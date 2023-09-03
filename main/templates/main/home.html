@@ -1,0 +1,242 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+    <section class=" top-txt ">
+        <div class="head container ">
+            <div class="head-txt ">
+                <p>Welcome to our customer ordering management system, were happy to serve you.</p>
+            </div>
+            <div class="sing_in_up ">
+                <a href="# ">SIGN IN</a>
+                <a href="# ">SIGN UP</a>
+            </div>
+        </div>
+    </section>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <input type="checkbox" name="" id="checkbox">
+            <div class="hamburger-lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
+            <ul class="menu-items">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#foods">Foods</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="logo">
+                <h1><img src="{% static 'img/logo.jpg' %}" width="30"> Legit Busog Restaurant</h1>
+            </div>
+        </div>
+    </nav>
+    <section id="home">
+
+        <div class="home_page ">
+            <div class="home_img">
+                <img src="{% static 'img/banner.jpg' %}" alt="img ">
+            </div>
+            <div class="home_txt ">
+                <p class="collectio ">Legit Busog</p>
+                <h2>Your all day breakfast<br> adventure starts here.</h2>
+                <div class="home_label ">
+                    <p>A a popular restaurant chain located at<br>Zone-8 Bulan Sorsogon.</p>
+                </div>
+                <button><a href="#foods">ORDER NOW</a><i class='bx bx-right-arrow-alt'></i></button>
+            </div>
+        </div>
+
+    </section>
+    
+    <section id="collection">
+        <div class="collections container">
+            <div class="content">
+                <img src="{% static 'img/dish.png' %}" alt="img" />
+                <div class="img-content">
+                    <p>Dish</p>
+                    <button><a href="#foods">SHOW NOW</a></button>
+                </div>
+            </div>
+            <div class="content">
+                <img src="{% static 'img/disert.jpg' %}" alt="img" />
+                <div class="img-content">
+                    <p>Disert</p>
+                    <button><a href="#foods">SHOW NOW</a></button>
+                </div>
+            </div>
+            <div class="content">
+                <img src="{% static 'img/drinks.jpg' %}" alt="img" />
+                <div class="img-content">
+                    <p>Drinks</p>
+                    <button><a href="#foods">SHOW NOW</a></button>
+                </div>
+            </div>
+            <div class="content">
+                <img src="{% static 'img/pasta.jpg' %}" alt="img" />
+                <div class="img-content">
+                    <p>Pasta</p>
+                    <button><a href="#foods">SHOW NOW</a></button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="foods">
+        <div class="seller container">
+            <h2>Top Sales</h2>
+            <div class="best-seller">
+                <div class="best-p1">
+                    <img src="{% static 'img/foods/masiram.jpg' %}" alt="img">
+                    <div class="best-p1-txt">
+                        <div class="name-of-p">
+                            <p>Basta Masiram</p>
+                        </div>
+                        <div class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <div class="price">
+                            &#8369; 80.00
+                            <div class="colors">
+                                <i class='bx bxs-circle red'></i>
+                                <i class='bx bxs-circle blue'></i>
+                                <i class='bx bxs-circle white'></i>
+                            </div>
+                        </div>
+                        <div class="buy-now">
+                            <button><a href="#">Buy  Now</a></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="best-p1">
+                    <img src="{% static 'img/foods/Nicenice.jpg' %}" alt="img">
+                    <div class="best-p1-txt">
+                        <div class="name-of-p">
+                            <p>Checheken Spag</p>
+                        </div>
+                        <div class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <div class="price">
+                            &#8369; 100.00
+                            <div class="colors">
+                                <i class='bx bxs-circle green'></i>
+                                <i class='bx bxs-circle grey'></i>
+                                <i class='bx bxs-circle brown'></i>
+                            </div>
+                        </div>
+                        <div class="buy-now">
+                            <button><a href="#">Buy  Now</a></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="best-p1">
+                    <img src="{% static 'img/foods/siram.jpg' %}" alt="img">
+                    <div class="best-p1-txt">
+                        <div class="name-of-p">
+                            <p>Ramen Special</p>
+                        </div>
+                        <div class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <div class="price">
+                            &#8369; 50.00
+                            <div class="colors">
+                                <i class='bx bxs-circle brown'></i>
+                                <i class='bx bxs-circle green'></i>
+                                <i class='bx bxs-circle blue'></i>
+                            </div>
+                        </div>
+                        <div class="buy-now">
+                            <button><a href="#">Buy  Now</a></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="best-p1">
+                    <img src="{% static 'img/foods/lumpia.jpg' %}" alt="img">
+                    <div class="best-p1-txt">
+                        <div class="name-of-p">
+                            <p>Lumpia Shangai</p>
+                        </div>
+                        <div class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <div class="price">
+                            &#8369; 43.00
+                            <div class="colors">
+                                <i class='bx bxs-circle red'></i>
+                                <i class='bx bxs-circle grey'></i>
+                                <i class='bx bxs-circle blue'></i>
+                            </div>
+                        </div>
+                        <div class="buy-now">
+                            <button><a href="#">Buy  Now</a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <section id="contact">
+        <div class="contact container">
+            <div class="map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d973.1797431736345!2d123.87809846962472!3d12.666422207693135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a0d7b6e4e3f599%3A0x3ab760e4ad620704!2sLEGIT%20BUSOG%20Yvonne&#39;s%20Food%20House!5e0!3m2!1sen!2sph!4v1693751930953!5m2!1sen!2sph" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <form action="https://formspree.io/f/xzbowpjq" method="POST">
+                <div class="form">
+                    <div class="form-txt">
+                        <h4>INFORMATION</h4>
+                        <h1>Contact Us</h1>
+                        <span>As you might expect of a our Restaurant. It's Located at listed bellow and for more info you can contact us.</span>
+                        <h3>PH</h3>
+                        <p>161 T. De Castro Street, Bulan, Sorsogon<br>+639275621240</p>
+                        <h3>Philippines</h3>
+                        <p>MV8H+HF Bulan, Sorsogon<br>4706</p>
+                    </div>
+                    <div class="form-details">
+                        <input type="text" name="name" id="name" placeholder="Name" required>
+                        <input type="email" name="email" id="email" placeholder="Email" required>
+                        <textarea name="message" id="message" cols="52" rows="7" placeholder="Message" required></textarea>
+                        <button>SEND MESSAGE</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <footer>
+        <div class="f-design">
+            <div class="f-design-txt container">
+                <p>Design and Code by BSIT-Capstone Project</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>
