@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register Page</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="login container">
+        <form action="" method="POST">
+            <div class="form">
+                <div class="logo">
+                    <a href="{% url 'index' %}"><img src="{% static 'img/logo.jpg' %}" alt=""></a>
+                </div>
+                <div class="form-card ml-1 mt-1">
+                    <h1>User Login</h1>
+                    <label for="name">Username</label>
+                    <input type="text" name="username" id="name" placeholder="Username" required>
+                    <label for="pass">Password</label>
+                    <input type="password" name="password" id="pass" placeholder="Password" required>
+                    <button>Login</button>
+                    <hr>
+                    <a href="{% url 'register' %}">Register</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
