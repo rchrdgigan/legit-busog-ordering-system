@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -6,9 +7,24 @@
     <title>Login and Register Page</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
+    <div class="container">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="register container">
         <form action="" method="POST">
+            {% csrf_token %}
             <div class="form">
                 <div class="form-register">
                     <h1>Register Account</h1>
@@ -51,4 +67,5 @@
         </form>
     </div>
 </body>
+
 </html>
