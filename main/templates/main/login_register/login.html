@@ -13,15 +13,20 @@
                 <div class="logo">
                     <a href="{% url 'index' %}"><img src="{% static 'img/logo.jpg' %}" alt=""></a>
                 </div>
-                <div class="form-card ml-1 mt-1">
+                <div class="form-login">
                     <h1>User Login</h1>
-                    <label for="name">Username</label>
-                    <input type="text" name="username" id="name" placeholder="Username" required>
-                    <label for="pass">Password</label>
-                    <input type="password" name="password" id="pass" placeholder="Password" required>
+                    <div class="form-group">
+                        <label for="name">Username</label>
+                        <input type="text" name="username" id="name" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass">Password</label>
+                        <input type="password" name="password" id="pass" placeholder="Password" required>
+                    </div>
                     <button>Login</button>
                     <hr>
                     <a href="{% url 'register' %}">Register</a>
+                    
                 </div>
             </div>
         </form>
