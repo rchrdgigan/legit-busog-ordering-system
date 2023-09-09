@@ -1,0 +1,118 @@
+{% extends '../admin-layout.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+    {% load static %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-12">
+            <div class="dash-count">
+                <div class="dash-counts">
+                    <h4>0</h4>
+                    <h5>Pending</h5>
+                </div>
+                <div class="dash-imgs">
+                    <i data-feather="user"></i>
+                </div>
+                <div class="flex">
+                    <a class="btn btn-primary" href="">View</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="dash-count das1">
+                <div class="dash-counts">
+                    <h4>0</h4>
+                    <h5>Processing</h5>
+                </div>
+                <div class="dash-imgs">
+                    <i data-feather="rotate-cw"></i>
+                </div>
+                <div class="flex">
+                    <a class="btn text-white" href="">View</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12 col-12 d-flex">
+            <div class="dash-count das2">
+                <div class="dash-counts">
+                    <h4>0</h4>
+                    <h5>Completed</h5>
+                </div>
+                <div class="dash-imgs">
+                    <i data-feather="check-circle"></i>
+                </div>
+                <div class="flex">
+                    <a class="btn text-white" href="">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Recent Customers List</h4>
+            <h6>Show your recent customers.</h6>
+        </div>
+    </div>
+
+    <div class="card">
+       
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table">
+                    <thead>
+                        <tr>
+                            <th>Order No.</th>
+                            <th>Images</th>
+                            <th>Foods</th>
+                            <th>Category</th>
+                            <th>Qty.</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Date and Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2023-0001</td>
+                            <td>
+                                <a href="">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 1</td>
+                            <td>Category 1</td>
+                            <td>10</td>
+                            <td>Customer 1</td>
+                            <td><a class="bg-danger text-white rounded p-1">Pending</a></td>
+                            <td>Sept. 16, 2023 03:00 pm</td>
+                            <td>
+                                <button type="button" id="" class="btn btn-sm btn-success m-2" data-bs-toggle="modal" data-bs-target="#approvedModal"><i class="fa fa-check"></i> Approved</a>
+                                <button type="button" id="" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="fa fa-times"></i> Cancel</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('#example').dataTable();
+    } );
+</script>
+{% endblock javascripts %}

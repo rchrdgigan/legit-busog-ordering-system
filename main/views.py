@@ -74,5 +74,21 @@ def register(response):
     return render(response, 'main/login_register/register.html')
 
 
-def orderTracking(response):
-    return render(response, 'main/order/index.html')
+def adminIndex(response):
+    return render(response, 'main/admin/index.html')  # Admin
+
+
+def adminCatList(response):
+    return render(response, 'main/admin/categorylist.html')  # Admin
+
+
+def adminFoodList(response):
+    return render(response, 'main/admin/foodlist.html')  # Admin
+
+
+def adminFoodCreate(response):
+    return render(response, 'main/admin/foodcreate.html')  # Admin
+
+
+def customerIndex(response):
+    return render(response, 'main/customer/index.html')  # Customer
