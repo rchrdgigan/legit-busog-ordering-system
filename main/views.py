@@ -85,44 +85,30 @@ def register(response):
 def adminIndex(response):
     return render(response, 'main/admin/index.html')  # Admin
 
+
 @login_required
 def adminCatList(response):
     dish_count = ProductInfo.objects.filter(category='Dish').count()
     dessert_count = ProductInfo.objects.filter(category='Dessert').count()
     drinks_count = ProductInfo.objects.filter(category='Drinks').count()
     return render(response, 'main/admin/categorylist.html', {
-        'dish_count':dish_count,
-        'dessert_count':dessert_count,
-        'drinks_count':drinks_count,
+        'dish_count': dish_count,
+        'dessert_count': dessert_count,
+        'drinks_count': drinks_count,
     })  # Admin
 
 
 @login_required
-def adminFoodList_Dish(response):
-    food = ProductInfo.objects.filter(category='Dish')
+def adminFoodCat(response, str):
+    food = ProductInfo.objects.filter(category=str)
     return render(response, 'main/admin/foodlist.html', {
-        'food':food
+        'food': food,
     })  # Admin
 
-
-@login_required
-def adminFoodList_Drinks(response):
-    food = ProductInfo.objects.filter(category='Drinks')
-    return render(response, 'main/admin/foodlist.html', {
-        'food':food
-    })  # Admin
-
-
-@login_required
-def adminFoodList_Dessert(response):
-    food = ProductInfo.objects.filter(category='Dessert')
-    return render(response, 'main/admin/foodlist.html', {
-        'food':food
-    })  # Admin
 
 @login_required
 def adminFoodCreate(response):
-    
+
     if response.method == "POST":
         form = ProductInfoForm(response.POST, response.FILES)
         if form.is_valid():
@@ -136,7 +122,7 @@ def adminFoodCreate(response):
             return redirect('admin_cat_list')
     form = ProductInfoForm()
     return render(response, 'main/admin/foodcreate.html', {
-        'form':form
+        'form': form
     })  # Admin
 
 
@@ -153,12 +139,19 @@ def adminFoodEdit(response, id):
             save.price = response.POST['price']
             save.PrepTime = response.POST['ept']
             save.save()
-            return redirect('admin_cat_list')
-    
+            if save:
+                messages.success(response, 'Data successfully updated!')
+                return redirect('admin_cat_list')
+
     return render(response, 'main/admin/foodedit.html', {
-        'form':form,
-        'food':food,
+        'form': form,
+        'food': food,
     })
+
+
+@login_required
+def adminViewFeedback(response):
+    return render(response, 'main/admin/feedbacklist.html')  # Admin
 
 
 @login_required
@@ -167,6 +160,7 @@ def adminFoodDelete(response, id):
     food = get_object_or_404(ProductInfo, id=id)
     food.delete()
     return redirect('admin_cat_list')
+
 
 def customerIndex(response):
     return render(response, 'main/customer/index.html')  # Customer

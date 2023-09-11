@@ -10,6 +10,16 @@ Dashboard
 {% block content %}
 <div class="content">
     {% load static %}
+
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Category List</h4>
+            <h6>Manage all categories menu</h6>
+        </div>
+        <div class="page-btn">
+            <a class="btn btn-added" data-bs-toggle="modal" id="" data-bs-target="#add"><i data-feather="plus"></i>Add Category</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-4 col-sm-6 col-12">
             <div class="dash-count das2">
@@ -19,7 +29,7 @@ Dashboard
                 </div>
 
                 <div class="flex">
-                    <a class="btn text-white" href="{% url 'admin_food_dish' %}">View</a>
+                    <a class="btn text-white" href="{% url 'admin_food_cat' 'Dish' %}">View</a>
                 </div>
             </div>
         </div>
@@ -31,7 +41,7 @@ Dashboard
                 </div>
 
                 <div class="flex">
-                    <a class="btn text-white" href="{% url 'admin_food_dessert' %}">View</a>
+                    <a class="btn text-white" href="{% url 'admin_food_cat' 'Dessert' %}">View</a>
                 </div>
             </div>
         </div>
@@ -42,9 +52,36 @@ Dashboard
                     <h5>Drinks</h5>
                 </div>
                 <div class="flex">
-                    <a class="btn text-white" href="{% url 'admin_food_drinks' %}">View</a>
+                    <a class="btn text-white" href="{% url 'admin_food_cat' 'Drinks' %}">View</a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+ <!-- Modal -->
+<div class="modal fade" id="add">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" id="delete_frm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Food Category</label>
+                        <input type="text" class="form-control" name="cat" required>
+                    </div>
+                </div>
+                <div class="modal-footer float-end">
+
+                    <a type="submit" href=""
+                        class="btn btn-primary">Save</a>
+
+                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>
