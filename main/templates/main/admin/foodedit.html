@@ -5,6 +5,20 @@ Edit
 {% endblock %}
 
 {% block stylesheets %}
+<style>
+    .cat:focus {
+        border-color: #ff9f43;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+    }
+    #id_image{
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -25,29 +39,16 @@ Edit
                         <div class="form-group">
                             <label>Food</label>
                             <input type="text" value="{{ food.name }}" class="form-control" name="food" required>
-
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="select2" name="cat_id" class="form-control" required>
-                                {% if food.category == 'Dish' %}
+                            <select class="select2 cat form-select" name="cat_id" class="form-control" required>
                                 <option disabled></option>
-                                <option value="Dish" selected>Dish</option>
-                                <option value="Dessert">Dessert</option>
-                                <option value="Drinks">Drinks</option>
-                                {% elif food.category == 'Dessert' %}
-                                <option disabled></option>
-                                <option value="Dish">Dish</option>
-                                <option value="Dessert" selected>Dessert</option>
-                                <option value="Drinks">Drinks</option>
-                                {% elif food.category == 'Drinks' %}
-                                <option disabled></option>
-                                <option value="Dish">Dish</option>
-                                <option value="Dessert">Dessert</option>
-                                <option value="Drinks" selected>Drinks</option>
-                                {% endif %}
+                                <option {% if food.category == 'Dish' %} selected {% endif %} value="Dish" >Dish</option>
+                                <option {% if food.category == 'Dessert' %} selected {% endif %} value="Dessert">Dessert</option>
+                                <option {% if food.category == 'Drinks' %} selected {% endif %} value="Drinks">Drinks</option>
                             </select>
                         </div>
                     </div>
@@ -79,11 +80,10 @@ Edit
                                 </div>
                             </tr>
                         </table>
-
                     </div>
                     <div class="col-lg-12">
                         <button type="submit" class="btn btn-submit me-2">Update</button>
-                        <a href="" class="btn btn-cancel">Cancel</a>
+                        <a onclick="window.history.go(-1); return false;" class="btn btn-cancel">Cancel</a>
                     </div>
                 </div>
             </form>
