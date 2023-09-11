@@ -1,0 +1,24 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/style.css' %}">
+</head>
+
+<body>
+    <!-- <div id="global-loader">
+        <div class="whirly-loader"> </div>
+    </div> -->
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>

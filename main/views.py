@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .decorators import allowed_users
 
-from .models import PersonInfo
+from .models import PersonInfo, ProductInfo
+from .forms import ProductInfoForm
 
 # string path for admin and customer
 strc = 'main/customer'
@@ -23,7 +27,10 @@ def login(response):
 
         if user is not None:
             dj_login(response, user)
-            return redirect('index')
+            if user.groups.filter(name='Admin'):
+                return redirect('admin.index')
+            else:
+                return redirect('index')
         else:
             messages.error(response, "Invalid Credentials")
 
@@ -74,5 +81,92 @@ def register(response):
     return render(response, 'main/login_register/register.html')
 
 
-def orderTracking(response):
-    return render(response, 'main/order/index.html')
+@login_required
+def adminIndex(response):
+    return render(response, 'main/admin/index.html')  # Admin
+
+@login_required
+def adminCatList(response):
+    dish_count = ProductInfo.objects.filter(category='Dish').count()
+    dessert_count = ProductInfo.objects.filter(category='Dessert').count()
+    drinks_count = ProductInfo.objects.filter(category='Drinks').count()
+    return render(response, 'main/admin/categorylist.html', {
+        'dish_count':dish_count,
+        'dessert_count':dessert_count,
+        'drinks_count':drinks_count,
+    })  # Admin
+
+
+@login_required
+def adminFoodList_Dish(response):
+    food = ProductInfo.objects.filter(category='Dish')
+    return render(response, 'main/admin/foodlist.html', {
+        'food':food
+    })  # Admin
+
+
+@login_required
+def adminFoodList_Drinks(response):
+    food = ProductInfo.objects.filter(category='Drinks')
+    return render(response, 'main/admin/foodlist.html', {
+        'food':food
+    })  # Admin
+
+
+@login_required
+def adminFoodList_Dessert(response):
+    food = ProductInfo.objects.filter(category='Dessert')
+    return render(response, 'main/admin/foodlist.html', {
+        'food':food
+    })  # Admin
+
+@login_required
+def adminFoodCreate(response):
+    
+    if response.method == "POST":
+        form = ProductInfoForm(response.POST, response.FILES)
+        if form.is_valid():
+            save = form.save(commit=False)
+            save.user = response.user
+            save.name = response.POST['food']
+            save.category = response.POST['cat_id']
+            save.price = response.POST['price']
+            save.PrepTime = response.POST['ept']
+            save.save()
+            return redirect('admin_cat_list')
+    form = ProductInfoForm()
+    return render(response, 'main/admin/foodcreate.html', {
+        'form':form
+    })  # Admin
+
+
+@login_required
+def adminFoodEdit(response, id):
+    food = get_object_or_404(ProductInfo, id=id)
+    form = ProductInfoForm(response.POST, response.FILES, instance=food)
+    if response.method == "POST":
+        form = ProductInfoForm(response.POST, response.FILES, instance=food)
+        if form.is_valid():
+            save = form.save(commit=False)
+            save.name = response.POST['food']
+            save.category = response.POST['cat_id']
+            save.price = response.POST['price']
+            save.PrepTime = response.POST['ept']
+            save.save()
+            return redirect('admin_cat_list')
+    
+    return render(response, 'main/admin/foodedit.html', {
+        'form':form,
+        'food':food,
+    })
+
+
+@login_required
+def adminFoodDelete(response, id):
+    food = ProductInfo.objects.filter(id=id).first()
+    food = get_object_or_404(ProductInfo, id=id)
+    food.delete()
+    return redirect('admin_cat_list')
+
+def customerIndex(response):
+    return render(response, 'main/customer/index.html')  # Customer

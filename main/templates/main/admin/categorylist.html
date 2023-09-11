@@ -1,0 +1,59 @@
+{% extends '../admin-layout.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+    {% load static %}
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-12">
+            <div class="dash-count das2">
+                <div class="dash">
+                    <h4>{{ dish_count }}</h4>
+                    <h5>Dish</h5>
+                </div>
+
+                <div class="flex">
+                    <a class="btn text-white" href="{% url 'admin_food_dish' %}">View</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-12 d-flex">
+            <div class="dash-count das2">
+                <div class="dash-counts">
+                    <h4>{{ dessert_count }}</h4>
+                    <h5>Dessert</h5>
+                </div>
+
+                <div class="flex">
+                    <a class="btn text-white" href="{% url 'admin_food_dessert' %}">View</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12 col-12 d-flex">
+            <div class="dash-count das2">
+                <div class="dash-counts">
+                    <h4>{{ drinks_count }}</h4>
+                    <h5>Drinks</h5>
+                </div>
+                <div class="flex">
+                    <a class="btn text-white" href="{% url 'admin_food_drinks' %}">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function () {
+        $('#example').dataTable();
+    });
+</script>
+{% endblock javascripts %}

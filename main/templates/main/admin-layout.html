@@ -1,0 +1,210 @@
+{% load static %}
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/css/style.css' %}">
+    {% block stylesheets %}{% endblock stylesheets %}
+</head>
+
+<body>
+    <!-- <div id="global-loader">
+        <div class="whirly-loader"> </div>
+    </div> -->
+    <div class="main-wrapper">
+        <!-- start header -->
+        <div class="header">
+            <div class="header-left active" style="overflow:hidden">
+                <a href="{% url 'admin.index' %}" class="logo">
+                    <img src="{% static 'img/logo-small.jpg' %}" alt="">
+                </a>
+                <a href="{% url 'admin.index' %}" class="logo-small">
+                    <img src="{% static 'img/logo.jpg' %}" alt="">
+                </a>
+                <a id="toggle_btn" href="javascript:void(0);">
+                </a>
+            </div>
+
+            <!-- burger sa jollibee -->
+            <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                <span class="bar-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </a>
+
+            <ul class="nav user-menu">
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <span class="status online"></span>
+                        </span>
+                        <small class="p-2"> Admin Fist Name</small>
+
+                    </a>
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+
+                                <span class="user-img">
+                                    <!-- sub profile imge -->
+                                    <img src="{% static 'img/admin.png' %}" alt="img">
+                                    <span class="status online"></span></span>
+                                <div class="profilesets">
+                                    <h6>Admin Email</h6>
+                                    <h5>Administrator</h5>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <a class="dropdown-item" href=""> <i class="me-2" data-feather="user"></i> My Profile</a>
+                            <a type="button" class="dropdown-item" data-bs-toggle="modal"
+                               data-bs-target="#changepassModal">
+                                <i class="fa fa-key me-2"></i> Change Password
+                            </a>
+                            <hr class="m-0">
+                            <a class="dropdown-item logout pb-0" href="" onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">Logout</a>
+
+                            <!-- form para sa logout -->
+                            <form id="logout-form" action="" method="POST" class="d-none">
+                            </form>
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- sidebar para sa mobile -->
+            <div class="dropdown mobile-user-menu">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                   aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="">My Profile</a>
+                    <a class="dropdown-item" href="">Change Password</a>
+                    <a class="dropdown-item" href="#" onclick="event.preventDefault();
+                        document.getElementById('logout-form-mob').submit();">Logout</a>
+
+                    <!-- form para sa logout -->
+                    <form id="logout-form-mob" action="" method="POST" class="d-none">
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal para sa pag palit password-->
+        <div class="modal fade" id="changepassModal" tabindex="-1" aria-labelledby="changepassModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="form-validation">
+                        <form action="" method="post" class="needs-validation">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="changepassModalLabel">Change Password</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3 row">
+                                    <label class="col-lg-12 col-form-label" for="oldpass">
+                                        Old Password
+                                    </label>
+                                    <div class="col-lg-12">
+                                        <input type="password" name="old_password" class="form-control" id="oldpass"
+                                               placeholder="Enter your current password.." required="">
+                                        <div class="invalid-feedback">
+                                            Please enter your old password.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-lg-12 col-form-label" for="newpass">
+                                        New Password
+                                    </label>
+                                    <div class="col-lg-12">
+                                        <input type="password" name="new_password" class="form-control" id="newpass"
+                                               placeholder="Enter your new password.." required="">
+                                        <div class="invalid-feedback">
+                                            Please enter your new password.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label class="col-lg-12 col-form-label" for="conpass">
+                                        Confirmation Password
+                                    </label>
+                                    <div class="col-lg-12">
+                                        <input type="password" name="new_password_confirmation" class="form-control"
+                                               id="conpass" placeholder="Enter your new password.." required="">
+                                        <div class="invalid-feedback">
+                                            Please enter your new password.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end modal -->
+
+        <!-- start sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+                        <li class="active"><a href="{% url 'admin.index' %}"><i class="me-2"
+                                   data-feather="home"></i><span>Dashboard</span></a></li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);" class=""><i class="me-2"
+                                   data-feather="clipboard"></i><span>Managemet Order</span> <span
+                                      class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a class="" href="">Pending</span></a></li>
+                                <li><a class="" href="">Processing</span></a></li>
+                                <li><a class="" href="">Completed</span></a></li>
+                                <li><a class="" href="">Cancelled</span></a></li>
+                            </ul>
+                        </li>
+                        <li class=""><a href="{% url 'admin_cat_list' %}"><i class="me-2"
+                                   data-feather="grid"></i><span>Manage Menu</span></a></li>
+                        <li class=""><a href=""><i class="me-2" data-feather="mail"></i><span>Feedback</span></a></li>
+                        <li class=""><a href=""><i class="me-2" data-feather="users"></i><span>Users
+                                    Managemet</span></a></li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- end sidebar -->
+        <main class="py-4">
+            <div class="page-wrapper">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'vendor/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'vendor/js/feather.min.js' %}"></script>
+    <script src="{% static 'vendor/js/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'vendor/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendor/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/js/script.js' %}"></script>
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+
+</html>
