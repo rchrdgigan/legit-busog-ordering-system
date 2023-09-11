@@ -1,7 +1,7 @@
 {% extends '../admin-layout.html' %}
 
 {% block title %}
-Food Management
+Edit
 {% endblock %}
 
 {% block stylesheets %}
@@ -17,14 +17,15 @@ Food Management
     </div>
     <div class="card">
         <div class="card-body">
-        
+
             <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Food</label>
                             <input type="text" class="form-control" name="food" required>
-                           
+
                         </div>
                     </div>
                     <div class="col-lg-4 col-sm-6 col-12">
@@ -32,42 +33,42 @@ Food Management
                             <label>Category</label>
                             <select class="select2" name="cat_id" class="form-control" required>
                                 <option disabled selected=""></option>
-                                <option value="">Test</option>
-
+                                <option value="Dish">Dish</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Drinks">Drinks</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Price</label>
-                            <input type="number" class="form-control" ame="price" required>
+                            <input type="number" class="form-control" name="price" required>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Estimated Preparation Time</label>
                             <input type="text" class="form-control" name="ept" required>
-                          
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea class="form-control" name="description" required></textarea>
-                           
+                            {{ form.description}}
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
-                        <table class="table" id="dynamic_field">  
-                        <tr> 
-                            <div class="form-group"> 
-                                <label>Photos Images:</label>                    
-                                <td><input multiple type="file" name="p_photo[]" placeholder="Photos" class="form-control name_list" accept="image/*" required/></td> 
-                                <td><button type="button" id="add" name="add" class="btn btn-success col-lg-12">Add More</button></td>  
-                            </div>
-                        </tr>  
+                        <table class="table" id="dynamic_field">
+                            <tr>
+                                <div class="form-group">
+                                    <label>Photos Images:</label>
+                                    <td>{{ form.image }}</td>
+                                </div>
+                            </tr>
                         </table>
-                        
+
                     </div>
                     <div class="col-lg-12">
                         <button type="submit" class="btn btn-submit me-2">Save</button>
@@ -87,30 +88,29 @@ Food Management
         //Initialize Select2 Elements
         $('.select2').select2();
     });
-    </script>
-    <script>  
-        $(document).ready(function(){  
-            var i=1;  
-            $('#add').click(function(){  
-                i++;  
-                $('#dynamic_field').append('<tr id="row'+i+'"><td><input multiple type="file" name="p_photo[]" placeholder="Photos" class="form-control name_list" required accept="image/*" /></td></td> <td><button id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>'); 
-            });  
-            $(document).on('click', '.btn_remove', function(){  
-                var button_id = $(this).attr("id");   
-                $('#row'+button_id+'').remove();  
-            });  
-            $('#submit').click(function(){            
-                $.ajax({  
-                    url:form.attr("action"), 
-                    method:"POST",  
-                    data:$("#myForm input").serialize(),
-                    success:function(data)  
-                    {  
-                        console.log(data);  
-                        $('#myForm input')[0].reset();  
-                    }  
-                });  
-            });  
+</script>
+<script>
+    $(document).ready(function () {
+        var i = 1;
+        $('#add').click(function () {
+            i++;
+            $('#dynamic_field').append('<tr id="row' + i + '"><td><input multiple type="file" name="p_photo[]" placeholder="Photos" class="form-control name_list" required accept="image/*" /></td></td> <td><button id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
         });
-    </script>
+        $(document).on('click', '.btn_remove', function () {
+            var button_id = $(this).attr("id");
+            $('#row' + button_id + '').remove();
+        });
+        $('#submit').click(function () {
+            $.ajax({
+                url: form.attr("action"),
+                method: "POST",
+                data: $("#myForm input").serialize(),
+                success: function (data) {
+                    console.log(data);
+                    $('#myForm input')[0].reset();
+                }
+            });
+        });
+    });
+</script>
 {% endblock javascripts %}
