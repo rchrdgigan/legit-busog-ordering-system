@@ -12,11 +12,18 @@ class PersonInfo(models.Model):
     def __str__(self):
         return str(self.user)
 
+class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    category_name = models.CharField(max_length=100, null=False)
+    timestamp = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return self.category_name
 
 class ProductInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100, null=False)
-    category = models.CharField(max_length=100, null=False)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     price = models.IntegerField()
     PrepTime = models.CharField(max_length=100)
     description = models.TextField()

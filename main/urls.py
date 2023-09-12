@@ -11,12 +11,13 @@ urlpatterns = [
     # Admin
     path("v1/", views.adminIndex, name="admin.index"),
     path("v1/cat/list", views.adminCatList, name="admin_cat_list"),
-    path("v1/food/dish", views.adminFoodList_Dish, name="admin_food_dish"),
-    path("v1/food/drinks", views.adminFoodList_Drinks, name="admin_food_drinks"),
-    path("v1/food/dessert", views.adminFoodList_Dessert, name="admin_food_dessert"),
-    path("v1/food/create", views.adminFoodCreate, name="admin_food_create"),
+    path("v1/food/<int:id>", views.adminFoodCat, name="admin_food_cat"),
+    path("v1/food/create/<int:id>", views.adminFoodCreate, name="admin_food_create"),
     path("v1/food/edit/<int:id>", views.adminFoodEdit, name='admin_food_edit'),
-    path("v1/food/delete/<int:id>", views.adminFoodDelete, name='admin_food_delete'),
+    path('v1/food/available/<int:ida>/<int:id>', views.adminFoodAvailable, name='admin_food_available'),
+    path('v1/food/unavailable/<int:ida>/<int:id>', views.adminFoodUnavailable, name='admin_food_unavailable'),
+    path("v1/food/delete/<int:id2>/<int:id>", views.adminFoodDelete, name='admin_food_delete'),
+    path("v1/feedback/list", views.adminViewFeedback, name="admin_feedback_list"),
     # Customer
     path("v2/", views.customerIndex, name="customer.index"),
 ]

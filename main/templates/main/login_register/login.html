@@ -7,10 +7,8 @@
     <title>Login and Register Page</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
-            rel="stylesheet" 
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
-            crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -20,64 +18,72 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-10 offset-lg-1">
-                  <h3 class="mb-3">Login Now</h3>
+                    <h3 class="mb-3">Login Now</h3>
                     <div class="bg-white shadow rounded">
                         <div class="row">
                             <div class="col-md-6 pe-0">
                                 <div class="form-left h-100 py-5 px-5">
                                     <form action="" method="POST" class="row g-3 needs-validation" novalidate>
                                         {% csrf_token %}
-                                            <div class="row">
-                                                {% for message in messages %}
-                                                {% if message.tags == 'success' %}
-                                                <script>
-                                                    Swal.fire(
+                                        <div class="row">
+                                            {% for message in messages %}
+                                            {% if message.tags == 'success' %}
+                                            <script>
+                                                Swal.fire(
                                                     'Successfully Register!',
                                                     'You may login now. Thank!',
                                                     'success'
-                                                    )
-                                                </script>
-                                                {% elif message.tags == 'error' %}
-                                                <div class="alert alert-danger" role="alert">
-                                                    {{ message }}
-                                                </div>
-                                                {% endif %}
-                                                {% endfor %}
+                                                )
+                                            </script>
+                                            {% elif message.tags == 'error' %}
+                                            <div class="alert alert-danger" role="alert">
+                                                {{ message }}
                                             </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
 
-                                            <div class="col-12">
-                                                <label for="name">Username</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-text rounded-pill"><i class="fa fa-user "></i></div>
-                                                    <input type="email" name="username" placeholder="Input Email" class="form-control rounded-pill" id="name" required>
-                                                    <div class="invalid-feedback">
-                                                        Please provide a email.
-                                                    </div>
+                                        <div class="col-12">
+                                            <label for="name">Email</label>
+                                            <div class="input-group">
+                                                <div class="input-group-text rounded-pill"><i class="fa fa-user "></i>
                                                 </div>
-                                               
-                                            </div>
-
-                                            <div class="col-12">
-                                                <label for="pass">Password</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-text rounded-pill"><i class="fa fa-lock"></i></div>
-                                                    <input type="password" name="password" id="pass" placeholder="Input Password" class="form-control rounded-pill" required>
-                                                    <div class="invalid-feedback">
-                                                        Please input your password.
-                                                    </div>
+                                                <input type="email" name="username" placeholder="Input Email"
+                                                       class="form-control rounded-pill" id="name" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a email.
                                                 </div>
                                             </div>
 
-                                            <div class="col-12">
-                                                <button type="submit" class="btn btn-dark w-100 mt-4 rounded-pill">Login</button>
-                                                <a href="{% url 'register' %}" class="btn btn-secondary w-100 rounded-pill mt-2">Register</a>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="pass">Password</label>
+                                            <div class="input-group">
+                                                <div class="input-group-text rounded-pill"><i class="fa fa-lock"></i>
+                                                </div>
+                                                <input type="password" name="password" id="pass"
+                                                       placeholder="Input Password" class="form-control rounded-pill"
+                                                       required>
+                                                <div class="invalid-feedback">
+                                                    Please input your password.
+                                                </div>
                                             </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <button type="submit"
+                                                    class="btn btn-dark w-100 mt-4 rounded-pill">Login</button>
+                                            <a href="{% url 'register' %}"
+                                               class="btn btn-secondary w-100 rounded-pill mt-2">Register</a>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                             <div class="col-md-6 ps-0 d-none d-md-block">
                                 <div class="form-right h-100 text-white text-center overflow-hidden">
-                                    <a href="{% url 'index' %}" class="p-5"><img src="{% static 'img/logo.jpg' %}" width="480" alt=""></a>
+                                    <a href="{% url 'index' %}" class="p-5"><img src="{% static 'img/logo.jpg' %}"
+                                             width="480" alt=""></a>
                                 </div>
                             </div>
                         </div>
@@ -87,21 +93,22 @@
         </div>
     </div>
 </body>
+
 </html>
 <script>
-    (function () {
-    'use strict'
-    var forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
-            }
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
 
-            form.classList.add('was-validated')
-        }, false)
-        })
-    })()
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
 </script>

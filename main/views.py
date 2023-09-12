@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
 
-from .models import PersonInfo, ProductInfo
+from .models import PersonInfo, ProductInfo, Category
 from .forms import ProductInfoForm
 
 # string path for admin and customer
@@ -75,12 +75,11 @@ def register(response):
         group = Group.objects.get(name='Customer')
         user.groups.add(group)
 
-        #personal information
+        #Personal Information
         user = info.id
         perinfo = PersonInfo.objects.create(
             user=user, dob=dob, address=address, contact=contact)
         perinfo.save()
-
         messages.success(
             response, 'Your account has been successfully created')
         return redirect('login')
@@ -93,69 +92,68 @@ def register(response):
 def adminIndex(response):
     return render(response, 'main/admin/index.html')  # Admin
 
+
 @login_required
 @allowed_users(allowed_roles=['Admin'])
 def adminCatList(response):
-    dish_count = ProductInfo.objects.filter(category='Dish').count()
-    dessert_count = ProductInfo.objects.filter(category='Dessert').count()
-    drinks_count = ProductInfo.objects.filter(category='Drinks').count()
+    cat = Category.objects.all()
+    #count = Category.objects.filter(category=cat).count
+    if response.method == "POST":
+        user = response.user
+        category = response.POST['cat']
+        data = Category(user=user, category_name=category)
+        data.save()
+        messages.success(response, 'Category Has Been Added!')
+        return redirect('admin_cat_list')
     return render(response, 'main/admin/categorylist.html', {
-        'dish_count':dish_count,
-        'dessert_count':dessert_count,
-        'drinks_count':drinks_count,
+        'cat':cat,
     })  # Admin
 
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
-def adminFoodList_Dish(response):
-    food = ProductInfo.objects.filter(category='Dish')
+def adminFoodCat(response, id):
+    category = Category.objects.get(id=id)
+    food = ProductInfo.objects.filter(category=category)
     return render(response, 'main/admin/foodlist.html', {
-        'food':food
+        'food': food,
+        'category':category,
     })  # Admin
 
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
-def adminFoodList_Drinks(response):
-    food = ProductInfo.objects.filter(category='Drinks')
-    return render(response, 'main/admin/foodlist.html', {
-        'food':food
-    })  # Admin
-
-
-@login_required
-@allowed_users(allowed_roles=['Admin'])
-def adminFoodList_Dessert(response):
-    food = ProductInfo.objects.filter(category='Dessert')
-    return render(response, 'main/admin/foodlist.html', {
-        'food':food
-    })  # Admin
-
-@login_required
-@allowed_users(allowed_roles=['Admin'])
-def adminFoodCreate(response):
-    
+def adminFoodCreate(response, id):
+    category = Category.objects.get(id=id)
+    food = ProductInfo.objects.filter(category=category)
     if response.method == "POST":
         form = ProductInfoForm(response.POST, response.FILES)
         if form.is_valid():
             save = form.save(commit=False)
             save.user = response.user
             save.name = response.POST['food']
-            save.category = response.POST['cat_id']
             save.price = response.POST['price']
             save.PrepTime = response.POST['ept']
+            save.category = category
             save.save()
-            return redirect('admin_cat_list')
-    form = ProductInfoForm()
-    return render(response, 'main/admin/foodcreate.html', {
-        'form':form
-    })  # Admin
+            messages.success(response, 'Your Product Has Been Successfully Added!')
+            return redirect('admin_food_cat', category.id)
+        else:
+            HttpResponse('Invalid!')
 
+    form = ProductInfoForm()
+    cat_all = Category.objects.all()
+    return render(response, 'main/admin/foodcreate.html', {
+        'form': form,
+        'food':food,
+        'cat_all':cat_all
+        
+    })  # Admin
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
 def adminFoodEdit(response, id):
+    
     food = get_object_or_404(ProductInfo, id=id)
     form = ProductInfoForm(response.POST, response.FILES, instance=food)
     if response.method == "POST":
@@ -163,25 +161,65 @@ def adminFoodEdit(response, id):
         if form.is_valid():
             save = form.save(commit=False)
             save.name = response.POST['food']
-            save.category = response.POST['cat_id']
+            save.category = response.POST.get('cat_id')
             save.price = response.POST['price']
             save.PrepTime = response.POST['ept']
             save.save()
-            return redirect('admin_cat_list')
-    
+            if save:
+                messages.success(response, 'Data successfully updated!')
+                return HttpResponseRedirect(response.path)
+    cat = Category.objects.all().exclude(category_name=food.category)
     return render(response, 'main/admin/foodedit.html', {
-        'form':form,
-        'food':food,
+        'form': form,
+        'food': food,
+        'cat': cat,
     })
 
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
-def adminFoodDelete(response, id):
-    food = ProductInfo.objects.filter(id=id).first()
+def adminViewFeedback(response, id):
+    
+    return render(response, 'main/admin/feedbacklist.html')  # Admin
+
+
+@login_required
+@allowed_users(allowed_roles=['Admin'])
+def adminFoodDelete(response, id2, id):
+    cat = Category.objects.filter(id=id2).first()
+    food = ProductInfo.objects.filter(category=cat, id=id)
     food = get_object_or_404(ProductInfo, id=id)
     food.delete()
-    return redirect('admin_cat_list')
+    messages.error(response, 'Product Has Been Deleted!')
+    return redirect('admin_food_cat', cat.id)
+
+@login_required
+@allowed_users(allowed_roles=['Admin'])
+def adminFoodAvailable(response, ida, id):
+    print(1)
+    cat = Category.objects.filter(id=ida).first()
+    food = ProductInfo.objects.filter(category=cat, id=id)
+    food = get_object_or_404(ProductInfo, id=id)
+    data = ProductInfo.objects.get(name=food.name, category=food.category, price=food.price, PrepTime=food.PrepTime, description=food.description, image=food.image)
+    data.availability = True
+    data.save()
+    messages.success(response, 'Successfully Changed The Status!')
+    return redirect('admin_food_cat', cat.id)
+
+@login_required
+@allowed_users(allowed_roles=['Admin'])
+def adminFoodUnavailable(response, ida, id):
+    print(2)
+    cat = Category.objects.filter(id=ida).first()
+    food = ProductInfo.objects.filter(category=cat, id=id)
+    food = get_object_or_404(ProductInfo, id=id)
+    data = ProductInfo.objects.get(name=food.name, category=food.category, price=food.price, PrepTime=food.PrepTime, description=food.description, image=food.image)
+    data.availability = False
+    data.save()
+    messages.success(response, 'Successfully Changed The Status!')
+    return redirect('admin_food_cat', cat.id)
+    
+
 
 def customerIndex(response):
     return render(response, 'main/customer/index.html')  # Customer

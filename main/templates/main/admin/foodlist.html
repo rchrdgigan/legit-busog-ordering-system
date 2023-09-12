@@ -10,16 +10,29 @@ List of Food
 {% block content %}
 <div class="content">
     {% load static %}
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="page-header">
         <div class="page-title">
             <h4>Foods List</h4>
             <h6>Manage all foods menu</h6>
         </div>
         <div class="page-btn">
-            <a href="{% url 'admin_food_create' %}" class="btn btn-added"><i data-feather="plus"></i>Add New</a>
+            <a href="{% url 'admin_food_create' category.id %}" class="btn btn-added"><i data-feather="plus"></i>Add
+                New</a>
         </div>
     </div>
-
     <div class="card">
         <!-- para sa alert -->
         <!-- <div class="row">
@@ -29,7 +42,6 @@ List of Food
             </div>
         </div> -->
         <div class="card-body">
-
             <div class="table-responsive">
                 <table id="example" class="table">
                     <thead>
@@ -38,12 +50,10 @@ List of Food
                             <th>Item Name</th>
                             <th>Category</th>
                             <th>Price/Serving</th>
-                            <th>Estimated Preparation Time</th>
-                            <th>Description</th>
+                            <th>Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-
                     {% for f in food %}
                     <tbody>
                         <tr>
@@ -53,25 +63,38 @@ List of Food
                                 </a>
                             </td>
                             <td>{{ f.name }}</td>
-                            <td>{{ f.category }}</td>
+                            <td>{{ f.category.category_name }}</td>
                             <td>{{ f.price}} PHP</td>
-                            <td>{{ f.PrepTime }}</td>
-                            <td>{{ f.description }}</td>
+                            <td>
+                                {% if f.availability == True %}
+                                <a class="text-success" data-bs-toggle="modal"
+                                   data-bs-target="#changeStatus_true{{ f.id }}">
+                                    Available
+                                </a>
+                                {% elif f.availability == False %}
+                                <a class="text-danger" data-bs-toggle="modal"
+                                   data-bs-target="#changeStatus_false{{ f.id }}">
+                                    Unavailable
+                                </a>
+                                {% endif %}
+                            </td>
                             <td class="text-center">
-                                <a class="me-3" href="">
+                                <a class="me-3" href="" data-bs-toggle="modal" name="{{ f.name }}"
+                                   category="{{ f.category }}" price="{{ f.price }}" PrepTime="{{ f.PrepTime }}"
+                                   description="{{ f.description }}" data-bs-target="#viewModal">
                                     <i data-feather="eye"></i>
                                 </a>
                                 <a class="me-3" href="{% url 'admin_food_edit' f.id %}">
                                     <i data-feather="edit"></i>
                                 </a>
-                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal">
+                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal{{ f.id }}">
                                     <i data-feather="delete"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
-                    <!-- Modal -->
-                    <div class="modal fade" id="delModal">
+                    <!-- Modal Delete-->
+                    <div class="modal fade" id="delModal{{ f.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="" method="post" id="delete_frm">
@@ -85,10 +108,56 @@ List of Food
                                         <p>Are you sure you want to delete this data?</p>
                                     </div>
                                     <div class="modal-footer float-end">
-
-                                        <a type="submit" href="{% url 'admin_food_delete' f.id %}"
+                                        <a type="submit" href="{% url 'admin_food_delete' category.id f.id %}"
                                            class="btn btn-danger">Yes</a>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Status-->
 
+                    <!-- if true -->
+                    <div class="modal fade" id="changeStatus_true{{ f.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="delete_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Change Status...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        Are you sure you want to change the status of this food?
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a type="submit" href="{% url 'admin_food_unavailable' category.id f.id %}"
+                                           class="btn btn-primary">Yes</a>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- if false -->
+                    <div class="modal fade" id="changeStatus_false{{ f.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="delete_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Change Status...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        Are you sure you want to change the status of this food??
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a type="submit" href="{% url 'admin_food_available' category.id f.id %}"
+                                           class="btn btn-primary">Yes</a>
                                         <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                                     </div>
                                 </form>
@@ -101,7 +170,55 @@ List of Food
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="viewModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" id="view_frm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">View Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Item Name</label>
+                            <input type="text" class="form-control" name="name" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <input type="text" class="form-control" name="category" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Price</label>
+                                <input type="text" class="form-control" name="price" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Prep Time</label>
+                                <input type="text" class="form-control" name="PrepTime" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <input type="text" class="form-control" name="status" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer float-end">
+                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 {% block javascripts %}
@@ -114,6 +231,18 @@ List of Food
         var id = $(opener).attr('id');
         $('#delete_frm').find('[name="id"]').val(id);
     });
-
+    $('#viewModal').on('show.bs.modal', function (e) {
+        var opener = e.relatedTarget;
+        var name = $(opener).attr('name');
+        var category = $(opener).attr('category');
+        var price = $(opener).attr('price');
+        var PrepTime = $(opener).attr('PrepTime');
+        var description = $(opener).attr('description');
+        $('#view_frm').find('[name="name"]').val(name);
+        $('#view_frm').find('[name="category"]').val(category);
+        $('#view_frm').find('[name="price"]').val(price);
+        $('#view_frm').find('[name="PrepTime"]').val(PrepTime);
+        $('#view_frm').find('[name="description"]').val(description);
+    });
 </script>
 {% endblock javascripts %}
