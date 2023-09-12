@@ -70,10 +70,17 @@ def register(response):
         info.first_name = first_name
         info.last_name = last_name
         info.save()
+
+        #For role
+        group = Group.objects.get(name='Customer')
+        user.groups.add(group)
+
+        #personal information
         user = info.id
         perinfo = PersonInfo.objects.create(
             user=user, dob=dob, address=address, contact=contact)
         perinfo.save()
+
         messages.success(
             response, 'Your account has been successfully created')
         return redirect('login')
@@ -82,10 +89,12 @@ def register(response):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminIndex(response):
     return render(response, 'main/admin/index.html')  # Admin
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminCatList(response):
     dish_count = ProductInfo.objects.filter(category='Dish').count()
     dessert_count = ProductInfo.objects.filter(category='Dessert').count()
@@ -98,6 +107,7 @@ def adminCatList(response):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodList_Dish(response):
     food = ProductInfo.objects.filter(category='Dish')
     return render(response, 'main/admin/foodlist.html', {
@@ -106,6 +116,7 @@ def adminFoodList_Dish(response):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodList_Drinks(response):
     food = ProductInfo.objects.filter(category='Drinks')
     return render(response, 'main/admin/foodlist.html', {
@@ -114,6 +125,7 @@ def adminFoodList_Drinks(response):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodList_Dessert(response):
     food = ProductInfo.objects.filter(category='Dessert')
     return render(response, 'main/admin/foodlist.html', {
@@ -121,6 +133,7 @@ def adminFoodList_Dessert(response):
     })  # Admin
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodCreate(response):
     
     if response.method == "POST":
@@ -141,6 +154,7 @@ def adminFoodCreate(response):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodEdit(response, id):
     food = get_object_or_404(ProductInfo, id=id)
     form = ProductInfoForm(response.POST, response.FILES, instance=food)
@@ -162,6 +176,7 @@ def adminFoodEdit(response, id):
 
 
 @login_required
+@allowed_users(allowed_roles=['Admin'])
 def adminFoodDelete(response, id):
     food = ProductInfo.objects.filter(id=id).first()
     food = get_object_or_404(ProductInfo, id=id)
