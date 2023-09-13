@@ -9,15 +9,17 @@ Edit
     .cat:focus {
         border-color: #ff9f43;
         outline: 0;
-        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
-        box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
     }
-    #id_image{
+
+    #id_image {
         border: 1px solid #ccc;
         display: inline-block;
         padding: 6px 12px;
         cursor: pointer;
     }
+
 </style>
 {% endblock stylesheets %}
 
@@ -45,10 +47,10 @@ Edit
                         <div class="form-group">
                             <label>Category</label>
                             <select class="select2 cat form-select" name="cat_id" class="form-control" required>
-                                <option disabled></option>
-                                <option {% if food.category == 'Dish' %} selected {% endif %} value="Dish" >Dish</option>
-                                <option {% if food.category == 'Dessert' %} selected {% endif %} value="Dessert">Dessert</option>
-                                <option {% if food.category == 'Drinks' %} selected {% endif %} value="Drinks">Drinks</option>
+                                <option selected value="{{food.category}}">{{ food.category }}</option>
+                                {% for c in cat %}
+                                <option value="{{ c.category_name }}">{{ c.category_name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -68,7 +70,7 @@ Edit
                     <div class="col-lg-6 col-sm-6 col-12">
                         <div class="form-group">
                             <label>Description</label>
-                            {{ form.description }}
+                            <textarea name="description" id="" cols="30" rows="10">{{ food.description }}</textarea>
                         </div>
                     </div>
                     <div class="col-lg-6 col-sm-6 col-12">
@@ -76,7 +78,7 @@ Edit
                             <tr>
                                 <div class="form-group">
                                     <label>Photos Images:</label>
-                                    <td>{{ form }}</td>
+                                    <td>{{ form.image }}</td>
                                 </div>
                             </tr>
                         </table>

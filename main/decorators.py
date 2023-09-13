@@ -12,5 +12,6 @@ def allowed_users(allowed_roles=[]):
                     return view_func(response, *args, **kwargs)
                 else:
                     return HttpResponse('You are not authorize to view this page')
+            return HttpResponse('You are not authorize to view this page')
         return wrapper_func
     return decorator
