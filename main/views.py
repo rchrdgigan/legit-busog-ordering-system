@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
@@ -38,8 +39,12 @@ def login(response):
 
 
 def logout(response):
+    user = response.user
     dj_logout(response)
-    return redirect('index')
+    if user.groups.filter(name='Admin'):
+        return redirect('login')
+    else:
+        return redirect('index')
 
 
 def register(response):
@@ -86,11 +91,68 @@ def register(response):
 
     return render(response, 'main/login_register/register.html')
 
+@login_required
+def changePassword(response):
+    if response.method == "POST":
+        user = response.user
+        form = PasswordChangeForm(user=response.user, data=response.POST) 
+        if form.is_valid():
+            form.save()
+            dj_logout(response)
+            if user.groups.filter(name='Admin'):
+                return redirect('login')
+            else:
+                return redirect('index')
+        else: 
+            messages.error(response, 'Invalid Input!')
+            if user.groups.filter(name='Admin'):
+                return redirect('admin.index')
+            else:
+                return redirect('index')
+            
+    else:
+        form = PasswordChangeForm(user=response.user)
+        return render(response, 'main/login_register/change_password.html', {
+            'form': form,
+        })
+
+
+    
+    
+    # if new_pass != new_pass_confirm:
+    #     messages.error(response, 'Error! Password Confirmation not match!')
+    #     if user.groups.filter(name='Admin'):
+    #         return redirect('admin.index')
+    #     else:
+    #         return redirect('index')
+    # # elif len(new_pass) < 8 or len(new_pass_confirm) < 8:
+    # #     messages.error(response, "Password must contain 8 or more character")
+    # #     if user.groups.filter(name='Admin'):
+    # #         return redirect('admin.index')
+    # #     else:
+    # #         return redirect('index')
+    # elif not new_pass.isalnum() or not new_pass_confirm.isalnum():
+    #     messages.error(response, 'Password must contain Alpha-Numeric character')
+    #     if user.groups.filter(name='Admin'):
+    #         return redirect('admin.index')
+    #     else:
+    #         return redirect('index')  
+    # else:
+    #     user.set_password(new_pass)
+    #     user.save()
+    #     dj_logout(response)
+    # return redirect('login')
+    
+
+        
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
 def adminIndex(response):
-    return render(response, 'main/admin/index.html')  # Admin
+    user = response.user
+    return render(response, 'main/admin/index.html', {
+        'user':user,
+    })  # Admin
 
 
 @login_required
@@ -114,7 +176,7 @@ def adminCatList(response):
 @allowed_users(allowed_roles=['Admin'])
 def adminFoodCat(response, id):
     category = Category.objects.get(id=id)
-    food = ProductInfo.objects.filter(category=category)
+    food = ProductInfo.objects.filter(category=category.category_name)
     return render(response, 'main/admin/foodlist.html', {
         'food': food,
         'category':category,
@@ -134,7 +196,8 @@ def adminFoodCreate(response, id):
             save.name = response.POST['food']
             save.price = response.POST['price']
             save.PrepTime = response.POST['ept']
-            save.category = category
+            save.category = response.POST['cat_id']
+            save.description = response.POST['description']
             save.save()
             messages.success(response, 'Your Product Has Been Successfully Added!')
             return redirect('admin_food_cat', category.id)
@@ -161,13 +224,14 @@ def adminFoodEdit(response, id):
         if form.is_valid():
             save = form.save(commit=False)
             save.name = response.POST['food']
-            save.category = response.POST.get('cat_id')
+            save.category = response.POST['cat_id']
             save.price = response.POST['price']
             save.PrepTime = response.POST['ept']
+            save.description = response.POST['description']
             save.save()
             if save:
                 messages.success(response, 'Data successfully updated!')
-                return HttpResponseRedirect(response.path)
+                return redirect('admin_cat_list')
     cat = Category.objects.all().exclude(category_name=food.category)
     return render(response, 'main/admin/foodedit.html', {
         'form': form,
@@ -178,7 +242,7 @@ def adminFoodEdit(response, id):
 
 @login_required
 @allowed_users(allowed_roles=['Admin'])
-def adminViewFeedback(response, id):
+def adminViewFeedback(response):
     
     return render(response, 'main/admin/feedbacklist.html')  # Admin
 

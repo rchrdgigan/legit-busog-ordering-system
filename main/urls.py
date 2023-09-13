@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", views.login, name="login"),
     path("register/", views.register, name="register"),
     path("logout/", views.logout, name="logout"),
+    path("changepassword/", views.changePassword, name='change_password'),
     # Admin
     path("v1/", views.adminIndex, name="admin.index"),
     path("v1/cat/list", views.adminCatList, name="admin_cat_list"),

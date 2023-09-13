@@ -11,6 +11,25 @@ Dashboard
 <div class="content">
     {% load static %}
     <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <script>
+            Swal.fire(
+                'Successfully Register!',
+                'You may login now. Thank!',
+                'success'
+            )
+        </script>
+        {% elif message.tags == 'error' %}
+        <script>
+            Swal.fire(
+                '{{ message }}'
+            )
+        </script>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <div class="row">
         <div class="col-lg-4 col-sm-6 col-12">
             <div class="dash-count">
                 <div class="dash-counts">
@@ -65,7 +84,7 @@ Dashboard
     </div>
 
     <div class="card">
-       
+
         <div class="card-body">
             <div class="table-responsive">
                 <table id="example" class="table">
@@ -97,8 +116,10 @@ Dashboard
                             <td><a class="bg-danger text-white rounded p-1">Pending</a></td>
                             <td>Sept. 16, 2023 03:00 pm</td>
                             <td>
-                                <button type="button" id="" class="btn btn-sm btn-success m-2" data-bs-toggle="modal" data-bs-target="#approvedModal"><i class="fa fa-check"></i> Approved</a>
-                                <button type="button" id="" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#cancelModal"><i class="fa fa-times"></i> Cancel</a>
+                                <button type="button" id="" class="btn btn-sm btn-success m-2" data-bs-toggle="modal"
+                                        data-bs-target="#approvedModal"><i class="fa fa-check"></i> Approved</a>
+                                    <button type="button" id="" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                            data-bs-target="#cancelModal"><i class="fa fa-times"></i> Cancel</a>
                             </td>
                         </tr>
                     </tbody>
@@ -111,8 +132,8 @@ Dashboard
 
 {% block javascripts %}
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#example').dataTable();
-    } );
+    });
 </script>
 {% endblock javascripts %}

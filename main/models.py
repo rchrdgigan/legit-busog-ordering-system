@@ -18,12 +18,12 @@ class Category(models.Model):
     timestamp = models.DateTimeField(default=now)
 
     def __str__(self):
-        return self.category_name
+        return str(self.user) +", "+ self.category_name
 
 class ProductInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100, null=False)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.CharField(max_length=50, null=False)
     price = models.IntegerField()
     PrepTime = models.CharField(max_length=100)
     description = models.TextField()
