@@ -105,28 +105,4 @@ Add
         $('.select2').select2();
     });
 </script>
-<script>
-    $(document).ready(function () {
-        var i = 1;
-        $('#add').click(function () {
-            i++;
-            $('#dynamic_field').append('<tr id="row' + i + '"><td><input multiple type="file" name="p_photo[]" placeholder="Photos" class="form-control name_list" required accept="image/*" /></td></td> <td><button id="' + i + '" class="btn btn-danger btn_remove">X</button></td></tr>');
-        });
-        $(document).on('click', '.btn_remove', function () {
-            var button_id = $(this).attr("id");
-            $('#row' + button_id + '').remove();
-        });
-        $('#submit').click(function () {
-            $.ajax({
-                url: form.attr("action"),
-                method: "POST",
-                data: $("#myForm input").serialize(),
-                success: function (data) {
-                    console.log(data);
-                    $('#myForm input')[0].reset();
-                }
-            });
-        });
-    });
-</script>
 {% endblock javascripts %}

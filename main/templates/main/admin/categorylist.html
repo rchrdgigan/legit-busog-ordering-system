@@ -33,24 +33,35 @@ Dashboard
                 Category</a>
         </div>
     </div>
+    <!-- {{category_product_counts}} -->
     <div class="row">
         {% for c in cat %}
         <div class="col-lg-4 col-sm-6 col-12">
             <div class="dash-count das2">
                 <div class="dash">
-                    <h4>1</h4>
+                    {% for key, value in category_product_counts.items %}
+                        {% if key == c.category_name %}
+                            <h4>{{ value }}</h4>
+                        {% endif %}
+                    {% endfor %}
                     <h5>{{ c.category_name }}</h5>
                 </div>
-
                 <div class="flex">
-                    <a class="btn text-white" href="{% url 'admin_food_cat' c.id %}">View</a>
+                    <div class="dropdown">
+                        <button class="btn btn-das2 text-white" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i data-feather="more-horizontal"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li> <a class="dropdown-item" href="{% url 'admin_food_cat' c.id %}">View Product</a></li>
+                          <li> <a class="dropdown-item" data-bs-toggle="modal" id="{{ c.id }}" category="{{ c.category_name }}" data-bs-target="#editModal">Edit Category</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
-<!-- Modal -->
 <div class="modal fade" id="add">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -65,9 +76,41 @@ Dashboard
                         <label>Food Category</label>
                         <input type="text" class="form-control" name="cat" required>
                     </div>
+                    <div class="form-group">
+                        <label>Upload Image</label>
+                        <input type="file" class="form-control" name="image" required>
+                    </div>
                 </div>
                 <div class="modal-footer float-end">
                     <Button type="submit" class="btn btn-primary">Save</Button>
+                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{% url 'admin_cat_update' %}" method="post" id="edit_frm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <input type="hidden" name="id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Food Category</label>
+                        <input type="text" class="form-control" name="cat" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Image (Optional)</label>
+                        <input type="file" class="form-control" name="image">
+                    </div>
+                </div>
+                <div class="modal-footer float-end">
+                    <Button type="submit" class="btn btn-primary">Update</Button>
                     <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                 </div>
             </form>
@@ -80,6 +123,13 @@ Dashboard
 <script>
     $(document).ready(function () {
         $('#example').dataTable();
+    });
+    $('#editModal').on('show.bs.modal', function (e) {
+        var opener = e.relatedTarget;
+        var id = $(opener).attr('id');
+        var category = $(opener).attr('category');
+        $('#edit_frm').find('[name="id"]').val(id);
+        $('#edit_frm').find('[name="cat"]').val(category);
     });
 </script>
 {% endblock javascripts %}
