@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
 
 from .models import PersonInfo, ProductInfo, Category
-from .forms import ProductInfoForm
+from .forms import CategoryForm, ProductInfoForm
 
 # string path for admin and customer
 strc = 'main/customer'
@@ -16,7 +16,10 @@ stra = 'main/admin'
 
 
 def index(response):
-    return render(response, 'main/home.html')
+    category = Category.objects.all()
+    return render(response, 'main/home.html', {
+        'category':category,
+    })
 
 
 def login(response):
@@ -161,14 +164,21 @@ def adminCatList(response):
     cat = Category.objects.all()
     #count = Category.objects.filter(category=cat).count
     if response.method == "POST":
-        user = response.user
+        form = CategoryForm(response.POST, response.FILES)
         category = response.POST['cat']
-        data = Category(user=user, category_name=category)
-        data.save()
-        messages.success(response, 'Category Has Been Added!')
-        return redirect('admin_cat_list')
+        if form.is_valid():
+            save = form.save(commit=False)
+            save.user = response.user
+            save.category_name = category
+            save.save()
+            messages.success(response, 'Category Has Been Added!')
+            return redirect('admin_cat_list')
+        else:
+            return HttpResponse('Invalid')
+    form = CategoryForm()
     return render(response, 'main/admin/categorylist.html', {
         'cat':cat,
+        'form':form,
     })  # Admin
 
 

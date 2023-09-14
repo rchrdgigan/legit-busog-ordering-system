@@ -70,34 +70,15 @@
             <h2>Food Category</h2>
         </div>
         <div class="collections ">
+            {% for cat in category %}
             <div class="content">
-                <img src="{% static 'img/dish.png' %}" alt="img" />
+                <img src="{{ cat.image.url }}" alt="vehicle" />
                 <div class="img-content">
-                    <p>Dish</p>
+                    <p>{{ cat.category_name }}</p>
                     <button><a href="#foods">SHOW NOW</a></button>
                 </div>
             </div>
-            <div class="content">
-                <img src="{% static 'img/disert.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Dessert</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
-            <div class="content">
-                <img src="{% static 'img/drinks.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Drinks</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
-            <div class="content">
-                <img src="{% static 'img/pasta.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Pasta</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </section>
     <section id="foods">
