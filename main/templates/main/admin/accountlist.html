@@ -10,6 +10,19 @@ List of Food
 {% block content %}
 <div class="content">
     {% load static %}
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="page-header">
         <div class="page-title">
             <h4>User Management</h4>
@@ -34,23 +47,25 @@ List of Food
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    {% for user in users %}
                     <tbody>
                         <tr>
-                            <td>Sept 30, 2023</td>
+                            <td>{{ user.date_joined }}</td>
                             <td>
                                 <img width="50" src="" alt="vehicle">
                             </td>
-                            <td>Test Test</td>
-                            <td>Test@example.com</td>
-                            <td>+63 912341234</td>
-                            <td>Address 1</td>
+                            <td>{{ user.first_name | title }} {{ user.last_name | title }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.personinfo.contact }}</td>
+                            <td>{{ user.personinfo.address }}</td>
                             <td class="text-center">
-                                <a class="me-3" href="">
+                                <a class="me-3" href="{% url 'admin_account_change_pass' user.id %}">
                                     <i data-feather="edit"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
+                    {% endfor %}
                 </table>
             </div>
         </div>

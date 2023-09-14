@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
@@ -16,7 +16,12 @@ stra = 'main/admin'
 
 
 def index(response):
-    return render(response, 'main/home.html')
+    category = Category.objects.all()
+    foods = ProductInfo.objects.all()
+    return render(response, 'main/home.html', {
+        'category':category,
+        'foods':foods,
+    })
 
 
 def login(response):
@@ -28,7 +33,7 @@ def login(response):
 
         if user is not None:
             dj_login(response, user)
-            if user.groups.filter(name='Admin'):
+            if user.groups.filter(name='admin'):
                 return redirect('admin.index')
             else:
                 return redirect('index')
@@ -41,7 +46,7 @@ def login(response):
 def logout(response):
     user = response.user
     dj_logout(response)
-    if user.groups.filter(name='Admin'):
+    if user.groups.filter(name='admin'):
         return redirect('login')
     else:
         return redirect('index')
@@ -70,20 +75,18 @@ def register(response):
                 response, 'Password must contain Alpha-Numeric character')
             return redirect('register')
 
-        info = User.objects.create_user(
-            username=email, email=email, password=password)
+        info = User.objects.create_user(username=email, email=email, password=password)
         info.first_name = first_name
         info.last_name = last_name
         info.save()
 
         # For role
-        group = Group.objects.get(name='Customer')
-        user.groups.add(group)
+        group = Group.objects.get(name='customer')
+        info.groups.add(group)
 
         # Personal Information
-        user = info.id
-        perinfo = PersonInfo.objects.create(
-            user=user, dob=dob, address=address, contact=contact)
+        user = info
+        perinfo = PersonInfo.objects.create(user=user, dob=dob, address=address, contact=contact)
         perinfo.save()
         messages.success(
             response, 'Your account has been successfully created')
@@ -100,13 +103,13 @@ def changePassword(response):
         if form.is_valid():
             form.save()
             dj_logout(response)
-            if user.groups.filter(name='Admin'):
+            if user.groups.filter(name='admin'):
                 return redirect('login')
             else:
                 return redirect('index')
         else:
             messages.error(response, 'Invalid Input!')
-            if user.groups.filter(name='Admin'):
+            if user.groups.filter(name='admin'):
                 return redirect('admin.index')
             else:
                 return redirect('index')
@@ -117,33 +120,8 @@ def changePassword(response):
             'form': form,
         })
 
-    # if new_pass != new_pass_confirm:
-    #     messages.error(response, 'Error! Password Confirmation not match!')
-    #     if user.groups.filter(name='Admin'):
-    #         return redirect('admin.index')
-    #     else:
-    #         return redirect('index')
-    # # elif len(new_pass) < 8 or len(new_pass_confirm) < 8:
-    # #     messages.error(response, "Password must contain 8 or more character")
-    # #     if user.groups.filter(name='Admin'):
-    # #         return redirect('admin.index')
-    # #     else:
-    # #         return redirect('index')
-    # elif not new_pass.isalnum() or not new_pass_confirm.isalnum():
-    #     messages.error(response, 'Password must contain Alpha-Numeric character')
-    #     if user.groups.filter(name='Admin'):
-    #         return redirect('admin.index')
-    #     else:
-    #         return redirect('index')
-    # else:
-    #     user.set_password(new_pass)
-    #     user.save()
-    #     dj_logout(response)
-    # return redirect('login')
-
-
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminIndex(response):
     user = response.user
     return render(response, 'main/admin/index.html', {
@@ -152,20 +130,20 @@ def adminIndex(response):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminCatList(request):
     cat = Category.objects.all()
     if request.method == "POST":
         user = request.user
         category = request.POST['cat']
-        data = Category(user=user, category_name=category)
+        image = request.FILES.get('image')
+        data = Category(user=user, category_name=category, img=image)
         data.save()
         messages.success(request, 'Category Has Been Added!')
         return redirect('admin_cat_list')
     category_product_counts = {}
     for category in cat:
-        product_count = ProductInfo.objects.filter(
-            category=category.category_name).count()
+        product_count = ProductInfo.objects.filter(category=category.category_name).count()
         category_product_counts[category.category_name] = product_count
     return render(request, 'main/admin/categorylist.html', {
         'cat': cat,
@@ -174,12 +152,12 @@ def adminCatList(request):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
-def adminCatUpdate(request):
+@allowed_users(allowed_roles=['admin'])
+def adminCatUpdate(request, id):
+    cat = Category.objects.get(id=id)
     if request.method == "POST":
-        cat_id = request.POST.get('id')
-        cat = Category.objects.get(id=cat_id)
         cat.category_name = request.POST['cat']
+        cat.img = request.FILES.get('image')
         cat.save()
         messages.success(request, 'Data successfully updated!')
         return redirect('admin_cat_list')
@@ -190,7 +168,7 @@ def adminCatUpdate(request):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodCat(response, id):
     category = Category.objects.get(id=id)
     food = ProductInfo.objects.filter(category=category.category_name)
@@ -201,7 +179,7 @@ def adminFoodCat(response, id):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodCreate(response, id):
     category = Category.objects.get(id=id)
     food = ProductInfo.objects.filter(category=category)
@@ -233,7 +211,7 @@ def adminFoodCreate(response, id):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodEdit(response, id):
 
     food = get_object_or_404(ProductInfo, id=id)
@@ -260,21 +238,43 @@ def adminFoodEdit(response, id):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminViewFeedback(response):
 
     return render(response, 'main/admin/feedbacklist.html')  # Admin
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminViewAccount(response):
+    group = Group.objects.get(name='customer')
+    users = User.objects.filter(groups=group)
+    return render(response, 'main/admin/accountlist.html', {
+        'users':users
+    })  # Admin
 
-    return render(response, 'main/admin/accountlist.html')  # Admin
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminUserChangePass(response, id):
+    user = User.objects.get(id=id)
+    if response.method == "POST":
+        form = SetPasswordForm(user=user, data=response.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(response, 'Successfully Changed The Password!')
+            return redirect('admin_account_list')
+        else:
+            messages.error(response, 'Invalid Input!')
+            return redirect('admin_account_list')
+    else:
+        form = SetPasswordForm(user=user)
+        return render(response, 'main/login_register/customer_change_pass.html', {
+            'form': form,
+        })
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodDelete(response, id2, id):
     cat = Category.objects.filter(id=id2).first()
     food = ProductInfo.objects.filter(category=cat, id=id)
@@ -285,7 +285,7 @@ def adminFoodDelete(response, id2, id):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodAvailable(response, ida, id):
     print(1)
     cat = Category.objects.filter(id=ida).first()
@@ -300,7 +300,7 @@ def adminFoodAvailable(response, ida, id):
 
 
 @login_required
-@allowed_users(allowed_roles=['Admin'])
+@allowed_users(allowed_roles=['admin'])
 def adminFoodUnavailable(response, ida, id):
     print(2)
     cat = Category.objects.filter(id=ida).first()
@@ -316,3 +316,4 @@ def adminFoodUnavailable(response, ida, id):
 
 def customerIndex(response):
     return render(response, 'main/customer/index.html')  # Customer
+

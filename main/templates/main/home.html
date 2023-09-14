@@ -70,34 +70,15 @@
             <h2>Food Category</h2>
         </div>
         <div class="collections ">
+            {% for cat in category %}
             <div class="content">
-                <img src="{% static 'img/dish.png' %}" alt="img" />
+                <img src="{{ cat.img.url }}" alt="img" />
                 <div class="img-content">
-                    <p>Dish</p>
+                    <p>{{ cat.category_name }}</p>
                     <button><a href="#foods">SHOW NOW</a></button>
                 </div>
             </div>
-            <div class="content">
-                <img src="{% static 'img/disert.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Dessert</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
-            <div class="content">
-                <img src="{% static 'img/drinks.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Drinks</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
-            <div class="content">
-                <img src="{% static 'img/pasta.jpg' %}" alt="img" />
-                <div class="img-content">
-                    <p>Pasta</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </section>
     <section id="foods">
@@ -106,11 +87,12 @@
         </div>
         <div class="seller container">
             <div class="best-seller">
+                {% for food in foods %}
                 <div class="best-p1">
-                    <img src="{% static 'img/foods/masiram.jpg' %}" alt="img">
+                    <img src="{{ food.image.url }}" alt="img">
                     <div class="best-p1-txt">
                         <div class="name-of-p">
-                            <p>Basta Masiram</p>
+                            <p>{{ food.name }}</p>
                         </div>
                         <div class="rating">
                             <span class="fa fa-star checked"></span>
@@ -120,7 +102,7 @@
                             <span class="fa fa-star"></span>
                         </div>
                         <div class="price">
-                            &#8369; 80.00
+                            &#8369; {{ food.price }}
                             <div class="colors">
                                 <i class='bx bxs-circle red'></i>
                                 <i class='bx bxs-circle blue'></i>
@@ -132,110 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="best-p1">
-                    <img src="{% static 'img/foods/masiram.jpg' %}" alt="img">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>Basta Masiram</p>
-                        </div>
-                        <div class="rating">
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="price">
-                            &#8369; 80.00
-                            <div class="colors">
-                                <i class='bx bxs-circle red'></i>
-                                <i class='bx bxs-circle blue'></i>
-                                <i class='bx bxs-circle white'></i>
-                            </div>
-                        </div>
-                        <div class="buy-now">
-                            <button><a href="#">Buy Now</a></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="best-p1">
-                    <img src="{% static 'img/foods/Nicenice.jpg' %}" alt="img">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>Checheken Spag</p>
-                        </div>
-                        <div class="rating">
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="price">
-                            &#8369; 100.00
-                            <div class="colors">
-                                <i class='bx bxs-circle green'></i>
-                                <i class='bx bxs-circle grey'></i>
-                                <i class='bx bxs-circle brown'></i>
-                            </div>
-                        </div>
-                        <div class="buy-now">
-                            <button><a href="#">Buy Now</a></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="best-p1">
-                    <img src="{% static 'img/foods/siram.jpg' %}" alt="img">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>Ramen Special</p>
-                        </div>
-                        <div class="rating">
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="price">
-                            &#8369; 50.00
-                            <div class="colors">
-                                <i class='bx bxs-circle brown'></i>
-                                <i class='bx bxs-circle green'></i>
-                                <i class='bx bxs-circle blue'></i>
-                            </div>
-                        </div>
-                        <div class="buy-now">
-                            <button><a href="#">Buy Now</a></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="best-p1">
-                    <img src="{% static 'img/foods/lumpia.jpg' %}" alt="img">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>Lumpia Shangai</p>
-                        </div>
-                        <div class="rating">
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="price">
-                            &#8369; 43.00
-                            <div class="colors">
-                                <i class='bx bxs-circle red'></i>
-                                <i class='bx bxs-circle grey'></i>
-                                <i class='bx bxs-circle blue'></i>
-                            </div>
-                        </div>
-                        <div class="buy-now">
-                            <button><a href="#">Buy Now</a></button>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
