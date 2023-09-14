@@ -58,7 +58,7 @@
                                     <img src="{% static 'img/admin.png' %}" alt="img">
                                     <span class="status online"></span></span>
                                 <div class="profilesets">
-                                    <h6>{{ user.email }}</h6>
+                                    <h6>{{ user.first_name }}</h6>
                                     <h5>Administrator</h5>
                                 </div>
                             </div>
@@ -69,11 +69,6 @@
                             </a>
                             <hr class="m-0">
                             <a class="dropdown-item logout pb-0" href="{% url 'logout' %}">Logout</a>
-
-                            <!-- form para sa logout -->
-                            <form id="logout-form" action="" method="POST" class="d-none">
-                            </form>
-
                         </div>
                     </div>
                 </li>
@@ -176,7 +171,7 @@
                                    data-feather="grid"></i><span>Manage Menu</span></a></li>
                         <li class=""><a href="{% url 'admin_feedback_list' %}"><i class="me-2"
                                    data-feather="mail"></i><span>Feedback</span></a></li>
-                        <li class=""><a href=""><i class="me-2" data-feather="users"></i><span>Users
+                        <li class=""><a href="{% url 'admin_account_list' %}"><i class="me-2" data-feather="users"></i><span>Users
                                     Managemet</span></a></li>
 
                     </ul>

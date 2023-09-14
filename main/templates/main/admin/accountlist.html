@@ -1,0 +1,62 @@
+{% extends '../admin-layout.html' %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content">
+    {% load static %}
+    <div class="page-header">
+        <div class="page-title">
+            <h4>User Management</h4>
+            <h6>Manage all users</h6>
+        </div>
+        <div class="page-btn">
+            <a href="" class="btn btn-added"><i data-feather="plus"></i>Add New</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table">
+                    <thead>
+                        <tr>
+                            <th>Date Created</th>
+                            <th>Image</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th>Contact Number</th>
+                            <th>Address</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sept 30, 2023</td>
+                            <td>
+                                <img width="50" src="" alt="vehicle">
+                            </td>
+                            <td>Test Test</td>
+                            <td>Test@example.com</td>
+                            <td>+63 912341234</td>
+                            <td>Address 1</td>
+                            <td class="text-center">
+                                <a class="me-3" href="">
+                                    <i data-feather="edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{% endblock javascripts %}
