@@ -1,0 +1,73 @@
+{% extends '../main-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
+<link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <section id="search" class="container2">
+        <input type="search" class="search" placeholder="Search Food Name">
+    </section>
+
+    <section id="foods">
+        <div class="header">
+            <h2>View Product</h2>
+        </div>
+        <div class="seller container2">
+
+            <div class="container-product">
+                <div class="product-image">
+                    <img src="{% static 'img/logo.jpg' %}" alt="img">
+                </div>
+
+                <div class="product-details">
+                    <div class="product-header">
+                        <h3>Item Name</h3>
+                        <h1>Price</h1>
+                    </div>
+                    <div class="cont-mo">
+                        <div class="more-details">
+                            <h1>More Details</h1>
+                            <br>
+                            <label><b>Estimated Prep</b></label>
+                            <input type="text" value="Estimated Pre" readonly>
+
+                            <label><b>Status</b></label>
+                            <input type="text" value="Status" readonly>
+                        </div>
+                        <div class="order-qty-button">
+                            <h3>Item Name</h3>
+                            <br>
+                            <label><b>Quantity</b></label>
+                            <div class="qty-input">
+                                <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
+                                <input class="product-qty" type="number" name="product-qty" min="0" max="10" value="1">
+                                <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
+                            </div>
+                            <br>
+                            <label for="order"><b>Order Mode</b></label>
+                            <select id="order" name="mode">
+                              <option value="Dine-In">Dine-In</option>
+                              <option value="Delivery">Delivery</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
+                        <a class="btn-place-order" href="{% url 'customer_placeorder_order' %}">Place Order</a>
+                    </div>
+                </div>
+            </div>
+                 
+        </div>
+    </section>
+    
+    {% endblock %}
+    {% block javascripts %}
+    {% endblock javascripts %}

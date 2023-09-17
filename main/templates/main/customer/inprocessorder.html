@@ -1,0 +1,89 @@
+{% extends '../customer-layout.html' %}
+{% load static %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<header>
+    <h1>Your Pending Order</h1>
+</header>
+
+<div class="container">
+	<div class="col-12 mx-auto col-md-10">
+		<div class="row justify-content-between">
+			
+			<div class="order-tracking completed">
+				<a href="{% url 'customer_pending_order' %}">
+					<span class="is-complete"></span>
+					<p>Pending<br></p>
+				</a>
+			</div>
+			<div class="order-tracking completed">
+				<a href="{% url 'customer_process_order' %}">
+					<span class="is-complete"></span>
+					<p>In-process<br></p>
+				</a>
+			</div>
+			<div class="order-tracking">
+				<a href="{% url 'customer_completed_order' %}">
+					<span class="is-complete"></span>
+					<p>Completed<br></p>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="content mt-2">
+		<div class="page-header">
+			<div class="page-title">
+				<h4>Process Order List</h4>
+				<h6>View all process orders</h6>
+			</div>
+		</div>
+	
+		<div class="card">
+			<div class="card-body">
+				<div class="table-responsive">
+					<table id="example" class="table">
+						<thead>
+							<tr>
+                                <th>Order No.</th>
+								<th>Image</th>
+								<th>Foods</th>
+								<th>Quantity</th>
+                                <th>Order Mode</th>
+                                <th>Status</th>
+								<th class="text-center">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+	
+							<tr>
+                                <td>00023</td>
+								<td>
+									<a href="{% static 'img/dish.png' %}">
+										<img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+									</a>
+								</td>
+								<td>Food 1</td>
+								<td>2</td>
+                                <td>Dine-In</td>
+								<td class="text-info">In-process</td>
+								<td class="text-center">
+									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+										<i data-feather="eye"></i>
+									</a>
+								</td>
+							</tr>
+	
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

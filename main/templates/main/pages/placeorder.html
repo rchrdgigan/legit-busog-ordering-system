@@ -1,0 +1,70 @@
+{% extends '../main-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
+<link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<section id="search" class="container2">
+    <input type="search" class="search" placeholder="Search Food Name">
+</section>
+
+<section id="foods">
+    <div class="header">
+        <h2>Your Placed Order</h2>
+    </div>
+    <div class="seller container2">
+        <div class="container-product">
+            <div class="product-image">
+                <img src="{% static 'img/logo.jpg' %}" alt="img">
+            </div>
+            <div class="product-details">
+                <div class="product-header">
+                    <h3>Item Name</h3>
+                    <h1>Price</h1>
+                </div>
+                <div class="cont-mo">
+                    <div class="more-details">
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Order Mode</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>10</td>
+                                    <td>1000.00</td>
+                                    <td>Dine-In</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2">Total:</td>
+                                    <td>1000.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="product-footer">
+                    <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
+                    <a class="btn-place-order" href="{% url 'main_food_success' %}">Buy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    
+</section>
+{% endblock %}
+{% block javascripts %}
+{% endblock javascripts %}

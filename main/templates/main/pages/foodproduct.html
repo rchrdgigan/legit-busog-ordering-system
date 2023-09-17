@@ -1,0 +1,58 @@
+{% extends '../main-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <section id="search" class="container2">
+        <input type="text" class="search" placeholder="Search Food Name">
+    </section>
+
+    <section id="foods">
+        <div class="header">
+            <h2>Food Product</h2>
+        </div>
+        <div class="seller container2">
+            <div class="foodproduct">
+                 
+                <div class="best-p1">
+                    <img src="{% static 'img/logo.jpg' %}" alt="img">
+                    <div class="best-p1-txt">
+                        <div class="name-of-p">
+                            <p>Test</p>
+                        </div>
+                        <div class="rating">
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                        </div>
+                        <div class="price">
+                            &#8369; 100
+                            <div class="colors">
+                                <i class='bx bxs-circle red'></i>
+                                <i class='bx bxs-circle blue'></i>
+                                <i class='bx bxs-circle white'></i>
+                            </div>
+                        </div>
+                        <div class="buy-now">
+                            <button><a href="{% url 'main_food_show' %}">Buy Now</a></button>
+                        </div>
+                    </div>
+                </div>
+           
+                 
+            </div>
+        </div>
+    </section>
+    
+    {% endblock %}
+    {% block javascripts %}
+    {% endblock javascripts %}
