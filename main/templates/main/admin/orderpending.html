@@ -1,0 +1,104 @@
+{% extends '../admin-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Pending Order
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="content mt-2">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Peding Order List</h4>
+            <h6>View all pending orders</h6>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Order No.</th>
+                            <th>Image</th>
+                            <th>Foods</th>
+                            <th>Quantity</th>
+                            <th>Order Mode</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Customer 1</td>
+                            <td>00023</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 1</td>
+                            <td>2</td>
+                            <td>Dine-In</td>
+                            <td class="text-danger">Pending</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""  data-bs-target="#appModal">
+                                    <i data-feather="check"></i>
+                                </a>
+                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a class="btn btn-sm btn-danger text-white" type="button" data-bs-toggle="modal" id=""  data-bs-target="#caModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="caModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <form action="" method="post" id="ca_frm">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <input name="id" type="hidden">
+                  <p>Are you sure you want to cancel this data?</p>
+                  <input type="text" class="form-control" placeholder="Your Reason" required>
+              </div>
+              <div class="modal-footer float-end">
+                  <button type="submit" class="btn btn-dark">Yes</button>
+                  <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('#example').dataTable();
+    } );
+   $('#delModal').on('show.bs.modal', function (e) {
+        var opener=e.relatedTarget;
+        var id=$(opener).attr('id');
+        $('#delete_frm').find('[name="id"]').val(id);
+    });
+</script>
+{% endblock javascripts %}

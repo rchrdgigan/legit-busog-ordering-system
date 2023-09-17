@@ -15,12 +15,28 @@ strc = 'main/customer'
 stra = 'main/admin'
 
 
+def customerPlaceOrder(response):
+    return render(response, 'main/pages/placeorder.html')
+
+
+def foodProductList(response):
+    return render(response, 'main/pages/foodproduct.html')
+
+
+def foodProductShow(response):
+    return render(response, 'main/pages/viewproduct.html')
+
+
+def foodBuySucessfully(response):
+    return render(response, 'main/pages/successfully-ordered.html')
+
+
 def index(response):
     category = Category.objects.all()
     foods = ProductInfo.objects.all()
     return render(response, 'main/home.html', {
-        'category':category,
-        'foods':foods,
+        'category': category,
+        'foods': foods,
     })
 
 
@@ -75,7 +91,8 @@ def register(response):
                 response, 'Password must contain Alpha-Numeric character')
             return redirect('register')
 
-        info = User.objects.create_user(username=email, email=email, password=password)
+        info = User.objects.create_user(
+            username=email, email=email, password=password)
         info.first_name = first_name
         info.last_name = last_name
         info.save()
@@ -86,7 +103,8 @@ def register(response):
 
         # Personal Information
         user = info
-        perinfo = PersonInfo.objects.create(user=user, dob=dob, address=address, contact=contact)
+        perinfo = PersonInfo.objects.create(
+            user=user, dob=dob, address=address, contact=contact)
         perinfo.save()
         messages.success(
             response, 'Your account has been successfully created')
@@ -120,6 +138,7 @@ def changePassword(response):
             'form': form,
         })
 
+
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminIndex(response):
@@ -143,7 +162,8 @@ def adminCatList(request):
         return redirect('admin_cat_list')
     category_product_counts = {}
     for category in cat:
-        product_count = ProductInfo.objects.filter(category=category.category_name).count()
+        product_count = ProductInfo.objects.filter(
+            category=category.category_name).count()
         category_product_counts[category.category_name] = product_count
     return render(request, 'main/admin/categorylist.html', {
         'cat': cat,
@@ -250,8 +270,9 @@ def adminViewAccount(response):
     group = Group.objects.get(name='customer')
     users = User.objects.filter(groups=group)
     return render(response, 'main/admin/accountlist.html', {
-        'users':users
+        'users': users
     })  # Admin
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
@@ -314,6 +335,57 @@ def adminFoodUnavailable(response, ida, id):
     return redirect('admin_food_cat', cat.id)
 
 
+def adminPendingOrder(response):
+    return render(response, 'main/admin/orderpending.html')  # admin
+
+
+def adminProcessOrder(response):
+    return render(response, 'main/admin/orderinprocess.html')  # admin
+
+
+def adminCompletedOrder(response):
+    return render(response, 'main/admin/ordercompleted.html')  # admin
+
+
+def adminCancelledOrder(response):
+    return render(response, 'main/admin/ordercancelled.html')  # admin
+
+
+def adminProfile(response):
+    return render(response, 'main/admin/profile.html')  # admin
+
+
+def adminEditProfile(response):
+    return render(response, 'main/admin/editprofile.html')  # admin
+
+
+def adminChangePicture(response):
+    return render(response, 'main/admin/changepicture.html')  # admin
+
+
 def customerIndex(response):
     return render(response, 'main/customer/index.html')  # Customer
 
+
+def customerEditProfile(response):
+    return render(response, 'main/customer/editprofile.html')  # Customer
+
+
+def customerChangePicture(response):
+    return render(response, 'main/customer/changepicture.html')  # Customer
+
+
+def customerPendingOrder(response):
+    return render(response, 'main/customer/pendingorderlist.html')  # Customer
+
+
+def customerProcessOrder(response):
+    return render(response, 'main/customer/inprocessorder.html')  # Customer
+
+
+def customerCompletedOrder(response):
+    return render(response, 'main/customer/completedorder.html')  # Customer
+
+
+def customerHistoryOrder(response):
+    return render(response, 'main/customer/orderhistory.html')  # Customer

@@ -1,0 +1,103 @@
+.container2 {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+}
+.foodproduct {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.foodproduct .red {
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.foodproduct .blue {
+    color: #8989ce;
+    cursor: pointer;
+}
+
+.foodproduct .white {
+    color: var(--light-black);
+    cursor: pointer;
+}
+
+.foodproduct .grey {
+    color: grey;
+    cursor: pointer;
+}
+
+.foodproduct .brown {
+    color: rgb(175, 53, 53);
+    cursor: pointer;
+}
+
+.foodproduct .yellow {
+    color: #ffff00;
+    cursor: pointer;
+}
+
+.foodproduct .orange {
+    color: #ffa500;
+    cursor: pointer;
+}
+
+.foodproduct .green {
+    color: #008000;
+    cursor: pointer;
+}
+.foodproduct .buy-now a {
+    text-decoration: none;
+    color: var(--white);
+}
+.foodproduct .buy-now button,
+.foodproduct .add-cart button {
+    padding: 10px 15px;
+    margin-top: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    background-color: #f05e8a;
+    color: var(--white);
+    border: none;
+    border-radius: 15px;
+    font-weight: 500;
+    border: 1px solid #f05e8a;
+    transition: 0.5s;
+}
+.foodproduct .buy-now button:hover,
+.foodproduct .add-cart button:hover {
+    background-color: var(--white);
+    font-weight: 600;
+}
+
+.foodproduct .buy-now button:hover a,
+.foodproduct .add-cart button:hover a {
+    color: #f05e8a;
+}
+
+.search {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 28px 0;
+    display: inline-block;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+.search:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+@media (max-width: 500px) {
+    .foodproduct {
+        justify-content: center;
+        align-items: center;
+    }
+}
