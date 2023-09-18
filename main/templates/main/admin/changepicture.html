@@ -3,7 +3,8 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+      integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock stylesheets %}
 
@@ -12,14 +13,19 @@
     <h1>Change your profile picture</h1>
 </header>
 <div class="container">
-    <form>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="avatar-upload">
             <div class="avatar-edit">
-                <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                <input type='file' id="imageUpload" name="image" accept=".png, .jpg, .jpeg" />
                 <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview">
+                {% if person.image %}
+                <div id="imagePreview" style="background-image: url('{{ person.image.url }}');"></div>
+                {% else %}
                 <div id="imagePreview" style="background-image: url('../../../static/img/no-profile.png');"></div>
+                {% endif %}
             </div>
         </div>
         <div class="mt-2">
@@ -32,15 +38,15 @@
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#imagePreview').css('background-image', 'url('+e.target.result +')');
+            reader.onload = function (e) {
+                $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
                 $('#imagePreview').hide();
                 $('#imagePreview').fadeIn(650);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
-    $("#imageUpload").change(function() {
+    $("#imageUpload").change(function () {
         readURL(this);
     });
 </script>

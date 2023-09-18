@@ -6,13 +6,13 @@
 
 {% block content %}
 <header>
-    <h1>Your Pending Order</h1>
+	<h1>Your In-Process Order</h1>
 </header>
 
 <div class="container">
 	<div class="col-12 mx-auto col-md-10">
 		<div class="row justify-content-between">
-			
+
 			<div class="order-tracking completed">
 				<a href="{% url 'customer_pending_order' %}">
 					<span class="is-complete"></span>
@@ -41,43 +41,44 @@
 				<h6>View all process orders</h6>
 			</div>
 		</div>
-	
+
 		<div class="card">
 			<div class="card-body">
 				<div class="table-responsive">
 					<table id="example" class="table">
 						<thead>
 							<tr>
-                                <th>Order No.</th>
+								<th>Order No.</th>
 								<th>Image</th>
 								<th>Foods</th>
 								<th>Quantity</th>
-                                <th>Order Mode</th>
-                                <th>Status</th>
+								<th>Order Mode</th>
+								<th>Status</th>
 								<th class="text-center">Action</th>
 							</tr>
 						</thead>
+						{% for order in orders %}
 						<tbody>
-	
 							<tr>
-                                <td>00023</td>
+								<td>{{ order.id }}</td>
 								<td>
-									<a href="{% static 'img/dish.png' %}">
-										<img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+									<a href="{{ order.product.image.url }}">
+										<img width="50" src="{{ order.product.image.url }}" alt="vehicle">
 									</a>
 								</td>
-								<td>Food 1</td>
-								<td>2</td>
-                                <td>Dine-In</td>
-								<td class="text-info">In-process</td>
+								<td>{{ order.product.name }}</td>
+								<td>{{ order.product.quantity }}</td>
+								<td>{{ order.order_mode }}</td>
+								<td class="text-info">{{ order.status }}</td>
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""
+									   data-bs-target="#viewModal">
 										<i data-feather="eye"></i>
 									</a>
 								</td>
 							</tr>
-	
 						</tbody>
+						{% endfor %}
 					</table>
 				</div>
 			</div>

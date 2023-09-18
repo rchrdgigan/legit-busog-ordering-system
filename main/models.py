@@ -8,6 +8,7 @@ class PersonInfo(models.Model):
     dob = models.DateField(null=False)
     address = models.CharField(max_length=100, null=False)
     contact = models.CharField(max_length=100, null=False)
+    image = models.ImageField(null=True)
 
     def __str__(self):
         return str(self.user)
@@ -34,3 +35,15 @@ class ProductInfo(models.Model):
     
     def __str__(self):
         return self.name
+    
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    product = models.ForeignKey(ProductInfo, on_delete=models.CASCADE, null=False)
+    quantity = models.IntegerField()
+    order_mode = models.CharField(max_length=30)
+    status = models.CharField(max_length=50)
+    cancel_reason = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return str(self.user) +" - "+ str(self.product)
+    

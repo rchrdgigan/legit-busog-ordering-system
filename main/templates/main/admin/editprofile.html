@@ -10,36 +10,45 @@
     <h1>Edit Profile</h1>
 </header>
 <div class="container">
-    <form>
+    <form method="POST">
+        {% csrf_token %}
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="fname" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="fname">
+                    <input type="text" class="form-control" value="{{ user.first_name | title }}" name="fname"
+                           id="fname">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
                     <label for="lname" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lname">
+                    <input type="text" class="form-control" value="{{ user.last_name | title }}" name="lname"
+                           id="lname">
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email">
+                    <label for="email" class="form-label">Address</label>
+                    <input type="text" class="form-control" value="{{ person.address }}" name="address" id="address">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="mb-3">
                     <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" id="dob">
+                    <input type="date" class="form-control" value="{{ person.dob | date:'Y-m-d' }}" name="dob" id="dob">
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ user.email }}" name="email" id="email">
+                </div>
+            </div>
+            <div class="col-md-4">
                 <div class="mb-3">
                     <label for="cpnum" class="form-label">Contact Number</label>
-                    <input type="number" class="form-control" id="cpnum">
+                    <input type="number" class="form-control" value="{{ person.contact }}" name="contact" id="cpnum">
                 </div>
             </div>
         </div>
@@ -47,7 +56,7 @@
             <a onclick="window.history.go(-1); return false;" class="btn btn-dark">Cancel</a>
             <button type="submit" class="btn btn-primary float-end">Update</button>
         </div>
-      
+
     </form>
 </div>
 {% endblock %}
