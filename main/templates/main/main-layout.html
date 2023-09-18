@@ -7,6 +7,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .checked {
             color: orange;
@@ -34,6 +35,7 @@
             margin: 10px;
         }
     </style>
+    {% block stylesheets %}{% endblock stylesheets %}
 </head>
 
 <body>
@@ -49,7 +51,7 @@
                     <div class="dropdown-content">
                         <a href="{% url 'customer_index' %}" class="d-btn"><i class="fa fa-user"></i> Profile</a>
                         <br>
-                        <a href="{% url 'customer_pending_order' %}" class="d-btn"><i class="fa fa-shopping-cart"></i> Manage Order</a>
+                        <a href="{% url 'logout' %}" class="d-btn"><i class="fa fa-shopping-cart"></i> Manage Order</a>
                         <br>
                         <a href="{% url 'main_food' %}" class="d-btn"><i class="fa fa-shopping-bag"></i> Product List</a>
                         <br>
@@ -72,85 +74,17 @@
                 <span class="line line3"></span>
             </div>
             <ul class="menu-items">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#collection">Categories</a></li>
-                <li><a href="#foods">Top Sales</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="/#home">Home</a></li>
+                <li><a href="/#collection">Categories</a></li>
+                <li><a href="/#foods">Top Sales</a></li>
+                <li><a href="/#contact">Contact</a></li>
             </ul>
             <h1><img src="{% static 'img/logo.jpg' %}" width="30"> Legit Busog Restaurant</h1>
         </div>
     </nav>
-    <section id="home">
-
-        <div class="home_page ">
-            <div class="home_img">
-                <img src="{% static 'img/banner.jpg' %}" alt="img ">
-            </div>
-            <div class="home_txt ">
-                <p class="collectio ">Legit Busog</p>
-                <h2>Your all day breakfast<br> adventure starts here.</h2>
-                <div class="home_label ">
-                    <p>A a popular restaurant chain located at<br>Zone-8 Bulan Sorsogon.</p>
-                </div>
-                <button><a href="{% url 'main_food' %}">ORDER NOW</a><i class='bx bx-right-arrow-alt'></i></button>
-            </div>
-        </div>
-
-    </section>
-
-    <section id="collection">
-        <div class="header">
-            <h2>Food Category</h2>
-        </div>
-        <div class="collections ">
-            {% for cat in category %}
-            <div class="content">
-                <img src="{{ cat.img.url }}" alt="img" />
-                <div class="img-content">
-                    <p>{{ cat.category_name }}</p>
-                    <button><a href="#foods">SHOW NOW</a></button>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-    <section id="foods">
-        <div class="header">
-            <h2>Top Sales</h2>
-        </div>
-        <div class="seller container">
-            <div class="best-seller">
-                {% for food in foods %}
-                <div class="best-p1">
-                    <img src="{{ food.image.url }}" alt="img">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>{{ food.name }}</p>
-                        </div>
-                        <div class="rating">
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                        </div>
-                        <div class="price">
-                            &#8369; {{ food.price }}
-                            <div class="colors">
-                                <i class='bx bxs-circle red'></i>
-                                <i class='bx bxs-circle blue'></i>
-                                <i class='bx bxs-circle white'></i>
-                            </div>
-                        </div>
-                        <div class="buy-now">
-                            <button><a href="{% url 'main_food_show' %}">Buy Now</a></button>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
+   
+    {% block content %}
+    {% endblock %}
 
     <section id="contact">
         <div class="contact container">
@@ -189,7 +123,6 @@
             </div>
         </div>
     </footer>
-    <script src="../static/js/script.js"></script>
 </body>
-
 </html>
+{% block javascripts %}{% endblock javascripts %}

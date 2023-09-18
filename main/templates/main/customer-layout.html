@@ -1,24 +1,140 @@
+{% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    {% load static %}
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'vendor/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/css/animate.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/css/dataTables.bootstrap4.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/fontawesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/plugins/fontawesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/css/style.css' %}">
+    {% block stylesheets %}{% endblock stylesheets %}
 </head>
-
+<style>
+    .logo img {
+        height: 60px;
+    }
+</style>
 <body>
     <!-- <div id="global-loader">
         <div class="whirly-loader"> </div>
     </div> -->
-    {% block content %}
-    {% endblock %}
-</body>
+    <div class="main-wrapper">
+        <!-- start header -->
+        <div class="header">
+            <div class="header-left active" style="overflow:hidden">
+                <a href="/#home" class="logo">
+                    <img src="{% static 'img/logo-small.jpg' %}" alt="">
+                </a>
+                <a href="/#home" class="logo-small">
+                    <img src="{% static 'img/logo.jpg' %}" alt="">
+                </a>
+                <a id="toggle_btn" href="javascript:void(0);">
+                </a>
+            </div>
 
+            <!-- burger sa jollibee -->
+            <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+                <span class="bar-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </a>
+
+            <ul class="nav user-menu">
+                <li class="nav-item dropdown has-arrow main-drop">
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown" aria-expanded="false">
+                   
+                        <span class="user-img">
+                            <span class="status online"></span>
+                        </span>
+                        <small class="p-2">{{ user.first_name | title }} {{ user.last_name | title}}</small>
+                        <i class="fa fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu menu-drop-user">
+                        <div class="profilename">
+                            <div class="profileset">
+                                <span class="user-img">
+                                    <!-- sub profile imge -->
+                                    <img src="{% static 'img/no-profile.png' %}" alt="img">
+                                    <span class="status online"></span></span>
+                                <div class="profilesets">
+                                    <h6>{{ user.first_name }}</h6>
+                                    <h5>Customer</h5>
+                                </div>
+                            </div>
+                            <hr class="m-0">
+                            <a class="dropdown-item" href="/"> <i class="me-2" data-feather="home"></i> Home Page</a>
+                            <a type="button" class="dropdown-item" href="{% url 'change_password' %}">
+                                <i class="fa fa-key me-2"></i> Change Password
+                            </a>
+                            <hr class="m-0">
+                            <a class="dropdown-item logout pb-0" href="{% url 'logout' %}"><i data-feather="log-out"></i>Logout</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- sidebar para sa mobile -->
+            <div class="dropdown mobile-user-menu">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                   aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="/">Home Page</a>
+                    <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
+                    <!-- form para sa logout -->
+                    <form id="logout-form-mob" action="" method="POST" class="d-none">
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- start sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+                        <li class="active"><a href="{% url 'customer_index' %}"><i class="me-2"
+                                   data-feather="user"></i><span>Profile</span></a></li>
+                        <li class="submenu">
+                            <a href="javascript:void(0);"><i class="me-2"
+                                   data-feather="shopping-cart"></i><span>My Order</span> <span
+                                      class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a class="" href="{% url 'customer_pending_order' %}">Pending</span></a></li>
+                                <li><a class="" href="{% url 'customer_process_order' %}">Processing</span></a></li>
+                                <li><a class="" href="{% url 'customer_completed_order' %}">Completed</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'customer_history_order' %}"><i class="me-2"
+                            data-feather="clipboard"></i><span>Order History</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <main class="py-4">
+            <div class="page-wrapper">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'vendor/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'vendor/js/feather.min.js' %}"></script>
+    <script src="{% static 'vendor/js/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'vendor/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendor/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/js/script.js' %}"></script>
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
 </html>
+

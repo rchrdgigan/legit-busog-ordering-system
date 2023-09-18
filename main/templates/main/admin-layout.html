@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="{% static 'vendor/css/style.css' %}">
     {% block stylesheets %}{% endblock stylesheets %}
 </head>
-
+<style>
+    .logo img {
+        height: 60px;
+    }
+</style>
 <body>
     <!-- <div id="global-loader">
         <div class="whirly-loader"> </div>
@@ -63,12 +67,12 @@
                                 </div>
                             </div>
                             <hr class="m-0">
-                            <a class="dropdown-item" href=""> <i class="me-2" data-feather="user"></i> My Profile</a>
+                            <a class="dropdown-item" href="{% url 'admin_profile' %}"> <i class="me-2" data-feather="user"></i> My Profile</a>
                             <a type="button" class="dropdown-item" href="{% url 'change_password' %}">
                                 <i class="fa fa-key me-2"></i> Change Password
                             </a>
                             <hr class="m-0">
-                            <a class="dropdown-item logout pb-0" href="{% url 'logout' %}">Logout</a>
+                            <a class="dropdown-item logout pb-0" href="{% url 'logout' %}"><i data-feather="log-out"></i>Logout</a>
                         </div>
                     </div>
                 </li>
@@ -79,8 +83,8 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                    aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="">My Profile</a>
-                    <a class="dropdown-item" href="">Change Password</a>
+                    <a class="dropdown-item" href="{% url 'admin_profile' %}">My Profile</a>
+                    <a class="dropdown-item" href="{% url 'change_password' %}">Change Password</a>
                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
 
                     <!-- form para sa logout -->
@@ -90,64 +94,6 @@
             </div>
 
         </div>
-
-        <!-- Modal para sa pag palit password
-        <div class="modal fade" id="changepassModal{{ user.id }}" tabindex="-1" aria-labelledby="changepassModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="form-validation">
-                        <form action="" method="post" class="needs-validation">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="changepassModalLabel">Change Password</h5>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3 row">
-                                    <label class="col-lg-12 col-form-label" for="oldpass">
-                                        Old Password
-                                    </label>
-                                    <div class="col-lg-12">
-                                        {{ form.old_password }}
-                                        <div class="invalid-feedback">
-                                            Please enter your old password.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-lg-12 col-form-label" for="newpass">
-                                        New Password
-                                    </label>
-                                    <div class="col-lg-12">
-                                        {{ form.new_password }}
-                                        <div class="invalid-feedback">
-                                            Please enter your new password.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-lg-12 col-form-label" for="conpass">
-                                        Confirmation Password
-                                    </label>
-                                    <div class="col-lg-12">
-                                        {{ form.new_password2 }}
-                                        <div class="invalid-feedback">
-                                            Please enter your new password.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <a type="submit" href="{% url 'change_password' %}" class="btn btn-primary">Save
-                                    Changes</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- end modal -->
 
         <!-- start sidebar -->
         <div class="sidebar" id="sidebar">
@@ -161,10 +107,10 @@
                                    data-feather="clipboard"></i><span>Managemet Order</span> <span
                                       class="menu-arrow"></span></a>
                             <ul>
-                                <li><a class="" href="">Pending</span></a></li>
-                                <li><a class="" href="">Processing</span></a></li>
-                                <li><a class="" href="">Completed</span></a></li>
-                                <li><a class="" href="">Cancelled</span></a></li>
+                                <li><a class="" href="{% url 'admin_pending_order' %}">Pending</span></a></li>
+                                <li><a class="" href="{% url 'admin_process_order' %}">Processing</span></a></li>
+                                <li><a class="" href="{% url 'admin_completed_order' %}">Completed</span></a></li>
+                                <li><a class="" href="{% url 'admin_cancelled_order' %}">Cancelled</span></a></li>
                             </ul>
                         </li>
                         <li class=""><a href="{% url 'admin_cat_list' %}"><i class="me-2"
@@ -174,7 +120,6 @@
                         <li class=""><a href="{% url 'admin_account_list' %}"><i class="me-2"
                                    data-feather="users"></i><span>Users
                                     Managemet</span></a></li>
-
                     </ul>
                 </div>
             </div>

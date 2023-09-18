@@ -1,4 +1,4 @@
-{% extends '../customer-layout.html' %}
+{% extends '../admin-layout.html' %}
 {% load static %}
 
 {% block stylesheets %}
@@ -16,8 +16,8 @@
             <i data-feather="more-horizontal"></i>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li> <a class="dropdown-item" href="{% url 'customer_profile_edit' %}"><i class="me-2" data-feather="user"></i> Edit Profile Information</a></li>
-            <li> <a class="dropdown-item" href="{% url 'customer_change_picture' %}"><i class="me-2" data-feather="image"></i> Change Profile Picture</a></li>
+            <li> <a class="dropdown-item" href="{% url 'admin_profile_edit' %}"><i class="me-2" data-feather="user"></i> Edit Profile Information</a></li>
+            <li> <a class="dropdown-item" href="{% url 'admin_change_picture' %}"><i class="me-2" data-feather="image"></i> Change Profile Picture</a></li>
             <li> <a class="dropdown-item" href="{% url 'change_password' %}"><i class="me-2" data-feather="key"></i> Change Password</a></li>
         </ul>
     </div>

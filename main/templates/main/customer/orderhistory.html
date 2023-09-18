@@ -1,0 +1,132 @@
+{% extends '../customer-layout.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<header>
+    <h1>Your Order History</h1>
+</header>
+<div class="content mt-2">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Order History List</h4>
+            <h6>View all history orders</h6>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table">
+                    <thead>
+                        <tr>
+                            <th>Order No.</th>
+                            <th>Date Time</th>
+                            <th>Image</th>
+                            <th>Foods</th>
+                            <th>Quantity</th>
+                            <th>Order Mode</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>00030</td>
+                            <td>Sept 23, 2023 08:20 am</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 1</td>
+                            <td>2</td>
+                            <td>Dine-In</td>
+                            <td class="text-danger">Pending</td>
+                            <td class="text-center">
+                                <a data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal" id=""  data-bs-target="#delModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>00029</td>
+                            <td>Sept 21, 2023 08:20 am</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 2</td>
+                            <td>10</td>
+                            <td>Delivery</td>
+                            <td class="text-info">In-process</td>
+                            <td class="text-center">
+                                <a data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal" id=""  data-bs-target="#delModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>00028</td>
+                            <td>Sept 20, 2023 08:20 am</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 3</td>
+                            <td>10</td>
+                            <td>Delivery</td>
+                            <td class="text-success">Completed</td>
+                            <td class="text-center">
+                                <a data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal" id=""  data-bs-target="#delModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>00027</td>
+                            <td>Sept 19, 2023 08:20 am</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 4</td>
+                            <td>10</td>
+                            <td>Delivery</td>
+                            <td class="text-secondary">Cancelled</td>
+                            <td class="text-center">
+                                <a data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                                <a type="button" data-bs-toggle="modal" id=""  data-bs-target="#delModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
