@@ -6,31 +6,52 @@
 {% endblock stylesheets %}
 
 {% block content %}
+<div class="row">
+    {% for message in messages %}
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% elif message.tags == 'error' %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
 <header>
     <h1>Welcome to your profile!</h1>
 </header>
 <div class="container">
     <div class="dropdown">
-        <button class="btn btn-das2" type="button" id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-das2" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                aria-expanded="false">
             <i data-feather="more-horizontal"></i>
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li> <a class="dropdown-item" href="{% url 'admin_profile_edit' %}"><i class="me-2" data-feather="user"></i> Edit Profile Information</a></li>
-            <li> <a class="dropdown-item" href="{% url 'admin_change_picture' %}"><i class="me-2" data-feather="image"></i> Change Profile Picture</a></li>
-            <li> <a class="dropdown-item" href="{% url 'change_password' %}"><i class="me-2" data-feather="key"></i> Change Password</a></li>
+            <li> <a class="dropdown-item" href="{% url 'admin_profile_edit' user.id %}"><i class="me-2"
+                       data-feather="user"></i>
+                    Edit Profile Information</a></li>
+            <li> <a class="dropdown-item" href="{% url 'admin_change_picture' user.id %}"><i class="me-2"
+                       data-feather="image"></i> Change Profile Picture</a></li>
+            <li> <a class="dropdown-item" href="{% url 'change_password' %}"><i class="me-2" data-feather="key"></i>
+                    Change Password</a></li>
         </ul>
     </div>
     <div class="profile-picture">
+        {% if person.image %}
+        <img src="{{ person.image.url }}" alt="img">
+        {% else %}
         <img src="{% static 'img/no-profile.png' %}" alt="img">
+        {% endif %}
     </div>
     <div class="profile-info">
-        <h2>Name</h2>
-        <p>Location: Address</p>
-        <p>Email: customer@example.com</p>
-        <p>Date of Birth: May 20, 1999</p>
+        <h2>{{ user.first_name | title }} {{ user.last_name | title }}</h2>
+        <p>Location: {{ person.address }}</p>
+        <p>Email: {{ user.email }}</p>
+        <p>Date of Birth: {{ person.dob }}</p>
         <!-- concatenate mo padi an number na ten digits dida sa contact -->
-        <p>Contact: +639xxxxxxxxx</p> 
+        <p>Contact: {{ person.contact }}</p>
     </div>
 </div>
 {% endblock %}

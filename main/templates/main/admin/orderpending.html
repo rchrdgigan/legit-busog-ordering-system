@@ -9,10 +9,23 @@ List of Pending Order
 {% endblock stylesheets %}
 
 {% block content %}
+<div class="row">
+    {% for message in messages %}
+    {% if message.tags == 'success' %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% elif message.tags == 'error' %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
 <div class="content mt-2">
     <div class="page-header">
         <div class="page-title">
-            <h4>Peding Order List</h4>
+            <h4>Pending Order List</h4>
             <h6>View all pending orders</h6>
         </div>
     </div>
@@ -33,71 +46,103 @@ List of Pending Order
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    {% for order in orders %}
                     <tbody>
-
                         <tr>
-                            <td>Customer 1</td>
-                            <td>00023</td>
+                            <td>{{ order.user.first_name | title }} {{ order.user.last_name | title }}</td>
+                            <td>{{ order.id }}</td>
                             <td>
-                                <a href="{% static 'img/dish.png' %}">
-                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                <a href="{{ order.product.image.url }}">
+                                    <img width="50" src="{{ order.product.image.url }}" alt="vehicle">
                                 </a>
                             </td>
-                            <td>Food 1</td>
-                            <td>2</td>
-                            <td>Dine-In</td>
-                            <td class="text-danger">Pending</td>
+                            <td>{{ order.product.name }}</td>
+                            <td>{{ order.quantity }}</td>
+                            <td>{{ order.order_mode }}</td>
+                            <td class="text-danger">{{ order.status }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""  data-bs-target="#appModal">
+                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#appModal{{ order.id }}">
                                     <i data-feather="check"></i>
                                 </a>
-                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+
+                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#viewModal">
                                     <i data-feather="eye"></i>
                                 </a>
-                                <a class="btn btn-sm btn-danger text-white" type="button" data-bs-toggle="modal" id=""  data-bs-target="#caModal">
+
+                                <a class="btn btn-sm btn-danger text-white" type="button" data-bs-toggle="modal" id=""
+                                   data-bs-target="#caModal{{ order.id }}">
                                     <i data-feather="delete"></i>
                                 </a>
+
                             </td>
                         </tr>
-
                     </tbody>
+                    <!-- Confirm Modal -->
+                    <div class="modal fade" id="appModal{{ order.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="app_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Confirming...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        <p>Are you sure you want to Confirm this data?</p>
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a type="submit" class="btn btn-dark"
+                                           href="{% url 'admin_toProcess_order' order.id %}">Yes</a>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="caModal{{order.id}}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="{% url 'admin_toCancel_order' order.id %}" method="POST" id="ca_frm">
+                                    {% csrf_token %}
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        <p>Are you sure you want to cancel this data?</p>
+                                        <input type="text" class="form-control" placeholder="Your Reason" name="reason"
+                                               required>
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <button type="submit" class="btn btn-dark">Yes</button>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </table>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="caModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-          <form action="" method="post" id="ca_frm">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <input name="id" type="hidden">
-                  <p>Are you sure you want to cancel this data?</p>
-                  <input type="text" class="form-control" placeholder="Your Reason" required>
-              </div>
-              <div class="modal-footer float-end">
-                  <button type="submit" class="btn btn-dark">Yes</button>
-                  <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
-              </div>
-          </form>
-      </div>
-    </div>
-  </div>
 {% endblock %}
 {% block javascripts %}
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#example').dataTable();
-    } );
-   $('#delModal').on('show.bs.modal', function (e) {
-        var opener=e.relatedTarget;
-        var id=$(opener).attr('id');
+    });
+    $('#delModal').on('show.bs.modal', function (e) {
+        var opener = e.relatedTarget;
+        var id = $(opener).attr('id');
         $('#delete_frm').find('[name="id"]').val(id);
     });
 </script>

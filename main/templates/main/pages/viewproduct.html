@@ -11,38 +11,42 @@ List of Food
 {% endblock stylesheets %}
 
 {% block content %}
-    <section id="search" class="container2">
-        <input type="search" class="search" placeholder="Search Food Name">
-    </section>
-
-    <section id="foods">
-        <div class="header">
-            <h2>View Product</h2>
-        </div>
-        <div class="seller container2">
-
-            <div class="container-product">
-                <div class="product-image">
-                    <img src="{% static 'img/logo.jpg' %}" alt="img">
+<section id="search" class="container2">
+    <input type="search" class="search" placeholder="Search Food Name">
+</section>
+<section id="foods">
+    <div class="header">
+        <h2>View Product</h2>
+    </div>
+    <div class="seller container2">
+        <div class="container-product">
+            <div class="product-image">
+                <img src="{{ food.image.url }}" alt="img">
+            </div>
+            <div class="product-details">
+                <div class="product-header">
+                    <h3>{{ food.name }}</h3>
+                    <h1>{{ food.price}} PHP</h1>
                 </div>
-
-                <div class="product-details">
-                    <div class="product-header">
-                        <h3>Item Name</h3>
-                        <h1>Price</h1>
-                    </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
                     <div class="cont-mo">
                         <div class="more-details">
                             <h1>More Details</h1>
                             <br>
                             <label><b>Estimated Prep</b></label>
-                            <input type="text" value="Estimated Pre" readonly>
+                            <input type="text" value="{{ food.PrepTime }}" readonly>
 
                             <label><b>Status</b></label>
-                            <input type="text" value="Status" readonly>
+                            {% if food.availability == True %}
+                            <input type="text" value="Available" readonly>
+                            {% else %}
+                            <input type="text" value="Unavailable" readonly>
+                            {% endif %}
                         </div>
                         <div class="order-qty-button">
-                            <h3>Item Name</h3>
+
+                            <h3>Select</h3>
                             <br>
                             <label><b>Quantity</b></label>
                             <div class="qty-input">
@@ -53,21 +57,22 @@ List of Food
                             <br>
                             <label for="order"><b>Order Mode</b></label>
                             <select id="order" name="mode">
-                              <option value="Dine-In">Dine-In</option>
-                              <option value="Delivery">Delivery</option>
+                                <option value="Dine-In">Dine-In</option>
+                                <option value="Delivery">Delivery</option>
                             </select>
                         </div>
                     </div>
                     <div class="product-footer">
                         <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                        <a class="btn-place-order" href="{% url 'customer_placeorder_order' %}">Place Order</a>
+                        <button class="btn btn-place-order" type="submit">Place Order</button>
                     </div>
-                </div>
+                </form>
             </div>
-                 
         </div>
-    </section>
-    
-    {% endblock %}
-    {% block javascripts %}
-    {% endblock javascripts %}
+    </div>
+
+</section>
+
+{% endblock %}
+{% block javascripts %}
+{% endblock javascripts %}

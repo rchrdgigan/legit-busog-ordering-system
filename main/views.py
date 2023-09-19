@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
 
-from .models import PersonInfo, ProductInfo, Category
+from .models import Order, PersonInfo, ProductInfo, Category
 from .forms import ProductInfoForm
 
 # string path for admin and customer
@@ -20,20 +20,43 @@ def customerPlaceOrder(response):
 
 
 def foodProductList(response):
-    return render(response, 'main/pages/foodproduct.html')
+    foods = ProductInfo.objects.filter(availability=True)
+    return render(response, 'main/pages/foodproduct.html', {
+        'foods':foods,
+    })
 
 
-def foodProductShow(response):
-    return render(response, 'main/pages/viewproduct.html')
+def foodProductShow(response, id):
+    food = ProductInfo.objects.get(id=id)
+    user = response.user
+    if response.method == "POST":
+        quantity = response.POST['product-qty']
+        mode = response.POST['mode']
+        order = Order(user=user, product=food, quantity=quantity, order_mode=mode)
+        order.status = 'Pending'
+        order.save()
+        return redirect('main_food_success')
+    
+    return render(response, 'main/pages/viewproduct.html', {
+        'food': food,
+    })
 
 
 def foodBuySucessfully(response):
     return render(response, 'main/pages/successfully-ordered.html')
 
+def ViewProductByCategory(response, id):
+    category = Category.objects.get(id=id)
+    foods = ProductInfo.objects.filter(category=category.category_name, availability=True)
+    return render(response, 'main/pages/viewproductbycategory.html', {
+        'foods': foods,
+        'category':category,
+    })
+    
 
 def index(response):
     category = Category.objects.all()
-    foods = ProductInfo.objects.all()
+    foods = ProductInfo.objects.filter(availability=True)
     return render(response, 'main/home.html', {
         'category': category,
         'foods': foods,
@@ -143,8 +166,20 @@ def changePassword(response):
 @allowed_users(allowed_roles=['admin'])
 def adminIndex(response):
     user = response.user
+    count_pending = Order.objects.filter(status='Pending').count()
+    count_processing = Order.objects.filter(status='In-Process').count()
+    count_deliver = Order.objects.filter(status='Out for Delivery').count()
+    count_pd = count_processing + count_deliver
+    count_completed = Order.objects.filter(status='Completed').count()
+    orders = Order.objects.filter(status='Pending')
     return render(response, 'main/admin/index.html', {
         'user': user,
+        'count_pending': count_pending,
+        'count_processing': count_processing,
+        'count_completed': count_completed,
+        'count_pd': count_pd,
+        'orders': orders
+
     })  # Admin
 
 
@@ -323,7 +358,6 @@ def adminFoodAvailable(response, ida, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminFoodUnavailable(response, ida, id):
-    print(2)
     cat = Category.objects.filter(id=ida).first()
     food = ProductInfo.objects.filter(category=cat, id=id)
     food = get_object_or_404(ProductInfo, id=id)
@@ -335,56 +369,205 @@ def adminFoodUnavailable(response, ida, id):
     return redirect('admin_food_cat', cat.id)
 
 
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminPendingOrder(response):
-    return render(response, 'main/admin/orderpending.html')  # admin
+    orders = Order.objects.filter(status='Pending')
+    return render(response, 'main/admin/orderpending.html', {
+        'orders':orders,
+    })  # admin
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+#Confirm order move to in-process category
+def adminToProcessOrder(response, id):
+    order = Order.objects.get(id=id)
+    order.status = 'In-Process'
+    order.save()
+    messages.success(response, 'Order has been confirmed! It will moving now to In-Process...')
+    return redirect('admin_pending_order')
 
 
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    return render(response, 'main/admin/orderinprocess.html')  # admin
+    orders = Order.objects.filter(status='In-Process') | Order.objects.filter(status='Out for Delivery')
+    return render(response, 'main/admin/orderinprocess.html', {
+        'orders': orders,
+    })  # admin
 
 
+def adminToDeliverOrder(response, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Out for Delivery'
+    order.save()
+    messages.success(response, 'Order is out for delivery!')
+    return redirect('admin_process_order')
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+#Confirm order move to completed category
+def adminToCompleteOrder(response, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Completed'
+    order.save()
+    messages.success(response, 'Order has been completed!')
+    return redirect('admin_process_order')
+
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminCompletedOrder(response):
-    return render(response, 'main/admin/ordercompleted.html')  # admin
+    orders = Order.objects.filter(status='Completed')
+    return render(response, 'main/admin/ordercompleted.html', {
+        'orders': orders,
+    })  # admin
 
 
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminCancellingOrder(response, id):
+    order = Order.objects.get(id=id)
+    if response.method == "POST":
+        reason = response.POST.get('reason')
+        order.status = 'Cancelled'
+        order.cancel_reason = reason
+        order.save()
+        messages.error(response, 'Order has been cancelled!')
+        return redirect('admin_pending_order')
+    else:
+        return HttpResponse('invalid')
+
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminCancelledOrder(response):
-    return render(response, 'main/admin/ordercancelled.html')  # admin
+    orders = Order.objects.filter(status='Cancelled')
+    return render(response, 'main/admin/ordercancelled.html', {
+        'orders':orders
+    })  # admin
 
 
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminProfile(response):
-    return render(response, 'main/admin/profile.html')  # admin
+    user = response.user
+    person = PersonInfo.objects.get(user=user)
+    return render(response, 'main/admin/profile.html', {
+        'user': user,
+        'person': person,
+    })  # admin
 
 
-def adminEditProfile(response):
-    return render(response, 'main/admin/editprofile.html')  # admin
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminEditProfile(response, id):
+    user = get_object_or_404(User, id=id)
+    person = PersonInfo.objects.get(user=user)
+    if response.method == "POST":
+        user.first_name = response.POST['fname']
+        user.last_name = response.POST['lname']
+        user.email = response.POST['email']
+        user.save()
+        person.address = response.POST['address']
+        person.dob = response.POST['dob']
+        person.contact = response.POST['contact']
+        person.save()
+        messages.success(response, 'Successfully updated your profile!')
+        return redirect('admin_profile')
 
 
-def adminChangePicture(response):
-    return render(response, 'main/admin/changepicture.html')  # admin
+    return render(response, 'main/admin/editprofile.html', {
+        'user': user,
+        'person': person,
+    })  # admin
+
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminChangePicture(response, id):
+    user = User.objects.get(id=id)
+    person = PersonInfo.objects.get(user=user)
+    if response.method == "POST":
+        person.image = response.FILES['image']
+        person.save()
+        messages.success(response, 'Successfully changed profile picture!')
+        return redirect('admin_profile')
+    return render(response, 'main/admin/changepicture.html', {
+        'person': person,
+    })  # admin
 
 
 def customerIndex(response):
-    return render(response, 'main/customer/index.html')  # Customer
+    user = response.user
+    person = PersonInfo.objects.get(user=user)
+    return render(response, 'main/customer/index.html', {
+        'user': user,
+        'person': person,
+    })  # Customer
 
 
-def customerEditProfile(response):
-    return render(response, 'main/customer/editprofile.html')  # Customer
+def customerEditProfile(response, id):
+    user = get_object_or_404(User, id=id)
+    person = PersonInfo.objects.get(user=user)
+    if response.method == "POST":
+        user.first_name = response.POST['fname']
+        user.last_name = response.POST['lname']
+        user.email = response.POST['email']
+        user.save()
+        person.address = response.POST['address']
+        person.dob = response.POST['dob']
+        person.contact = response.POST['contact']
+        person.save()
+        messages.success(response, 'Successfully updated your profile!')
+        return redirect('customer_index')
+    return render(response, 'main/customer/editprofile.html', {
+        'user': user,
+        'person': person,
+    })  # Customer
 
 
-def customerChangePicture(response):
-    return render(response, 'main/customer/changepicture.html')  # Customer
+def customerChangePicture(response, id):
+    user = User.objects.get(id=id)
+    person = PersonInfo.objects.get(user=user)
+    if response.method == "POST":
+        person.image = response.FILES['image']
+        person.save()
+        messages.success(response, 'Successfully changed profile picture!')
+        return redirect('customer_index')
+    return render(response, 'main/customer/changepicture.html', {
+        'person': person,
+    })  # Customer
+
+
+def customerCancelOrder(response, id):
+    order = Order.objects.get(id=id)
+    order.delete()
+    return redirect('customer_pending_order')
 
 
 def customerPendingOrder(response):
-    return render(response, 'main/customer/pendingorderlist.html')  # Customer
+    user = response.user
+    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(user=user, status='Cancelled')
+    return render(response, 'main/customer/pendingorderlist.html', {
+        'orders':orders
+    })  # Customer
 
 
 def customerProcessOrder(response):
-    return render(response, 'main/customer/inprocessorder.html')  # Customer
+    user = response.user
+    orders = Order.objects.filter(user=user, status='In-Process')
+    return render(response, 'main/customer/inprocessorder.html', {
+        'orders': orders,
+    })  # Customer
 
 
 def customerCompletedOrder(response):
-    return render(response, 'main/customer/completedorder.html')  # Customer
+    user = response.user
+    orders = Order.objects.filter(user=user, status='Completed')
+    return render(response, 'main/customer/completedorder.html', {
+        'orders': orders,
+    })  # Customer
 
 
 def customerHistoryOrder(response):

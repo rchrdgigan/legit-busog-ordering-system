@@ -17,7 +17,9 @@
     .logo img {
         height: 60px;
     }
+
 </style>
+
 <body>
     <!-- <div id="global-loader">
         <div class="whirly-loader"> </div>
@@ -47,8 +49,9 @@
 
             <ul class="nav user-menu">
                 <li class="nav-item dropdown has-arrow main-drop">
-                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown" aria-expanded="false">
-                   
+                    <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+
                         <span class="user-img">
                             <span class="status online"></span>
                         </span>
@@ -73,7 +76,8 @@
                                 <i class="fa fa-key me-2"></i> Change Password
                             </a>
                             <hr class="m-0">
-                            <a class="dropdown-item logout pb-0" href="{% url 'logout' %}"><i data-feather="log-out"></i>Logout</a>
+                            <a class="dropdown-item logout pb-0" href="{% url 'logout' %}"><i
+                                   data-feather="log-out"></i>Logout</a>
                         </div>
                     </div>
                 </li>
@@ -103,9 +107,8 @@
                         <li class="active"><a href="{% url 'customer_index' %}"><i class="me-2"
                                    data-feather="user"></i><span>Profile</span></a></li>
                         <li class="submenu">
-                            <a href="javascript:void(0);"><i class="me-2"
-                                   data-feather="shopping-cart"></i><span>My Order</span> <span
-                                      class="menu-arrow"></span></a>
+                            <a href="javascript:void(0);"><i class="me-2" data-feather="shopping-cart"></i><span>My
+                                    Order</span> <span class="menu-arrow"></span></a>
                             <ul>
                                 <li><a class="" href="{% url 'customer_pending_order' %}">Pending</span></a></li>
                                 <li><a class="" href="{% url 'customer_process_order' %}">Processing</span></a></li>
@@ -113,7 +116,7 @@
                             </ul>
                         </li>
                         <li><a href="{% url 'customer_history_order' %}"><i class="me-2"
-                            data-feather="clipboard"></i><span>Order History</span></a></li>
+                                   data-feather="clipboard"></i><span>Order History</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -136,5 +139,5 @@
     {% block javascripts %}{% endblock javascripts %}
 
 </body>
-</html>
 
+</html>

@@ -6,13 +6,13 @@
 
 {% block content %}
 <header>
-    <h1>Your Pending Order</h1>
+	<h1>Your Pending Order</h1>
 </header>
 
 <div class="container">
 	<div class="col-12 mx-auto col-md-10">
 		<div class="row justify-content-between">
-			
+
 			<div class="order-tracking completed">
 				<a href="{% url 'customer_pending_order' %}">
 					<span class="is-complete"></span>
@@ -41,7 +41,7 @@
 				<h6>View all pending orders</h6>
 			</div>
 		</div>
-	
+
 		<div class="card">
 			<div class="card-body">
 				<div class="table-responsive">
@@ -57,30 +57,85 @@
 								<th class="text-center">Action</th>
 							</tr>
 						</thead>
+						{% for order in orders %}
 						<tbody>
-	
 							<tr>
-								<td>00023</td>
+								<td>{{ order.id }}</td>
 								<td>
-									<a href="{% static 'img/dish.png' %}">
-										<img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+									<a href="{{ order.product.image.url }}">
+										<img width="50" src="{{ order.product.image.url }}" alt="vehicle">
 									</a>
 								</td>
-								<td>Food 1</td>
-								<td>2</td>
-								<td>Dine-In</td>
-								<td class="text-danger">Pending</td>
+								<td>{{ order.product.name }}</td>
+								<td>{{ order.quantity }}</td>
+								<td>{{ order.order_mode }}</td>
+								{% if order.status == 'Pending' %}
+								<td class="text-info">{{ order.status }}</td>
+								{% else %}
+								<td class="text-danger" data-bs-toggle="modal"
+									data-bs-target="#cancelled{{ order.id }}">
+									{{ order.status }}</td>
+								{% endif %}
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""
+									   data-bs-target="#viewModal">
 										<i data-feather="eye"></i>
 									</a>
-									<a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" id=""  data-bs-target="#caModal">
+									<a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" id=""
+									   data-bs-target="#caModal{{ order.id }}">
 										<i data-feather="delete"></i>
 									</a>
 								</td>
 							</tr>
-	
 						</tbody>
+						<!-- Cancelled message modal -->
+						<div class="modal fade" id="cancelled{{ order.id }}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form action="" method="post" id="app_frm">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Cancelled Order</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"
+													aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<input name="id" type="hidden">
+											<p>Order has been cancelled due to following reason/s:
+												{{ order.cancel_reason }}
+											</p>
+										</div>
+										<div class="modal-footer float-end">
+											<a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">OK</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<!-- Cancel Modal -->
+						<div class="modal fade" id="caModal{{ order.id }}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form action="" method="post" id="ca_frm">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"
+													aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<input name="id" type="hidden">
+											<p>Are you sure you want to cancel this data?</p>
+										</div>
+										<div class="modal-footer float-end">
+											<a type="submit" class="btn btn-dark"
+											   href="{% url 'customer_cancel_order' order.id %}">Yes</a>
+											<a class="btn btn-cancel" data-bs-dismiss="modal"
+											   aria-label="Close">Cancel</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
 					</table>
 				</div>
 			</div>
@@ -88,29 +143,5 @@
 	</div>
 </div>
 
-
-
-<!-- Modal -->
-<div class="modal fade" id="caModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-        <form action="" method="post" id="ca_frm">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input name="id" type="hidden">
-                <p>Are you sure you want to cancel this data?</p>
-				<input type="text" class="form-control" placeholder="Your Reason" required>
-            </div>
-            <div class="modal-footer float-end">
-                <button type="submit" class="btn btn-dark">Yes</button>
-                <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
-            </div>
-        </form>
-    </div>
-  </div>
-</div>
 
 {% endblock %}
