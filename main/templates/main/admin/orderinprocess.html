@@ -61,10 +61,17 @@ List of Inprocess Order
                             <td>{{ order.order_mode }}</td>
                             <td class="text-info">{{ order.status }}</td>
                             <td class="text-center">
+                                {% if order.status == 'Out for Delivery' %}
                                 <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
                                    data-bs-target="#appModal{{ order.id }}">
                                     <i data-feather="check-circle"></i>
                                 </a>
+                                {% elif order.status == 'In-Process' %}
+                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#deliverModal{{ order.id }}">
+                                    <i data-feather="truck"></i>
+                                </a>
+                                {% endif %}
                                 <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
                                    data-bs-target="#viewModal">
                                     <i data-feather="eye"></i>
@@ -112,6 +119,29 @@ List of Inprocess Order
                                     <div class="modal-footer float-end">
                                         <a type="submit" class="btn btn-dark"
                                            href="{% url 'admin_toComplete_order' order.id %}">Yes</a>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- deliver Modal -->
+                    <div class="modal fade" id="deliverModal{{ order.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="ca_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Confirming...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        <p>Are you sure you want to confirm this data?</p>
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a type="submit" class="btn btn-dark"
+                                           href="{% url 'admin_toDeliver_order' order.id %}">Yes</a>
                                         <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                                     </div>
                                 </form>

@@ -49,14 +49,14 @@ List of Cancelled Order
                             <td class="text-danger">{{ order.status }}</td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#cancelled">
+                                   data-bs-target="#cancelled{{ order.id }}">
                                     <i data-feather="eye"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
                     <!-- Cancelled message modal -->
-                    <div class="modal fade" id="cancelled">
+                    <div class="modal fade" id="cancelled{{ order.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="" method="post" id="app_frm">

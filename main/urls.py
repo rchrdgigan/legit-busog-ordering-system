@@ -39,6 +39,7 @@ urlpatterns = [
     path("v1/order/to_process/<int:id>", views.adminToProcessOrder, name='admin_toProcess_order'),
     path("v1/order/process", views.adminProcessOrder,
          name="admin_process_order"),
+    path('v1/order/to_deliver/<int:id>', views.adminToDeliverOrder, name='admin_toDeliver_order'),
     path("v1/order/to_complete/<int:id>", views.adminToCompleteOrder, name='admin_toComplete_order'),
     path("v1/order/completed", views.adminCompletedOrder,
          name="admin_completed_order"),

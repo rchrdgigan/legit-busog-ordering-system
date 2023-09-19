@@ -1,6 +1,9 @@
+import os
+from urllib import response
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+import vonage
 
 # Create your models here.
 class PersonInfo(models.Model):
@@ -43,7 +46,30 @@ class Order(models.Model):
     order_mode = models.CharField(max_length=30)
     status = models.CharField(max_length=50)
     cancel_reason = models.CharField(max_length=100, null=True)
+    date = models.DateTimeField(default=now, null=True)
 
     def __str__(self):
         return str(self.user) +" - "+ str(self.product)
+
+    def save(self, *args, **kwargs):
+        if self.status == 'Out for Delivery':
+            user = User.objects.get(id=self.user.id)
+            person = PersonInfo.objects.get(user=user)
+
+            TO_NUMBER = person.contact
+            VONAGE_API_KEY = 'b68cc5d5'
+            VONAGE_API_SECRET = '0iQvkqAg1Uk1BGsV'
+            VONAGE_BRAND_NAME = 'LegitBusog'
+            client = vonage.Client(key=VONAGE_API_KEY, secret=VONAGE_API_SECRET)
+            sms = vonage.Sms(client)
+
+            responseData = sms.send_message(
+                                {
+                                    "from": VONAGE_BRAND_NAME,
+                                    "to": TO_NUMBER,
+                                    "text": "Legit Busog: Your order is out for delivery, please prepare the price amount of your order. Thank you!",
+                                }
+                )
+            print(responseData)
+        return super().save(*args, **kwargs)
     

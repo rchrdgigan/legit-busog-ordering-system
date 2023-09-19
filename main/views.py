@@ -166,8 +166,20 @@ def changePassword(response):
 @allowed_users(allowed_roles=['admin'])
 def adminIndex(response):
     user = response.user
+    count_pending = Order.objects.filter(status='Pending').count()
+    count_processing = Order.objects.filter(status='In-Process').count()
+    count_deliver = Order.objects.filter(status='Out for Delivery').count()
+    count_pd = count_processing + count_deliver
+    count_completed = Order.objects.filter(status='Completed').count()
+    orders = Order.objects.filter(status='Pending')
     return render(response, 'main/admin/index.html', {
         'user': user,
+        'count_pending': count_pending,
+        'count_processing': count_processing,
+        'count_completed': count_completed,
+        'count_pd': count_pd,
+        'orders': orders
+
     })  # Admin
 
 
@@ -379,11 +391,18 @@ def adminToProcessOrder(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    orders = Order.objects.filter(status='In-Process')
+    orders = Order.objects.filter(status='In-Process') | Order.objects.filter(status='Out for Delivery')
     return render(response, 'main/admin/orderinprocess.html', {
         'orders': orders,
     })  # admin
 
+
+def adminToDeliverOrder(response, id):
+    order = Order.objects.get(id=id)
+    order.status = 'Out for Delivery'
+    order.save()
+    messages.success(response, 'Order is out for delivery!')
+    return redirect('admin_process_order')
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
