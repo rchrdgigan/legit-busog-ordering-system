@@ -100,24 +100,32 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="active"><a href="{% url 'admin.index' %}"><i class="me-2"
+                        {% url 'admin.index' as admin_index_url %}
+                        <li class="{% if request.path == admin_index_url %}active{% endif %}"><a href="{% url 'admin.index' %}"><i class="me-2"
                                    data-feather="home"></i><span>Dashboard</span></a></li>
                         <li class="submenu">
                             <a href="javascript:void(0);" class=""><i class="me-2"
                                    data-feather="clipboard"></i><span>Managemet Order</span> <span
                                       class="menu-arrow"></span></a>
                             <ul>
-                                <li><a class="" href="{% url 'admin_pending_order' %}">Pending</span></a></li>
-                                <li><a class="" href="{% url 'admin_process_order' %}">Processing</span></a></li>
-                                <li><a class="" href="{% url 'admin_completed_order' %}">Completed</span></a></li>
-                                <li><a class="" href="{% url 'admin_cancelled_order' %}">Cancelled</span></a></li>
+                                {% url 'admin_pending_order' as admin_pending_order_url %}
+                                <li><a class="{% if request.path == admin_pending_order_url %}active{% endif %}" href="{% url 'admin_pending_order' %}">Pending</span></a></li>
+                                {% url 'admin_process_order' as admin_process_order_url %}
+                                <li><a class="{% if request.path == admin_process_order_url %}active{% endif %}" href="{% url 'admin_process_order' %}">Processing</span></a></li>
+                                {% url 'admin_completed_order' as admin_completed_order_url %}
+                                <li><a class="{% if request.path == admin_completed_order_url %}active{% endif %}" href="{% url 'admin_completed_order' %}">Completed</span></a></li>
+                                {% url 'admin_cancelled_order' as admin_cancelled_order_url %}
+                                <li><a class="{% if request.path == admin_cancelled_order_url %}active{% endif %}" href="{% url 'admin_cancelled_order' %}">Cancelled</span></a></li>
                             </ul>
                         </li>
-                        <li class=""><a href="{% url 'admin_cat_list' %}"><i class="me-2"
+                        {% url 'admin_cat_list' as admin_cat_list_url %}
+                        <li class="{% if request.path == admin_cat_list_url %}active{% endif %}"><a href="{% url 'admin_cat_list' %}"><i class="me-2"
                                    data-feather="grid"></i><span>Manage Menu</span></a></li>
-                        <li class=""><a href="{% url 'admin_feedback_list' %}"><i class="me-2"
+                        {% url 'admin_feedback_list' as admin_feedback_list_url %}
+                        <li class="{% if request.path == admin_feedback_list_url %}active{% endif %}"><a href="{% url 'admin_feedback_list' %}"><i class="me-2"
                                    data-feather="mail"></i><span>Feedback</span></a></li>
-                        <li class=""><a href="{% url 'admin_account_list' %}"><i class="me-2"
+                        {% url 'admin_account_list' as admin_account_list_url %}
+                        <li class="{% if request.path == admin_account_list_url %}active{% endif %}"><a href="{% url 'admin_account_list' %}"><i class="me-2"
                                    data-feather="users"></i><span>Users
                                     Managemet</span></a></li>
                     </ul>

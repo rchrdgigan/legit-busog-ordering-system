@@ -22,7 +22,7 @@ def customerPlaceOrder(response):
 def foodProductList(response):
     foods = ProductInfo.objects.filter(availability=True)
     return render(response, 'main/pages/foodproduct.html', {
-        'foods':foods,
+        'foods': foods,
     })
 
 
@@ -32,11 +32,12 @@ def foodProductShow(response, id):
     if response.method == "POST":
         quantity = response.POST['product-qty']
         mode = response.POST['mode']
-        order = Order(user=user, product=food, quantity=quantity, order_mode=mode)
+        order = Order(user=user, product=food,
+                      quantity=quantity, order_mode=mode)
         order.status = 'Pending'
         order.save()
         return redirect('main_food_success')
-    
+
     return render(response, 'main/pages/viewproduct.html', {
         'food': food,
     })
@@ -45,14 +46,16 @@ def foodProductShow(response, id):
 def foodBuySucessfully(response):
     return render(response, 'main/pages/successfully-ordered.html')
 
+
 def ViewProductByCategory(response, id):
     category = Category.objects.get(id=id)
-    foods = ProductInfo.objects.filter(category=category.category_name, availability=True)
+    foods = ProductInfo.objects.filter(
+        category=category.category_name, availability=True)
     return render(response, 'main/pages/viewproductbycategory.html', {
         'foods': foods,
-        'category':category,
+        'category': category,
     })
-    
+
 
 def index(response):
     category = Category.objects.all()
@@ -374,24 +377,27 @@ def adminFoodUnavailable(response, ida, id):
 def adminPendingOrder(response):
     orders = Order.objects.filter(status='Pending')
     return render(response, 'main/admin/orderpending.html', {
-        'orders':orders,
+        'orders': orders,
     })  # admin
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
-#Confirm order move to in-process category
+# Confirm order move to in-process category
 def adminToProcessOrder(response, id):
     order = Order.objects.get(id=id)
     order.status = 'In-Process'
     order.save()
-    messages.success(response, 'Order has been confirmed! It will moving now to In-Process...')
+    messages.success(
+        response, 'Order has been confirmed! It will moving now to In-Process...')
     return redirect('admin_pending_order')
 
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    orders = Order.objects.filter(status='In-Process') | Order.objects.filter(status='Out for Delivery')
+    orders = Order.objects.filter(
+        status='In-Process') | Order.objects.filter(status='Out for Delivery')
     return render(response, 'main/admin/orderinprocess.html', {
         'orders': orders,
     })  # admin
@@ -404,9 +410,10 @@ def adminToDeliverOrder(response, id):
     messages.success(response, 'Order is out for delivery!')
     return redirect('admin_process_order')
 
+
 @login_required
 @allowed_users(allowed_roles=['admin'])
-#Confirm order move to completed category
+# Confirm order move to completed category
 def adminToCompleteOrder(response, id):
     order = Order.objects.get(id=id)
     order.status = 'Completed'
@@ -444,7 +451,7 @@ def adminCancellingOrder(response, id):
 def adminCancelledOrder(response):
     orders = Order.objects.filter(status='Cancelled')
     return render(response, 'main/admin/ordercancelled.html', {
-        'orders':orders
+        'orders': orders
     })  # admin
 
 
@@ -475,7 +482,6 @@ def adminEditProfile(response, id):
         person.save()
         messages.success(response, 'Successfully updated your profile!')
         return redirect('admin_profile')
-
 
     return render(response, 'main/admin/editprofile.html', {
         'user': user,
@@ -548,9 +554,10 @@ def customerCancelOrder(response, id):
 
 def customerPendingOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(user=user, status='Cancelled')
+    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(
+        user=user, status='Cancelled')
     return render(response, 'main/customer/pendingorderlist.html', {
-        'orders':orders
+        'orders': orders
     })  # Customer
 
 
