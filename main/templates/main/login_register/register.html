@@ -14,10 +14,10 @@
     <div class="login-page">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 pe-0 d-none d-md-block">
+                <div class="col-md-6 align-self-center">
                     <a href="{% url 'index' %}"><img src="{% static 'img/logo.jpg' %}" alt=""></a>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 align-self-center">
                     <h3 class="mb-3">Register Now</h3>
                     <div class="bg-white shadow rounded">
                         <div class="row">
@@ -42,7 +42,8 @@
                                             <label for="first_name">First Name</label>
                                             <div class="input-group">
                                                 <input type="text" name="first_name" id="first_name"
-                                                       class="form-control form-control-sm rounded-pill"
+                                                       class="form-control form-control-sm"
+                                                       style="border-radius: 10px;"
                                                        placeholder="First Name" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your first name.
@@ -54,7 +55,8 @@
                                             <label for="last_name">Last Name</label>
                                             <div class="input-group">
                                                 <input type="text" name="last_name" id="last_name"
-                                                       class="form-control form-control-sm rounded-pill"
+                                                       class="form-control form-control-sm"
+                                                       style="border-radius: 10px;"
                                                        placeholder="Last Name" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your last name.
@@ -66,7 +68,8 @@
                                             <label for="dob">Date of Birth</label>
                                             <div class="input-group">
                                                 <input type="date" name="date_of_birth" id="dob"
-                                                       class="form-control form-control-sm rounded-pill" required>
+                                                        style="border-radius: 10px;"
+                                                       class="form-control form-control-sm" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your date of birth.
                                                 </div>
@@ -76,7 +79,8 @@
                                             <label for="address">Address</label>
                                             <div class="input-group">
                                                 <input type="text" name="address" id="address" placeholder="Address"
-                                                       class="form-control form-control-sm rounded-pill" required>
+                                                        style="border-radius: 10px;"
+                                                       class="form-control form-control-sm" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your address.
                                                 </div>
@@ -86,8 +90,9 @@
                                             <label for="contact">Contact</label>
                                             <div class="input-group">
                                                 <input type="text" name="contact" id="contact"
+                                                        style="border-radius: 10px;"
                                                        placeholder="ex. +63xxxxxxxxxx"
-                                                       class="form-control form-control-sm rounded-pill" required>
+                                                       class="form-control form-control-sm" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your contact.
                                                 </div>
@@ -97,7 +102,8 @@
                                             <label for="email">Email</label>
                                             <div class="input-group">
                                                 <input type="email" name="email" id="email" placeholder="Email"
-                                                       class="form-control form-control-sm rounded-pill" required>
+                                                        style="border-radius: 10px;"
+                                                       class="form-control form-control-sm" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your email.
                                                 </div>
@@ -107,13 +113,14 @@
                                             <label for="pass">Password</label>
                                             <div class="input-group">
                                                 <input type="password" name="password" id="pass" placeholder="Password"
-                                                       class="form-control form-control-sm rounded-pill" required>
+                                                        style="border-radius: 10px;"
+                                                       class="form-control form-control-sm" required>
                                                 <div class="invalid-feedback">
                                                     Please provide your password.
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="btn btn-dark rounded-pill mt-4">Register</button>
+                                        <button class="btn mt-4" style="border-radius: 10px; background-color: #FF4343;">Register</button>
                                         <hr>
                                         <a href="{% url 'login' %}" class="text-center">Already have an account? Back to
                                             Login.</a>
