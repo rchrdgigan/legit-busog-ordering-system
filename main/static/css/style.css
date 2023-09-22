@@ -509,10 +509,10 @@ footer {
 }
 
 .f-design .f-design-txt {
-    border-top: 1px solid var(--grey);
+    border-top: 1px solid var(--white);
     padding: 25px 0;
     font-size: 14px;
-    color: var(--grey);
+    color: var(--white);
 }
 
 .contact {

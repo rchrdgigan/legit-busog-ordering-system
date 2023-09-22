@@ -104,18 +104,23 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-                        <li class="active"><a href="{% url 'customer_index' %}"><i class="me-2"
+                        {% url 'customer_index' as customer_index_url %}
+                        <li class="{% if request.path == customer_index_url %}active{% endif %}"><a href="{% url 'customer_index' %}"><i class="me-2"
                                    data-feather="user"></i><span>Profile</span></a></li>
                         <li class="submenu">
                             <a href="javascript:void(0);"><i class="me-2" data-feather="shopping-cart"></i><span>My
                                     Order</span> <span class="menu-arrow"></span></a>
                             <ul>
-                                <li><a class="" href="{% url 'customer_pending_order' %}">Pending</span></a></li>
-                                <li><a class="" href="{% url 'customer_process_order' %}">Processing</span></a></li>
-                                <li><a class="" href="{% url 'customer_completed_order' %}">Completed</span></a></li>
+                                {% url 'customer_pending_order' as customer_pending_order_url %}
+                                <li><a class="{% if request.path == customer_pending_order_url %}active{% endif %}" href="{% url 'customer_pending_order' %}">Pending</span></a></li>
+                                {% url 'customer_process_order' as customer_process_order_url %}
+                                <li><a class="{% if request.path == customer_process_order_url %}active{% endif %}" href="{% url 'customer_process_order' %}">Processing</span></a></li>
+                                {% url 'customer_completed_order' as customer_completed_order_url %}
+                                <li><a class="{% if request.path == customer_completed_order_url %}active{% endif %}" href="{% url 'customer_completed_order' %}">Completed</span></a></li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'customer_history_order' %}"><i class="me-2"
+                        {% url 'customer_history_order' as customer_history_order_url %}
+                        <li><a class="{% if request.path == customer_history_order_url %}active{% endif %}" href="{% url 'customer_history_order' %}"><i class="me-2"
                                    data-feather="clipboard"></i><span>Order History</span></a></li>
                     </ul>
                 </div>
