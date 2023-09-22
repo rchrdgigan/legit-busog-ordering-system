@@ -8,6 +8,90 @@ List of Food
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
 <link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
+<style>
+    .qty-input {
+        color: #000;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+    }
+
+    .qty-input .product-qty, .qty-input .qty-count {
+        background: transparent;
+        color: inherit;
+        font-weight: bold;
+        font-size: inherit;
+        border: none;
+        display: inline-block;
+        min-width: 0;
+        height: 2.5rem;
+        line-height: 1;
+    }
+
+    .qty-input .product-qty:focus, .qty-input .qty-count:focus {
+        outline: none;
+    }
+
+    .qty-input .product-qty {
+        width: 50px;
+        min-width: 0;
+        display: inline-block;
+        text-align: center;
+        appearance: textfield;
+    }
+
+    .qty-input .product-qty::-webkit-outer-spin-button, .qty-input .product-qty::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+    }
+
+    .qty-input .qty-count {
+        padding: 0;
+        cursor: pointer;
+        width: 2.5rem;
+        font-size: 1.25em;
+        text-indent: -100px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .qty-input .qty-count:before, .qty-input .qty-count:after {
+        content: "";
+        height: 2px;
+        width: 10px;
+        position: absolute;
+        display: block;
+        background: #000;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+    
+    .qty-input .qty-count--minus {
+        border-right: 1px solid #e2e2e2;
+    }
+    .qty-input .qty-count--add {
+        border-left: 1px solid #e2e2e2;
+    }
+    .qty-input .qty-count--add:after {
+        transform: rotate(90deg);
+    }
+    .qty-input .qty-count:disabled {
+        color: #ccc;
+        background: #f2f2f2;
+        cursor: not-allowed;
+        border-color: transparent;
+    }
+    .qty-input .qty-count:disabled:before, .qty-input .qty-count:disabled:after {
+        background: #ccc;
+    }
+    .qty-input {
+        border-radius: 4px;
+    }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -51,7 +135,7 @@ List of Food
                             <label><b>Quantity</b></label>
                             <div class="qty-input">
                                 <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
-                                <input class="product-qty" type="number" name="product-qty" min="0" max="10" value="1">
+                                <input class="product-qty" type="number" name="product-qty" min="0" max="50" value="1">
                                 <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
                             </div>
                             <br>
@@ -75,4 +159,70 @@ List of Food
 
 {% endblock %}
 {% block javascripts %}
+<script>
+    var QtyInput = (function () {
+        var $qtyInputs = $(".qty-input");
+
+        if (!$qtyInputs.length) {
+            return;
+        }
+
+        var $inputs = $qtyInputs.find(".product-qty");
+        var $countBtn = $qtyInputs.find(".qty-count");
+        var qtyMin = parseInt($inputs.attr("min"));
+        var qtyMax = parseInt($inputs.attr("max"));
+
+        $inputs.change(function () {
+            var $this = $(this);
+            var $minusBtn = $this.siblings(".qty-count--minus");
+            var $addBtn = $this.siblings(".qty-count--add");
+            var qty = parseInt($this.val());
+
+            if (isNaN(qty) || qty <= qtyMin) {
+                $this.val(qtyMin);
+                $minusBtn.attr("disabled", true);
+            } else {
+                $minusBtn.attr("disabled", false);
+                
+                if(qty >= qtyMax){
+                    $this.val(qtyMax);
+                    $addBtn.attr('disabled', true);
+                } else {
+                    $this.val(qty);
+                    $addBtn.attr('disabled', false);
+                }
+            }
+        });
+
+        $countBtn.click(function () {
+            var operator = this.dataset.action;
+            var $this = $(this);
+            var $input = $this.siblings(".product-qty");
+            var qty = parseInt($input.val());
+
+            if (operator == "add") {
+                qty += 1;
+                if (qty >= qtyMin + 1) {
+                    $this.siblings(".qty-count--minus").attr("disabled", false);
+                }
+
+                if (qty >= qtyMax) {
+                    $this.attr("disabled", true);
+                }
+            } else {
+                qty = qty <= qtyMin ? qtyMin : (qty -= 1);
+                
+                if (qty == qtyMin) {
+                    $this.attr("disabled", true);
+                }
+
+                if (qty < qtyMax) {
+                    $this.siblings(".qty-count--add").attr("disabled", false);
+                }
+            }
+
+            $input.val(qty);
+        });
+    })();
+</script>
 {% endblock javascripts %}
