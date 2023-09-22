@@ -5,7 +5,7 @@
 }
 
 :root {
-    --primary-color: #ff3c78;
+    --primary-color: #FF4343;
     --light-black: rgba(0, 0, 0, 0.89);
     --black: #000;
     --white: #fff;
@@ -17,7 +17,7 @@
     padding: 15px 25px;
     color: var(--white);
     font-weight: 500;
-    background: var(--black);
+    background: var(--primary-color);
     outline: none;
     border: none;
     margin: 15px;
@@ -48,7 +48,7 @@ body {
 }
 
 .top-txt {
-    background-color: var(--black);
+    background-color: var(--primary-color);
 }
 
 .head {
@@ -75,7 +75,7 @@ body {
     position: sticky;
     top: 0;
     background: var(--white);
-    color: var(--black);
+    color: var(--dark);
     z-index: 100;
 }
 
@@ -104,7 +104,7 @@ body {
 
 .navbar-container ul a {
     text-decoration: none;
-    color: var(--black);
+    color: var(--dark);
     font-size: 18px;
     position: relative;
 }
@@ -279,7 +279,7 @@ body {
 }
 
 .home_txt button {
-    background-color: var(--black);
+    background-color: var(--primary-color);
     color: var(--white);
     border: none;
     padding: 15px 30px;
@@ -467,7 +467,7 @@ body {
 }
 
 .seller a:hover {
-    color: #f05e8a;
+    color: var(--primary-color);
 }
 
 .best-seller .buy-now button,
@@ -477,12 +477,12 @@ body {
     font-size: 14px;
     cursor: pointer;
     text-transform: uppercase;
-    background-color: #f05e8a;
+    background-color: var(--primary-color);
     color: var(--white);
     border: none;
-    border-radius: 15px;
+    border-radius: 10px;
     font-weight: 500;
-    border: 1px solid #f05e8a;
+    border: 1px solid var(--primary-color);
     transition: 0.5s;
 }
 
@@ -494,12 +494,12 @@ body {
 
 .best-seller .buy-now button:hover a,
 .best-seller .add-cart button:hover a {
-    color: #f05e8a;
+    color: var(--primary-color);
 }
 
 footer {
     width: 100%;
-    background: var(--black);
+    background: var(--primary-color);
 }
 
 .f-design {
@@ -544,7 +544,7 @@ iframe {
 
 .form .form-txt h1 {
     font-weight: 600;
-    color: var(--black);
+    color: var(--primary-color);
     font-size: 40px;
     letter-spacing: 1.5px;
     margin-bottom: 10px;
@@ -596,7 +596,7 @@ iframe {
     padding: 15px 25px;
     color: var(--white);
     font-weight: 500;
-    background: var(--black);
+    background: var(--primary-color);
     outline: none;
     border: none;
     margin: 15px;
