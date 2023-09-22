@@ -69,8 +69,17 @@
 								<td>{{ order.order_mode }}</td>
 								<td class="text-success">{{ order.status }}</td>
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""
-									   data-bs-target="#viewModal">
+									<a class="btn btn-sm btn-info"
+										name="{{ order.product.name }}"
+										category="{{ order.product.category }}"
+										price="{{ order.product.price }}"
+										PrepTime="{{ order.product.PrepTime }}"
+										total_price="{{ order.product.price }}"
+										description="{{ order.product.description }}"
+										quantity = "{{ order.quantity }}"
+										order_mode="{{ order.order_mode }}"
+										data-bs-toggle="modal" 
+										data-bs-target="#viewModal">
 										<i data-feather="eye"></i>
 									</a>
 									<a class="btn btn-sm btn-warning" data-bs-toggle="modal" id=""
@@ -87,5 +96,94 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="viewModal">
+    <div class="modal-lg modal-dialog">
+        <div class="modal-content">
+            <form action="" method="post" id="view_frm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Your Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Item Name</label>
+                            <input type="text" class="form-control" name="name" readonly>
+                        </div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Quantity</label>
+								<input type="text" class="form-control" name="quantity" readonly>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Price</label>
+								<input type="text" class="form-control" name="price" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Total Price</label>
+							<input type="text" class="form-control" name="total_price" readonly>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Category</label>
+								<input type="text" class="form-control" name="category" readonly>
+							</div>
+						</div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Order Mode</label>
+                                <input type="text" class="form-control" name="order_mode" readonly>
+                            </div>
+                        </div>
+						
+						<div class="form-group">
+							<label>Prep Time</label>
+							<input type="text" class="form-control" name="PrepTime" readonly>
+						</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" id="description" cols="30" rows="10" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer float-end">
+                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+{% block javascripts %}
+<script>
+    $('#delModal').on('show.bs.modal', function (e) {
+        var opener = e.relatedTarget;
+        var id = $(opener).attr('id');
+        $('#delete_frm').find('[name="id"]').val(id);
+    });
+    $('#viewModal').on('show.bs.modal', function (e) {
+        var opener = e.relatedTarget;
+        var name = $(opener).attr('name');
+        var category = $(opener).attr('category');
+        var price = $(opener).attr('price');
+        var PrepTime = $(opener).attr('PrepTime');
+        var total_price = $(opener).attr('total_price');
+		var description = $(opener).attr('description');
+		var quantity = $(opener).attr('quantity');
+        var order_mode = $(opener).attr('order_mode');
+        $('#view_frm').find('[name="name"]').val(name);
+        $('#view_frm').find('[name="category"]').val(category);
+        $('#view_frm').find('[name="price"]').val(price);
+        $('#view_frm').find('[name="PrepTime"]').val(PrepTime);
+		$('#view_frm').find('[name="total_price"]').val(total_price);
+        $('#view_frm').find('[name="description"]').val(description);
+        $('#view_frm').find('[name="quantity"]').val(quantity);
+        $('#view_frm').find('[name="order_mode"]').val(order_mode);
+    });
+</script>
+{% endblock javascripts %}
+
