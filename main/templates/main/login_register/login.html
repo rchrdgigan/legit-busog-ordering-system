@@ -46,10 +46,11 @@
                                         <div class="col-12">
                                             <label for="name">Email</label>
                                             <div class="input-group">
-                                                <div class="input-group-text rounded-pill"><i class="fa fa-user "></i>
+                                                <div class="input-group-text"><i class="fa fa-user "></i>
                                                 </div>
                                                 <input type="text" name="username" placeholder="Input Email"
-                                                       class="form-control rounded-pill" id="name" required>
+                                                       class="form-control"  style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;" 
+                                                       id="name" required>
                                                 <div class="invalid-feedback">
                                                     Please provide a email.
                                                 </div>
@@ -60,10 +61,11 @@
                                         <div class="col-12">
                                             <label for="pass">Password</label>
                                             <div class="input-group">
-                                                <div class="input-group-text rounded-pill"><i class="fa fa-lock"></i>
+                                                <div class="input-group-text"><i class="fa fa-lock"></i>
                                                 </div>
                                                 <input type="password" name="password" id="pass"
-                                                       placeholder="Input Password" class="form-control rounded-pill"
+                                                       placeholder="Input Password" class="form-control"
+                                                       style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;"
                                                        required>
                                                 <div class="invalid-feedback">
                                                     Please input your password.
@@ -73,9 +75,9 @@
 
                                         <div class="col-12">
                                             <button type="submit"
-                                                    class="btn btn-dark w-100 mt-4 rounded-pill">Login</button>
+                                                    class="btn w-100 mt-4" style="border-radius: 10px; background-color: #FF4343;">Login</button>
                                             <a href="{% url 'register' %}"
-                                               class="btn btn-secondary w-100 rounded-pill mt-2">Register</a>
+                                               class="btn w-100 mt-2" style="border-radius: 10px; background-color: #FFD600;">Register</a>
                                         </div>
                                     </form>
                                 </div>

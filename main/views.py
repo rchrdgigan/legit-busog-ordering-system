@@ -6,6 +6,7 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
+from datetime import datetime
 
 from .models import FeedBack, Order, PersonInfo, ProductInfo, Category
 from .forms import ProductInfoForm
@@ -22,7 +23,7 @@ def customerPlaceOrder(response):
 def foodProductList(response):
     foods = ProductInfo.objects.filter(availability=True)
     return render(response, 'main/pages/foodproduct.html', {
-        'foods':foods,
+        'foods': foods,
     })
 
 @login_required
@@ -30,30 +31,37 @@ def foodProductShow(response, id):
     food = ProductInfo.objects.get(id=id)
     user = response.user
     if response.method == "POST":
-        quantity = response.POST['product-qty']
-        mode = response.POST['mode']
-        order = Order(user=user, product=food, quantity=quantity, order_mode=mode)
-        order.status = 'Pending'
-        order.save()
-        return redirect('main_food_success')
-    
+        if user.is_authenticated:
+            quantity = response.POST['product-qty']
+            mode = response.POST['mode']
+            order = Order(user=user, product=food,
+                          quantity=quantity, order_mode=mode)
+            order.status = 'Pending'
+            order.save()
+            return redirect('main_food_success')
+        else:
+            return redirect('login')
+
     return render(response, 'main/pages/viewproduct.html', {
         'food': food,
     })
 
 @login_required
+
+@login_required
 def foodBuySucessfully(response):
     return render(response, 'main/pages/successfully-ordered.html')
 
-@login_required
+
 def ViewProductByCategory(response, id):
     category = Category.objects.get(id=id)
-    foods = ProductInfo.objects.filter(category=category.category_name, availability=True)
+    foods = ProductInfo.objects.filter(
+        category=category.category_name, availability=True)
     return render(response, 'main/pages/viewproductbycategory.html', {
         'foods': foods,
-        'category':category,
+        'category': category,
     })
-    
+
 
 def index(response):
     category = Category.objects.all()
@@ -377,24 +385,27 @@ def adminFoodUnavailable(response, ida, id):
 def adminPendingOrder(response):
     orders = Order.objects.filter(status='Pending')
     return render(response, 'main/admin/orderpending.html', {
-        'orders':orders,
+        'orders': orders,
     })  # admin
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
-#Confirm order move to in-process category
+# Confirm order move to in-process category
 def adminToProcessOrder(response, id):
     order = Order.objects.get(id=id)
     order.status = 'In-Process'
     order.save()
-    messages.success(response, 'Order has been confirmed! It will moving now to In-Process...')
+    messages.success(
+        response, 'Order has been confirmed! It will moving now to In-Process...')
     return redirect('admin_pending_order')
 
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    orders = Order.objects.filter(status='In-Process') | Order.objects.filter(status='Out for Delivery')
+    orders = Order.objects.filter(
+        status='In-Process') | Order.objects.filter(status='Out for Delivery')
     return render(response, 'main/admin/orderinprocess.html', {
         'orders': orders,
     })  # admin
@@ -410,9 +421,10 @@ def adminToDeliverOrder(response, id):
     messages.success(response, 'Order is out for delivery!')
     return redirect('admin_process_order')
 
+
 @login_required
 @allowed_users(allowed_roles=['admin'])
-#Confirm order move to completed category
+# Confirm order move to completed category
 def adminToCompleteOrder(response, id):
     order = Order.objects.get(id=id)
     order.status = 'Completed'
@@ -450,7 +462,7 @@ def adminCancellingOrder(response, id):
 def adminCancelledOrder(response):
     orders = Order.objects.filter(status='Cancelled')
     return render(response, 'main/admin/ordercancelled.html', {
-        'orders':orders
+        'orders': orders
     })  # admin
 
 
@@ -458,7 +470,10 @@ def adminCancelledOrder(response):
 @allowed_users(allowed_roles=['admin'])
 def adminProfile(response):
     user = response.user
-    person = PersonInfo.objects.get(user=user)
+    try:
+        person = PersonInfo.objects.get(user=user)
+    except PersonInfo.DoesNotExist:
+        person = None
     return render(response, 'main/admin/profile.html', {
         'user': user,
         'person': person,
@@ -469,19 +484,29 @@ def adminProfile(response):
 @allowed_users(allowed_roles=['admin'])
 def adminEditProfile(response, id):
     user = get_object_or_404(User, id=id)
-    person = PersonInfo.objects.get(user=user)
+    try:
+        person = PersonInfo.objects.get(user=user)
+    except PersonInfo.DoesNotExist:
+        person = None
     if response.method == "POST":
         user.first_name = response.POST['fname']
         user.last_name = response.POST['lname']
         user.email = response.POST['email']
         user.save()
-        person.address = response.POST['address']
-        person.dob = response.POST['dob']
-        person.contact = response.POST['contact']
-        person.save()
+        if person:
+            person.address = response.POST['address']
+            person.dob = response.POST['dob']
+            person.contact = response.POST['contact']
+            person.save()
+        else:
+            PersonInfo.objects.create(
+                user=user,
+                address=response.POST['address'],
+                dob=response.POST['dob'],
+                contact=response.POST['contact']
+            )
         messages.success(response, 'Successfully updated your profile!')
         return redirect('admin_profile')
-
 
     return render(response, 'main/admin/editprofile.html', {
         'user': user,
@@ -493,7 +518,10 @@ def adminEditProfile(response, id):
 @allowed_users(allowed_roles=['admin'])
 def adminChangePicture(response, id):
     user = User.objects.get(id=id)
-    person = PersonInfo.objects.get(user=user)
+    try:
+        person = PersonInfo.objects.get(user=user)
+    except PersonInfo.DoesNotExist:
+        person = None
     if response.method == "POST":
         person.image = response.FILES['image']
         person.save()
@@ -555,9 +583,10 @@ def customerCancelOrder(response, id):
 @login_required
 def customerPendingOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(user=user, status='Cancelled')
+    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(
+        user=user, status='Cancelled')
     return render(response, 'main/customer/pendingorderlist.html', {
-        'orders':orders
+        'orders': orders
     })  # Customer
 
 @login_required

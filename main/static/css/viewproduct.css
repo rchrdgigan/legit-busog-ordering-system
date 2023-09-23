@@ -85,17 +85,24 @@ select {
     transition: 0.3s;
 }
 .btn-back {
-    background-color: black;
+    background-color: #FFD600;
     color: #ccc;
 }
 .btn-place-order {
-    background-color: #599d4a;
+    background-color: #FF4343;
     color: #ccc;
+    color: #000;
+    border-radius: 10px;
+    padding: 14px 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
 }
 .product-footer a {
     text-decoration: none;
-    color: white;
-    border-radius: 20px;
+    color: #000;
+    border-radius: 10px;
     padding: 14px 20px;
     margin: 8px 0;
     border: none;
@@ -104,12 +111,12 @@ select {
     transition: 0.3s;
 }
 .product-footer .btn-place-order:hover {
-    background-color: rgb(29, 177, 111);
+    background-color:#fe7b7b;
     color: white;
 }
 
 .product-footer .btn-back:hover {
-    background-color: #2d2f2c;
+    background-color: #f5df6f;
     color: white;
 }
 .order-table {
