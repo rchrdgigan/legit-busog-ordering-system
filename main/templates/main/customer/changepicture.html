@@ -14,6 +14,7 @@
 </header>
 <div class="container">
     <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <div class="avatar-upload">
             <div class="avatar-edit">
                 <input type='file' id="imageUpload" name="image" accept=".png, .jpg, .jpeg" />

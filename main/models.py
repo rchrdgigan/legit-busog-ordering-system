@@ -72,4 +72,14 @@ class Order(models.Model):
                 )
             print(responseData)
         return super().save(*args, **kwargs)
-    
+
+
+class FeedBack(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
+    message = models.TextField(max_length=500, null=True)
+    rating = models.IntegerField()
+    date = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return str(self.user)+ " - " +str(self.order)   
