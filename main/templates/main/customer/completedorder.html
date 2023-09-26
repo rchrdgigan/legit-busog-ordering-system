@@ -9,7 +9,70 @@
 	<h1>Your Completed Order</h1>
 </header>
 
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	.rate {
+		float: left;
+		height: 46px;
+		padding: 0 10px;
+	}
+
+	.rate:not(:checked)>input {
+		position: absolute;
+		top: -9999px;
+	}
+
+	.rate:not(:checked)>label {
+		float: right;
+		width: 1em;
+		overflow: hidden;
+		white-space: nowrap;
+		cursor: pointer;
+		font-size: 30px;
+		color: #ccc;
+	}
+
+	.rate:not(:checked)>label:before {
+		content: "★ ";
+	}
+
+	.rate>input:checked~label {
+		color: #ffc700;
+	}
+
+	.rate:not(:checked)>label:hover,
+	.rate:not(:checked)>label:hover~label {
+		color: #deb217;
+	}
+
+	.rate>input:checked+label:hover,
+	.rate>input:checked+label:hover~label,
+	.rate>input:checked~label:hover,
+	.rate>input:checked~label:hover~label,
+	.rate>label:hover~input:checked~label {
+		color: #c59b08;
+	}
+
+</style>
+
 <div class="container">
+	<div class="row">
+		{% for message in messages %}
+		{% if message.tags == 'success' %}
+		<div class="alert alert-success" role="alert">
+			{{ message }}
+		</div>
+		{% elif message.tags == 'error' %}
+		<div class="alert alert-danger" role="alert">
+			{{ message }}
+		</div>
+		{% endif %}
+		{% endfor %}
+	</div>
 	<div class="col-12 mx-auto col-md-10">
 		<div class="row justify-content-between">
 
@@ -83,12 +146,50 @@
 										<i data-feather="eye"></i>
 									</a>
 									<a class="btn btn-sm btn-warning" data-bs-toggle="modal" id=""
-									   data-bs-target="#viewModal">
+									   data-bs-target="#rateModal{{ order.id }}">
 										<i data-feather="thumbs-up"></i>
 									</a>
 								</td>
 							</tr>
 						</tbody>
+						<!-- Cancel Modal -->
+						<div class="modal fade" id="rateModal{{ order.id }}">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form action="{% url 'customer_feedback' order.id %}" method="POST" id="ca_frm">
+										{% csrf_token %}
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">FeedBack</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"
+													aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<label for="message">Feedback:</label> <br>
+											<textarea name="message" id="message" cols="55" rows="7"></textarea>
+											<br>
+											<p>Rating:</p>
+											<div class="rate">
+												<input type="radio" id="star1" name="rate1" value="5" />
+												<label for="star1" title="text">1 stars</label>
+												<input type="radio" id="star2" name="rate2" value="4" />
+												<label for="star2" title="text">2 stars</label>
+												<input type="radio" id="star3" name="rate3" value="3" />
+												<label for="star3" title="text">3 stars</label>
+												<input type="radio" id="star4" name="rate4" value="2" />
+												<label for="star4" title="text">4 stars</label>
+												<input type="radio" id="star5" name="rate5" value="1" />
+												<label for="star5" title="text">5 star</label>
+											</div>
+										</div>
+										<div class="modal-footer float-end">
+											<button type="submit" class="btn btn-dark">Submit</button>
+											<a class="btn btn-cancel" data-bs-dismiss="modal"
+											   aria-label="Close">Cancel</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
 						{% endfor %}
 					</table>
 				</div>

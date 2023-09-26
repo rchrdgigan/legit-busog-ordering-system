@@ -49,7 +49,7 @@ List of Food
                         <tr>
                             <td>{{ user.date_joined }}</td>
                             <td>
-                                <img width="50" src="" alt="vehicle">
+                                <img width="50" src="{{ user.personinfo.image.url }}" alt="vehicle">
                             </td>
                             <td>{{ user.first_name | title }} {{ user.last_name | title }}</td>
                             <td>{{ user.email }}</td>

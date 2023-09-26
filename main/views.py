@@ -8,25 +8,25 @@ from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
 from datetime import datetime
 
-from .models import Order, PersonInfo, ProductInfo, Category
+from .models import FeedBack, Order, PersonInfo, ProductInfo, Category
 from .forms import ProductInfoForm
 
 # string path for admin and customer
 strc = 'main/customer'
 stra = 'main/admin'
 
-
+@login_required
 def customerPlaceOrder(response):
     return render(response, 'main/pages/placeorder.html')
 
-
+@login_required
 def foodProductList(response):
     foods = ProductInfo.objects.filter(availability=True)
     return render(response, 'main/pages/foodproduct.html', {
         'foods': foods,
     })
 
-
+@login_required
 def foodProductShow(response, id):
     food = ProductInfo.objects.get(id=id)
     user = response.user
@@ -46,6 +46,7 @@ def foodProductShow(response, id):
         'food': food,
     })
 
+@login_required
 
 @login_required
 def foodBuySucessfully(response):
@@ -303,8 +304,10 @@ def adminFoodEdit(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminViewFeedback(response):
-
-    return render(response, 'main/admin/feedbacklist.html')  # Admin
+    feedbacks = FeedBack.objects.all()
+    return render(response, 'main/admin/feedbacklist.html', {
+        'feedbacks': feedbacks,
+    })  # Admin
 
 
 @login_required
@@ -408,6 +411,9 @@ def adminProcessOrder(response):
     })  # admin
 
 
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminToDeliverOrder(response, id):
     order = Order.objects.get(id=id)
     order.status = 'Out for Delivery'
@@ -526,6 +532,7 @@ def adminChangePicture(response, id):
     })  # admin
 
 
+@login_required
 def customerIndex(response):
     user = response.user
     person = PersonInfo.objects.get(user=user)
@@ -534,7 +541,7 @@ def customerIndex(response):
         'person': person,
     })  # Customer
 
-
+@login_required
 def customerEditProfile(response, id):
     user = get_object_or_404(User, id=id)
     person = PersonInfo.objects.get(user=user)
@@ -554,7 +561,7 @@ def customerEditProfile(response, id):
         'person': person,
     })  # Customer
 
-
+@login_required
 def customerChangePicture(response, id):
     user = User.objects.get(id=id)
     person = PersonInfo.objects.get(user=user)
@@ -567,13 +574,13 @@ def customerChangePicture(response, id):
         'person': person,
     })  # Customer
 
-
+@login_required
 def customerCancelOrder(response, id):
     order = Order.objects.get(id=id)
     order.delete()
     return redirect('customer_pending_order')
 
-
+@login_required
 def customerPendingOrder(response):
     user = response.user
     orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(
@@ -582,7 +589,7 @@ def customerPendingOrder(response):
         'orders': orders
     })  # Customer
 
-
+@login_required
 def customerProcessOrder(response):
     user = response.user
     orders = Order.objects.filter(user=user, status='In-Process')
@@ -590,7 +597,7 @@ def customerProcessOrder(response):
         'orders': orders,
     })  # Customer
 
-
+@login_required
 def customerCompletedOrder(response):
     user = response.user
     orders = Order.objects.filter(user=user, status='Completed')
@@ -598,6 +605,48 @@ def customerCompletedOrder(response):
         'orders': orders,
     })  # Customer
 
-
+@login_required
 def customerHistoryOrder(response):
-    return render(response, 'main/customer/orderhistory.html')  # Customer
+    user = response.user
+    orders =  Order.objects.filter(user=user, status='Cancelled') | Order.objects.filter(user=user, status='Completed')
+    return render(response, 'main/customer/orderhistory.html', {
+        'orders': orders,
+    })  # Customer
+
+@login_required
+def customerFeedback(response, id):
+    order = Order.objects.get(id=id)
+    product = ProductInfo.objects.get(id=order.product.id)
+    user = response.user
+    if response.method == "POST":
+        feedback = response.POST.get('message')
+        rate1 = response.POST.get('rate1')
+        rate2 = response.POST.get('rate2')
+        rate3 = response.POST.get('rate3')
+        rate4 = response.POST.get('rate4')
+        rate5 = response.POST.get('rate5')
+
+        if rate1:
+            rate = rate1
+        elif rate2:
+            rate = rate2
+        elif rate3:
+            rate = rate3
+        elif rate4:
+            rate = rate4
+        else:
+            rate = rate5
+
+        feedback_data = FeedBack(user=user, order=order, message=feedback, rating=rate)
+        feedback_data.save()
+        add = float(product.ratings) + float(rate)
+        div = float(add) / 2
+        product.ratings = div
+        product.save()
+        messages.success(response, 'Feedback has been submitted!')
+        return redirect('customer_completed_order')
+        
+        
+        
+
+

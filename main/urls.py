@@ -74,6 +74,7 @@ urlpatterns = [
          name="customer_history_order"),
     path("v2/order/place-order", views.customerPlaceOrder,
          name="customer_placeorder_order"),
+    path('v2/order/feedback/<int:id>', views.customerFeedback, name='customer_feedback'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
