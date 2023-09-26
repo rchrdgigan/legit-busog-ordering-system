@@ -24,44 +24,36 @@
                     <thead>
                         <tr>
                             <th>Order No.</th>
-                            <th>Date Time</th>
-                            <th>Image</th>
-                            <th>Foods</th>
-                            <th>Quantity</th>
                             <th>Order Mode</th>
                             <th>Status</th>
+                            <th>Total Amount</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
                     <tbody>
                         <tr>
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.date }}</td>
-                            <td>
-                                <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" alt="vehicle">
-                                </a>
-                            </td>
-                            <td>{{ order.product.name }}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.order_mode }}</td>
-                            {% if order.status == 'Cancelled' %}
-                            <td class="text-danger">{{ order.status }}</td>
-                            {% else %}
-                            <td class="text-success">{{ order.status }}</td>
-                            {% endif %}
+                            <td>2023091012</td>
+                            <td>Delivery</td>
+                            <td class="text-success">Completed</td>
+                            <td>200</td>
                             <td class="text-center">
-                                <a data-bs-toggle="modal" id="" data-bs-target="#viewModal">
+                                <a class="btn btn-sm btn-info" href="{% url 'customer_orderlist' %}">
                                     <i data-feather="eye"></i>
                                 </a>
-                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal">
-                                    <i data-feather="delete"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2023091012</td>
+                            <td>Delivery</td>
+                            <td class="text-secondary">Cancelled</td>
+                            <td>200</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-info" href="{% url 'customer_orderlist' %}">
+                                    <i data-feather="eye"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
-                    {% endfor %}
                 </table>
             </div>
         </div>

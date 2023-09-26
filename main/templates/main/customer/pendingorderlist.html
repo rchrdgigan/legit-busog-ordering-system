@@ -11,26 +11,10 @@
 
 <div class="container">
 	<div class="col-12 mx-auto col-md-10">
-		<div class="row justify-content-between">
-
-			<div class="order-tracking completed">
-				<a href="{% url 'customer_pending_order' %}">
-					<span class="is-complete"></span>
-					<p>Pending<br></p>
-				</a>
-			</div>
-			<div class="order-tracking">
-				<a href="{% url 'customer_process_order' %}">
-					<span class="is-complete"></span>
-					<p>In-process<br></p>
-				</a>
-			</div>
-			<div class="order-tracking">
-				<a href="{% url 'customer_completed_order' %}">
-					<span class="is-complete"></span>
-					<p>Completed<br></p>
-				</a>
-			</div>
+		<div class="d-flex justify-content-around bd-highlight">
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_pending_order' %}" class="btn btn-warning p-2"><i class="fa fa-clock"></i><br> Pending</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_process_order' %}" class="btn btn-primary p-2"><i class="fa fa-spinner"></i><br> In-process</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_completed_order' %}" class="btn btn-primary p-2"><i class="fa fa-check-circle"></i><br> Completed</a></div>
 		</div>
 	</div>
 
@@ -49,55 +33,32 @@
 						<thead>
 							<tr>
 								<th>Order No.</th>
-								<th>Image</th>
-								<th>Foods</th>
-								<th>Quantity</th>
 								<th>Order Mode</th>
 								<th>Status</th>
+								<th>Total Amount</th>
 								<th class="text-center">Action</th>
 							</tr>
 						</thead>
-						{% for order in orders %}
 						<tbody>
 							<tr>
-								<td>{{ order.id }}</td>
-								<td>
-									<a href="{{ order.product.image.url }}">
-										<img width="50" src="{{ order.product.image.url }}" alt="vehicle">
-									</a>
-								</td>
-								<td>{{ order.product.name }}</td>
-								<td>{{ order.quantity }}</td>
-								<td>{{ order.order_mode }}</td>
-								{% if order.status == 'Pending' %}
-								<td class="text-info">{{ order.status }}</td>
-								{% else %}
-								<td class="text-danger" data-bs-toggle="modal"
-									data-bs-target="#cancelled{{ order.id }}">
-									{{ order.status }}</td>
-								{% endif %}
+								<td>2023091012</td>
+								<td>Delivery</td>
+								<td class="text-danger">Pending</td>
+								<td>200</td>
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" 
-										name="{{ order.product.name }}"
-										category="{{ order.product.category }}"
-										price="{{ order.product.price }}"
-										PrepTime="{{ order.product.PrepTime }}"
-										description="{{ order.product.description }}"
-										quantity = "{{ order.quantity }}"
-										order_mode="{{ order.order_mode }}"
-										data-bs-toggle="modal" 
-									   	data-bs-target="#viewModal">
+									<a class="btn btn-sm btn-info" href="{% url 'customer_orderlist' %}">
 										<i data-feather="eye"></i>
 									</a>
 									<a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" id=""
-									   data-bs-target="#caModal{{ order.id }}">
+									   data-bs-target="#caModal">
 										<i data-feather="delete"></i>
 									</a>
 								</td>
 							</tr>
 						</tbody>
+						
 						<!-- Cancelled message modal -->
-						<div class="modal fade" id="cancelled{{ order.id }}">
+						<div class="modal fade" id="cancelled">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<form action="" method="post" id="app_frm">
@@ -108,9 +69,7 @@
 										</div>
 										<div class="modal-body">
 											<input name="id" type="hidden">
-											<p>Order has been cancelled due to following reason/s:
-												{{ order.cancel_reason }}
-											</p>
+											<p>Order has been cancelled due to following reason/s:</p>
 										</div>
 										<div class="modal-footer float-end">
 											<a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">OK</a>
@@ -119,8 +78,9 @@
 								</div>
 							</div>
 						</div>
+
 						<!-- Cancel Modal -->
-						<div class="modal fade" id="caModal{{ order.id }}">
+						<div class="modal fade" id="caModal">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<form action="" method="post" id="ca_frm">
@@ -135,7 +95,7 @@
 										</div>
 										<div class="modal-footer float-end">
 											<a type="submit" class="btn btn-dark"
-											   href="{% url 'customer_cancel_order' order.id %}">Yes</a>
+											   href="">Yes</a>
 											<a class="btn btn-cancel" data-bs-dismiss="modal"
 											   aria-label="Close">Cancel</a>
 										</div>
@@ -143,74 +103,13 @@
 								</div>
 							</div>
 						</div>
-						{% endfor %}
+
 					</table>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="modal fade" id="viewModal">
-    <div class="modal-lg modal-dialog">
-        <div class="modal-content">
-            <form action="" method="post" id="view_frm">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Your Order</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group">
-                            <label>Item Name</label>
-                            <input type="text" class="form-control" name="name" readonly>
-                        </div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Quantity</label>
-								<input type="text" class="form-control" name="quantity" readonly>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Price</label>
-								<input type="text" class="form-control" name="price" readonly>
-							</div>
-						</div>
-						<div class="form-group">
-							<label>Total Price</label>
-							<input type="text" class="form-control" name="total_price" readonly>
-						</div>
-						<div class="col-md-6">
-							<div class="form-group">
-								<label>Category</label>
-								<input type="text" class="form-control" name="category" readonly>
-							</div>
-						</div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Order Mode</label>
-                                <input type="text" class="form-control" name="order_mode" readonly>
-                            </div>
-                        </div>
-						
-						<div class="form-group">
-							<label>Prep Time</label>
-							<input type="text" class="form-control" name="PrepTime" readonly>
-						</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Description</label>
-                        <textarea name="description" id="description" cols="30" rows="10" readonly></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer float-end">
-                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Close</a>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -219,21 +118,6 @@
         var opener = e.relatedTarget;
         var id = $(opener).attr('id');
         $('#delete_frm').find('[name="id"]').val(id);
-    });
-    $('#viewModal').on('show.bs.modal', function (e) {
-        var opener = e.relatedTarget;
-        var name = $(opener).attr('name');
-        var category = $(opener).attr('category');
-        var price = $(opener).attr('price');
-        var PrepTime = $(opener).attr('PrepTime');
-        var description = $(opener).attr('description');
-        var order_mode = $(opener).attr('order_mode');
-        $('#view_frm').find('[name="name"]').val(name);
-        $('#view_frm').find('[name="category"]').val(category);
-        $('#view_frm').find('[name="price"]').val(price);
-        $('#view_frm').find('[name="PrepTime"]').val(PrepTime);
-        $('#view_frm').find('[name="description"]').val(description);
-        $('#view_frm').find('[name="order_mode"]').val(order_mode);
     });
 </script>
 {% endblock javascripts %}

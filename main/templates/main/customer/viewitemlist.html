@@ -1,0 +1,118 @@
+{% extends '../customer-layout.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<header>
+    <h1>Your Order List</h1>
+</header>
+<div class="content mt-2">
+    <div class="page-header">
+        <div class="page-title">
+            <h4>Your Food List Transaction #2023091012</h4>
+            <h6>View list of foods ordered</h6>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="example" class="table">
+                    <thead>
+                        <tr>
+                            <th>Food No.</th>
+                            <th>Image</th>
+                            <th>Foods</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <a href="{% static 'img/dish.png' %}">
+                                    <img width="50" src="{% static 'img/dish.png' %}" alt="vehicle">
+                                </a>
+                            </td>
+                            <td>Food 1</td>
+                            <td>2</td>
+                            <td>100</td>
+                            <td>200</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""  data-bs-target="#viewModal">
+                                    <i data-feather="eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    <!-- View modal -->
+                        <div class="modal fade" id="viewModal">
+							<div class="modal-lg modal-dialog">
+								<div class="modal-content">
+									<form action="" method="post" id="view_frm">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Your Order</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div class="row">
+												<div class="form-group">
+													<label>Item Name</label>
+													<input type="text" class="form-control" name="name" readonly>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Quantity</label>
+														<input type="text" class="form-control" name="quantity" readonly>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Price</label>
+														<input type="text" class="form-control" name="price" readonly>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Total Price</label>
+													<input type="text" class="form-control" name="total_price" readonly>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Category</label>
+														<input type="text" class="form-control" name="category" readonly>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Prep Time</label>
+													<input type="text" class="form-control" name="PrepTime" readonly>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Description</label>
+												<textarea name="description" id="description" cols="30" rows="10" readonly></textarea>
+											</div>
+										</div>
+										<div class="modal-footer float-end">
+											<a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Close</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-primary" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i> Back</a>
+
+</div>
+{% endblock %}

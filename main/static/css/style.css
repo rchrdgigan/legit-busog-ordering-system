@@ -252,7 +252,8 @@ body {
 }
 
 .home_txt p {
-    color: var(--primary-color);
+    font-size: 2.6rem;
+    color: var(--light-black);
     font-weight: 600;
     padding-bottom: 20px;
     letter-spacing: 1.5px;
@@ -468,6 +469,43 @@ body {
 
 .seller a:hover {
     color: var(--primary-color);
+}
+
+.best-seller .buy-now button:disabled,
+.best-seller .buy-now button[disabled]{
+    padding: 10px 15px;
+    margin-top: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.best-seller .buy-now button:disabled:hover,
+.best-seller .buy-now button[disabled]:hover {
+    padding: 10px 15px;
+    margin-top: 5px;
+    font-size: 14px;
+    cursor: not-allowed;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.best-seller .buy-now button:disabled:hover a,
+.best-seller .buy-now button[disabled]:hover a{
+    cursor: not-allowed;
+    background-color: #cccccc;
+    color: #666666;
 }
 
 .best-seller .buy-now button,

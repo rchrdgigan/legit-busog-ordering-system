@@ -96,7 +96,9 @@ List of Food
 
 {% block content %}
 <section id="search" class="container2">
-    <input type="search" class="search" placeholder="Search Food Name">
+    <form action="{% url 'main_food' %}" method="get">
+        <input type="search" name="search" class="search" placeholder="Search Food Name">
+    </form>
 </section>
 <section id="foods">
     <div class="header">
@@ -148,7 +150,8 @@ List of Food
                     </div>
                     <div class="product-footer">
                         <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                        <button class="btn btn-place-order" type="submit">Place Order</button>
+                        <button class="btn btn-place-order" type="submit">Buy This</button>
+                        <a class="btn btn-place-order" href="{% url 'customer_placeorder_order' %}">Add to Cart</a>
                     </div>
                 </form>
             </div>
