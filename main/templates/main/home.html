@@ -43,7 +43,7 @@
             border-radius: 10px;
         }
 
-        .custom-color{
+        .custom-color {
             color: #FF4343;
         }
 
@@ -109,7 +109,8 @@
                 <div class="home_label ">
                     <p>A a popular restaurant chain located at<br>Zone-8 Bulan Sorsogon.</p>
                 </div>
-                <button class="cutom-border-rad custom-bg"><a href="{% url 'main_food' %}">ORDER NOW</a><i class='bx bx-right-arrow-alt'></i></button>
+                <button class="cutom-border-rad custom-bg"><a href="{% url 'main_food' %}">ORDER NOW</a><i
+                       class='bx bx-right-arrow-alt'></i></button>
             </div>
         </div>
 
@@ -145,11 +146,42 @@
                             <p>{{ food.name }}</p>
                         </div>
                         <div class="rating">
+                            {% if food.ratings <= 1.5 %}
+                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif food.ratings >= 1.6 and food.ratings <= 2.5 %}
+                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star checked"></span>
                             <span class="fa fa-star"></span>
                             <span class="fa fa-star"></span>
                             <span class="fa fa-star"></span>
+                            {% elif food.ratings >= 2.6 and food.ratings <= 3.5 %}
+                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif food.ratings >= 3.6 and food.ratings <= 4.5 %}
+                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star"></span>
+                            {% elif food.ratings >= 4.6 and food.ratings <= 5 %}
+                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            <span class="fa fa-star checked"></span>
+                            {% endif %}
                         </div>
                         <div class="price">
                             &#8369; {{ food.price }}

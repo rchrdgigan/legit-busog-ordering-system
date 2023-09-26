@@ -616,6 +616,7 @@ def customerHistoryOrder(response):
 @login_required
 def customerFeedback(response, id):
     order = Order.objects.get(id=id)
+    product = ProductInfo.objects.get(id=order.product.id)
     user = response.user
     if response.method == "POST":
         feedback = response.POST.get('message')
@@ -638,6 +639,10 @@ def customerFeedback(response, id):
 
         feedback_data = FeedBack(user=user, order=order, message=feedback, rating=rate)
         feedback_data.save()
+        add = float(product.ratings) + float(rate)
+        div = float(add) / 2
+        product.ratings = div
+        product.save()
         messages.success(response, 'Feedback has been submitted!')
         return redirect('customer_completed_order')
         

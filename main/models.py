@@ -38,6 +38,7 @@ class ProductInfo(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='product')
     availability = models.BooleanField(default=True)
+    ratings = models.FloatField(null=True, default=5)
     createdDate = models.DateTimeField(default=now)
 
     def __str__(self):
