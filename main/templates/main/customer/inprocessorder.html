@@ -11,26 +11,10 @@
 
 <div class="container">
 	<div class="col-12 mx-auto col-md-10">
-		<div class="row justify-content-between">
-
-			<div class="order-tracking completed">
-				<a href="{% url 'customer_pending_order' %}">
-					<span class="is-complete"></span>
-					<p>Pending<br></p>
-				</a>
-			</div>
-			<div class="order-tracking completed">
-				<a href="{% url 'customer_process_order' %}">
-					<span class="is-complete"></span>
-					<p>In-process<br></p>
-				</a>
-			</div>
-			<div class="order-tracking">
-				<a href="{% url 'customer_completed_order' %}">
-					<span class="is-complete"></span>
-					<p>Completed<br></p>
-				</a>
-			</div>
+		<div class="d-flex justify-content-around bd-highlight">
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_pending_order' %}" class="btn btn-primary p-2"><i class="fa fa-clock"></i><br> Pending</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_process_order' %}" class="btn btn-warning p-2"><i class="fa fa-spinner"></i><br> In-process</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_completed_order' %}" class="btn btn-primary p-2"><i class="fa fa-check-circle"></i><br> Completed</a></div>
 		</div>
 	</div>
 
@@ -47,7 +31,7 @@
 				<div class="table-responsive">
 					<table id="example" class="table">
 						<thead>
-							<tr>
+							<!-- <tr>
 								<th>Order No.</th>
 								<th>Image</th>
 								<th>Foods</th>
@@ -55,38 +39,28 @@
 								<th>Order Mode</th>
 								<th>Status</th>
 								<th class="text-center">Action</th>
+							</tr> -->
+							<tr>
+								<th>Order No.</th>
+								<th>Order Mode</th>
+								<th>Status</th>
+								<th>Total Amount</th>
+								<th class="text-center">Action</th>
 							</tr>
 						</thead>
-						{% for order in orders %}
 						<tbody>
 							<tr>
-								<td>{{ order.id }}</td>
-								<td>
-									<a href="{{ order.product.image.url }}">
-										<img width="50" src="{{ order.product.image.url }}" alt="vehicle">
-									</a>
-								</td>
-								<td>{{ order.product.name }}</td>
-								<td>{{ order.product.quantity }}</td>
-								<td>{{ order.order_mode }}</td>
-								<td class="text-info">{{ order.status }}</td>
+								<td>2023091012</td>
+								<td>Delivery</td>
+								<td class="text-info">In-Process</td>
+								<td>200</td>
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" 
-										name="{{ order.product.name }}"
-										category="{{ order.product.category }}"
-										price="{{ order.product.price }}"
-										PrepTime="{{ order.product.PrepTime }}"
-										description="{{ order.product.description }}"
-										quantity = "{{ order.quantity }}"
-										order_mode="{{ order.order_mode }}"
-										data-bs-toggle="modal" 
-										data-bs-target="#viewModal">
+									<a class="btn btn-sm btn-info" href="{% url 'customer_orderlist' %}">
 										<i data-feather="eye"></i>
 									</a>
 								</td>
 							</tr>
 						</tbody>
-						{% endfor %}
 					</table>
 				</div>
 			</div>

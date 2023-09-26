@@ -91,8 +91,10 @@
             <ul class="menu-items">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#collection">Categories</a></li>
+                <li><a href="{% url 'main_food' %}">Foods</a></li>
                 <li><a href="#foods">Top Sales</a></li>
                 <li><a href="#contact">Contact</a></li>
+                <li><a href="{% url 'customer_placeorder_order' %}">Cart</a></li>
             </ul>
             <h1><img src="{% static 'img/logo.jpg' %}" width="30"> Legit Busog Restaurant</h1>
         </div>
@@ -134,68 +136,76 @@
     </section>
     <section id="foods">
         <div class="header">
-            <h2>Top Sales</h2>
+            <h2>Best Seller</h2>
         </div>
         <div class="seller container">
             <div class="best-seller">
                 {% for food in foods %}
-                <div class="best-p1">
-                    <img src="{{ food.image.url }}" alt="img" style="border-radius: 10px; margin-bottom: 10px;">
-                    <div class="best-p1-txt">
-                        <div class="name-of-p">
-                            <p>{{ food.name }}</p>
-                        </div>
-                        <div class="rating">
-                            {% if food.ratings <= 1.5 %}
-                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            {% elif food.ratings >= 1.6 and food.ratings <= 2.5 %}
-                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            {% elif food.ratings >= 2.6 and food.ratings <= 3.5 %}
-                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            <span class="fa fa-star"></span>
-                            {% elif food.ratings >= 3.6 and food.ratings <= 4.5 %}
-                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star"></span>
-                            {% elif food.ratings >= 4.6 and food.ratings <= 5 %}
-                            <span>{{ food.ratings |floatformat:1 }}/5.0</span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            <span class="fa fa-star checked"></span>
-                            {% endif %}
-                        </div>
-                        <div class="price">
-                            &#8369; {{ food.price }}
-                            <div class="colors">
-                                <i class='bx bxs-circle red'></i>
-                                <i class='bx bxs-circle blue'></i>
-                                <i class='bx bxs-circle white'></i>
+                    {% if food.ratings >= 4.6 and food.ratings <= 5 %}
+                    <div class="best-p1">
+                        <img src="{{ food.image.url }}" alt="img" style="border-radius: 10px; margin-bottom: 10px;">
+                        <div class="best-p1-txt">
+                            <div class="name-of-p">
+                                <p>{{ food.name }}</p>
+                            </div>
+                            <div class="rating">
+                                {% if food.ratings <= 1.5 %}
+                                <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                {% elif food.ratings >= 1.6 and food.ratings <= 2.5 %}
+                                <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                {% elif food.ratings >= 2.6 and food.ratings <= 3.5 %}
+                                <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                <span class="fa fa-star"></span>
+                                {% elif food.ratings >= 3.6 and food.ratings <= 4.5 %}
+                                <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star"></span>
+                                {% elif food.ratings >= 4.6 and food.ratings <= 5 %}
+                                <span>{{ food.ratings |floatformat:1 }}/5.0</span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                <span class="fa fa-star checked"></span>
+                                {% endif %}
+                            </div>
+                            <div class="price">
+                                &#8369; {{ food.price }}
+                                <div class="colors">
+                                    {% if food.availability == 0 %}
+                                    <i class='red'>Unavailable</i>
+                                    {% elif food.availability == 1 %}
+                                    <i class='blue'>Available</i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="buy-now">
+                                {% if food.availability == 0 %}
+                                <button disabled><a>Buy Now</a></button>
+                                {% elif food.availability == 1 %}
+                                <button><a href="{% url 'main_food_show' food.id %}">Buy Now</a></button>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="buy-now">
-                            <button><a href="{% url 'main_food_show' food.id %}">Buy Now</a></button>
-                        </div>
                     </div>
-                </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
@@ -213,7 +223,7 @@
                     <div class="form-txt">
                         <h4>INFORMATION</h4>
                         <h1>Contact Us</h1>
-                        <span>As you might expect of a our Restaurant. It's Located at listed bellow and for more info
+                        <span>As you might expect of a our Restaurant. It's Located at listed below and for more info
                             you can contact us.</span>
                         <h3>PH</h3>
                         <p>161 T. De Castro Street, Bulan, Sorsogon<br>+639275621240</p>
