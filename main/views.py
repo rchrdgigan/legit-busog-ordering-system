@@ -9,7 +9,7 @@ from .decorators import allowed_users
 from datetime import datetime
 from django.db.models import Q
 
-from .models import FeedBack, Order, PersonInfo, ProductInfo, Category
+from .models import FeedBack, Order, PersonInfo, ProductInfo, Category, Transaction
 from .forms import ProductInfoForm
 
 # string path for admin and customer
@@ -19,7 +19,42 @@ stra = 'main/admin'
 
 @login_required
 def customerPlaceOrder(response):
-    return render(response, 'main/pages/placeorder.html')
+    user = response.user
+    if Order.objects.filter(user=user, status='In-Cart'):   
+        orders = Order.objects.filter(user=user, status='In-Cart')
+        for order in orders:
+            ords = Order.objects.get(id=order.id)
+            break
+        data = order
+        if Transaction.objects.filter(transaction_id=ords.transaction_id):
+            transaction = get_object_or_404(Transaction, transaction_id=ords.transaction_id)
+        else:
+            transaction = Transaction(transaction_id=ords.transaction_id, user=user, order_mode=ords.order_mode)
+            transaction.save()
+        transaction.total_amount = 0
+        transaction.save()
+        for order in orders:
+                total_order = transaction.total_amount + order.total_amount
+                transaction.total_amount = total_order
+                transaction.save()
+        if response.method == "POST":
+            address = response.POST['location']
+            transaction.address = address
+            transaction.status = 'Pending'
+            transaction.save()
+            for order in orders:
+                order.status = 'Pending'
+                order.save()
+            return redirect('main_food_success')
+    else:
+        data = ''
+        orders = ''
+        transaction = ''
+    return render(response, 'main/pages/placeorder.html', {
+        'orders': orders,
+        'data': data,
+        'transaction': transaction,
+    })
 
 
 def foodProductList(request):
@@ -41,11 +76,43 @@ def foodProductShow(response, id):
         if user.is_authenticated:
             quantity = response.POST['product-qty']
             mode = response.POST['mode']
-            order = Order(user=user, product=food,
-                          quantity=quantity, order_mode=mode)
-            order.status = 'Pending'
-            order.save()
-            return redirect('main_food_success')
+            if Order.objects.filter(user=user, status='In-Cart'):
+                order_incart = Order.objects.filter(user=user, status='In-Cart')
+                for o in order_incart:
+                    o = Order.objects.get(id=o.id)
+                    break
+                order = Order(user=user, product=food,
+                            quantity=quantity, order_mode=mode)
+                order.total_amount = int(quantity) * int(order.product.price)
+                if response.POST.get('addcart'):
+                    if mode != o.order_mode:
+                        print(o.order_mode)
+                        messages.error(response, 'Order mode must be the same on the added product in cart')
+                        return redirect('main_food_show', food.id)
+                    else:
+                        order.status = 'In-Cart'
+                        if order_incart:
+                            order.transaction_id = o.transaction_id
+                            order.save()
+                        else:
+                            order.save()
+                        return redirect('main_food_success')
+                else:
+                    order.status = 'Pending'
+                    order.save()
+                    return redirect('main_food_success')
+            else:
+                order = Order(user=user, product=food,
+                                quantity=quantity, order_mode=mode)
+                order.total_amount = int(quantity) * int(order.product.price)
+                if response.POST.get('addcart'):
+                    order.status = 'In-Cart'
+                    order.save()
+                    return redirect('main_food_success')
+                else:
+                    order.status = 'Pending'
+                    order.save()
+                    return redirect('main_food_success')
         else:
             return redirect('login')
 
@@ -54,7 +121,6 @@ def foodProductShow(response, id):
     })
 
 
-@login_required
 @login_required
 def foodBuySucessfully(response):
     return render(response, 'main/pages/successfully-ordered.html')
@@ -593,10 +659,9 @@ def customerCancelOrder(response, id):
 @login_required
 def customerPendingOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='Pending') | Order.objects.filter(
-        user=user, status='Cancelled')
+    transaction = Transaction.objects.filter(user=user, status='Pending')
     return render(response, 'main/customer/pendingorderlist.html', {
-        'orders': orders
+        'transaction': transaction,
     })  # Customer
 
 
@@ -663,5 +728,11 @@ def customerFeedback(response, id):
         return redirect('customer_completed_order')
 
 
-def customerViewOrderList(response):
-    return render(response, 'main/customer/viewitemlist.html')
+def customerViewOrderList(response, trans_id):
+    trans = Transaction.objects.get(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='Pending')
+
+    return render(response, 'main/customer/viewitemlist.html', {
+        'orders': orders,
+        'trans': trans
+    })

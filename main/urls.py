@@ -77,7 +77,7 @@ urlpatterns = [
     path('v2/order/feedback/<int:id>',
          views.customerFeedback, name='customer_feedback'),
 
-    path('v2/order/fooodlist', views.customerViewOrderList,
+    path('v2/order/fooodlist/<int:trans_id>', views.customerViewOrderList,
          name='customer_orderlist'),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

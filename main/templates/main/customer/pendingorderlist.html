@@ -12,9 +12,12 @@
 <div class="container">
 	<div class="col-12 mx-auto col-md-10">
 		<div class="d-flex justify-content-around bd-highlight">
-			<div class="p-2 bd-highlight"><a href="{% url 'customer_pending_order' %}" class="btn btn-warning p-2"><i class="fa fa-clock"></i><br> Pending</a></div>
-			<div class="p-2 bd-highlight"><a href="{% url 'customer_process_order' %}" class="btn btn-primary p-2"><i class="fa fa-spinner"></i><br> In-process</a></div>
-			<div class="p-2 bd-highlight"><a href="{% url 'customer_completed_order' %}" class="btn btn-primary p-2"><i class="fa fa-check-circle"></i><br> Completed</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_pending_order' %}" class="btn btn-warning p-2"><i
+					   class="fa fa-clock"></i><br> Pending</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_process_order' %}" class="btn btn-primary p-2"><i
+					   class="fa fa-spinner"></i><br> In-process</a></div>
+			<div class="p-2 bd-highlight"><a href="{% url 'customer_completed_order' %}" class="btn btn-primary p-2"><i
+					   class="fa fa-check-circle"></i><br> Completed</a></div>
 		</div>
 	</div>
 
@@ -39,14 +42,16 @@
 								<th class="text-center">Action</th>
 							</tr>
 						</thead>
+						{% for trans in transaction %}
 						<tbody>
 							<tr>
-								<td>2023091012</td>
-								<td>Delivery</td>
-								<td class="text-danger">Pending</td>
-								<td>200</td>
+								<td>{{ trans.transaction_id }}</td>
+								<td>{{ trans.order_mode }}</td>
+								<td class="text-danger">{{ trans.status }}</td>
+								<td>{{ trans.total_amount }}</td>
 								<td class="text-center">
-									<a class="btn btn-sm btn-info" href="{% url 'customer_orderlist' %}">
+									<a class="btn btn-sm btn-info"
+									   href="{% url 'customer_orderlist' trans.transaction_id %}">
 										<i data-feather="eye"></i>
 									</a>
 									<a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" id=""
@@ -56,7 +61,7 @@
 								</td>
 							</tr>
 						</tbody>
-						
+						{% endfor %}
 						<!-- Cancelled message modal -->
 						<div class="modal fade" id="cancelled">
 							<div class="modal-dialog">
@@ -94,8 +99,7 @@
 											<p>Are you sure you want to cancel this data?</p>
 										</div>
 										<div class="modal-footer float-end">
-											<a type="submit" class="btn btn-dark"
-											   href="">Yes</a>
+											<a type="submit" class="btn btn-dark" href="">Yes</a>
 											<a class="btn btn-cancel" data-bs-dismiss="modal"
 											   aria-label="Close">Cancel</a>
 										</div>
@@ -114,10 +118,10 @@
 
 {% block javascripts %}
 <script>
-    $('#delModal').on('show.bs.modal', function (e) {
-        var opener = e.relatedTarget;
-        var id = $(opener).attr('id');
-        $('#delete_frm').find('[name="id"]').val(id);
-    });
+	$('#delModal').on('show.bs.modal', function (e) {
+		var opener = e.relatedTarget;
+		var id = $(opener).attr('id');
+		$('#delete_frm').find('[name="id"]').val(id);
+	});
 </script>
 {% endblock javascripts %}

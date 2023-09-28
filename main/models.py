@@ -1,4 +1,5 @@
 import os
+import random
 from urllib import response
 from django.db import models
 from django.contrib.auth.models import User
@@ -43,9 +44,12 @@ class ProductInfo(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+def random_string():
+    return str(random.randint(10000, 99999))
 
 class Order(models.Model):
+    transaction_id = models.CharField(max_length=50, default = random_string)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     product = models.ForeignKey(
         ProductInfo, on_delete=models.CASCADE, null=False)
@@ -53,11 +57,24 @@ class Order(models.Model):
     order_mode = models.CharField(max_length=30)
     status = models.CharField(max_length=50)
     cancel_reason = models.CharField(max_length=100, null=True)
+    total_amount = models.IntegerField(null=True)
     date = models.DateTimeField(default=now, null=True)
 
     def __str__(self):
         return str(self.user) + " - " + str(self.product)
 
+    
+class Transaction(models.Model):
+    transaction_id = models.CharField(max_length=50, null=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    total_amount = models.IntegerField(default=0, null=True)
+    order_mode = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
+    address = models.CharField(max_length=250)
+
+    def __str__(self):
+        return str(self.user)+ " - " + str(self.transaction_id)
+    
     def save(self, *args, **kwargs):
         if self.status == 'Out for Delivery':
             user = User.objects.get(id=self.user.id)
