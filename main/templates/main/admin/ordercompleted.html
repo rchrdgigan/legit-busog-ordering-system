@@ -23,43 +23,38 @@ List of Completed Order
                 <table id="example" class="table">
                     <thead>
                         <tr>
-                            <th>Customer</th>
+                            <th>Date Ordered</th>
                             <th>Order No.</th>
                             <th>Image</th>
-                            <th>Foods</th>
-                            <th>Quantity</th>
+                            <th>Customer</th>
                             <th>Order Mode</th>
                             <th>Status</th>
+                            <th>Total Amount</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
+                    
                     <tbody>
                         <tr>
-                            <td>{{ order.user.first_name | title }} {{ order.user.last_name | title }}</td>
-                            <td>{{ order.id }}</td>
+                            <td>2023-09-28</td>
+                            <td>36215</td>
                             <td>
-                                <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" alt="vehicle">
+                                <a href="{% static 'img/no-profile.png' %}">
+                                    <img width="50" src="{% static 'img/no-profile.png' %}" alt="vehicle">
                                 </a>
                             </td>
-                            <td>{{ order.product.name }}</td>
-                            <td>{{ order.quantity}}</td>
-                            <td>{{ order.order_mode }}</td>
-                            <td class="text-success">{{ order.status }}</td>
+                            <td>Customer Nname</td>
+                            <td>Dine-In</td>
+                            <td class="text-success">Completed</td>
+                            <td>1000</td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
                                    data-bs-target="#viewModal">
                                     <i data-feather="eye"></i>
                                 </a>
-                                <a class="btn btn-sm btn-warning text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#viewModal">
-                                    <i data-feather="thumbs-up"></i>
-                                </a>
                             </td>
                         </tr>
                     </tbody>
-                    {% endfor %}
                 </table>
             </div>
         </div>

@@ -36,44 +36,42 @@ List of Inprocess Order
                 <table id="example" class="table">
                     <thead>
                         <tr>
-                            <th>Customer</th>
+                            <th>Date Ordered</th>
                             <th>Order No.</th>
                             <th>Image</th>
-                            <th>Foods</th>
-                            <th>Quantity</th>
+                            <th>Customer</th>
                             <th>Order Mode</th>
                             <th>Status</th>
+                            <th>Total Amount</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
                     <tbody>
                         <tr>
-                            <td>{{ order.user.first_name | title }} {{ order.user.last_name | title }}</td>
-                            <td>{{ order.id }}</td>
+                            <td>2023-09-28</td>
+                            <td>36215</td>
                             <td>
-                                <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" alt="vehicle">
+                                <a href="{% static 'img/no-profile.png' %}">
+                                    <img width="50" src="{% static 'img/no-profile.png' %}" alt="vehicle">
                                 </a>
                             </td>
-                            <td>{{ order.product.name}}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.order_mode }}</td>
-                            <td class="text-info">{{ order.status }}</td>
+                            <td>Customer Nname</td>
+                            <td>Dine-In</td>
+                            <td class="text-info">In-Process</td>
+                            <td>1000</td>
                             <td class="text-center">
-                                {% if order.status == 'Out for Delivery' %}
-                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#appModal{{ order.id }}">
+                                
+                                <!-- <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#appModal">
                                     <i data-feather="check-circle"></i>
                                 </a>
-                                {% elif order.status == 'In-Process' %}
+                                -->
                                 <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#deliverModal{{ order.id }}">
+                                   data-bs-target="#deliverModal">
                                     <i data-feather="truck"></i>
                                 </a>
-                                {% endif %}
-                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#viewModal">
+
+                                <a class="btn btn-sm btn-info text-white" href="{% url 'admin_customer_orderlist' %}">
                                     <i data-feather="eye"></i>
                                 </a>
                             </td>
@@ -103,7 +101,7 @@ List of Inprocess Order
                         </div>
                     </div>
                     <!-- Confirm Modal -->
-                    <div class="modal fade" id="appModal{{ order.id }}">
+                    <div class="modal fade" id="appModal">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="" method="post" id="ca_frm">
@@ -118,7 +116,7 @@ List of Inprocess Order
                                     </div>
                                     <div class="modal-footer float-end">
                                         <a type="submit" class="btn btn-dark"
-                                           href="{% url 'admin_toComplete_order' order.id %}">Yes</a>
+                                           href="">Yes</a>
                                         <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                                     </div>
                                 </form>
@@ -126,7 +124,7 @@ List of Inprocess Order
                         </div>
                     </div>
                     <!-- deliver Modal -->
-                    <div class="modal fade" id="deliverModal{{ order.id }}">
+                    <div class="modal fade" id="deliverModal">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="" method="post" id="ca_frm">
@@ -141,14 +139,13 @@ List of Inprocess Order
                                     </div>
                                     <div class="modal-footer float-end">
                                         <a type="submit" class="btn btn-dark"
-                                           href="{% url 'admin_toDeliver_order' order.id %}">Yes</a>
+                                           href="">Yes</a>
                                         <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </table>
             </div>
         </div>
