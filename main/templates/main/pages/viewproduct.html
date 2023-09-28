@@ -17,7 +17,8 @@ List of Food
         overflow: hidden;
     }
 
-    .qty-input .product-qty, .qty-input .qty-count {
+    .qty-input .product-qty,
+    .qty-input .qty-count {
         background: transparent;
         color: inherit;
         font-weight: bold;
@@ -29,7 +30,8 @@ List of Food
         line-height: 1;
     }
 
-    .qty-input .product-qty:focus, .qty-input .qty-count:focus {
+    .qty-input .product-qty:focus,
+    .qty-input .qty-count:focus {
         outline: none;
     }
 
@@ -41,7 +43,8 @@ List of Food
         appearance: textfield;
     }
 
-    .qty-input .product-qty::-webkit-outer-spin-button, .qty-input .product-qty::-webkit-inner-spin-button {
+    .qty-input .product-qty::-webkit-outer-spin-button,
+    .qty-input .product-qty::-webkit-inner-spin-button {
         appearance: none;
         margin: 0;
     }
@@ -56,7 +59,8 @@ List of Food
         position: relative;
     }
 
-    .qty-input .qty-count:before, .qty-input .qty-count:after {
+    .qty-input .qty-count:before,
+    .qty-input .qty-count:after {
         content: "";
         height: 2px;
         width: 10px;
@@ -69,28 +73,35 @@ List of Food
         right: 0;
         margin: auto;
     }
-    
+
     .qty-input .qty-count--minus {
         border-right: 1px solid #e2e2e2;
     }
+
     .qty-input .qty-count--add {
         border-left: 1px solid #e2e2e2;
     }
+
     .qty-input .qty-count--add:after {
         transform: rotate(90deg);
     }
+
     .qty-input .qty-count:disabled {
         color: #ccc;
         background: #f2f2f2;
         cursor: not-allowed;
         border-color: transparent;
     }
-    .qty-input .qty-count:disabled:before, .qty-input .qty-count:disabled:after {
+
+    .qty-input .qty-count:disabled:before,
+    .qty-input .qty-count:disabled:after {
         background: #ccc;
     }
+
     .qty-input {
         border-radius: 4px;
     }
+
 </style>
 {% endblock stylesheets %}
 
@@ -101,6 +112,19 @@ List of Food
     </form>
 </section>
 <section id="foods">
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="header">
         <h2>View Product</h2>
     </div>
@@ -151,7 +175,7 @@ List of Food
                     <div class="product-footer">
                         <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
                         <button class="btn btn-place-order" type="submit">Buy This</button>
-                        <a class="btn btn-place-order" href="{% url 'customer_placeorder_order' %}">Add to Cart</a>
+                        <input type="submit" class="btn btn-place-order" name="addcart" value="Add To Cart">
                     </div>
                 </form>
             </div>
@@ -186,8 +210,8 @@ List of Food
                 $minusBtn.attr("disabled", true);
             } else {
                 $minusBtn.attr("disabled", false);
-                
-                if(qty >= qtyMax){
+
+                if (qty >= qtyMax) {
                     $this.val(qtyMax);
                     $addBtn.attr('disabled', true);
                 } else {
@@ -214,7 +238,7 @@ List of Food
                 }
             } else {
                 qty = qty <= qtyMin ? qtyMin : (qty -= 1);
-                
+
                 if (qty == qtyMin) {
                     $this.attr("disabled", true);
                 }

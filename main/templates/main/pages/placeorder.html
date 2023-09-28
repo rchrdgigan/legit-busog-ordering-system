@@ -19,17 +19,18 @@ List of Food
     <div class="header">
         <h2>Your Cart Order</h2>
     </div>
+
     <div class="seller container2">
-
-
+        {% if orders %}
+        {% for order in orders %}
         <div class="container-product">
             <div class="product-image">
-                <img src="{% static 'img/logo.jpg' %}"alt="img">
+                <img src="{{ order.product.image.url }}" alt="img">
             </div>
             <div class="product-details" style="align-self: center;">
                 <div class="product-header">
-                    <h3>Item Name</h3>
-                    <h1>Price</h1>
+                    <h3>{{ order.product.name | title }}</h3>
+                    <h1>{{ order.product.price }}.00</h1>
                 </div>
                 <div class="cont-mo">
                     <div class="more-details">
@@ -42,14 +43,14 @@ List of Food
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>10</td>
-                                    <td>100.00</td>
+                                    <td>{{ order.quantity }}</td>
+                                    <td>{{ order.product.price }}.00</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td>Total Amount:</td>
-                                    <td>1000.00</td>
+                                    <td>{{ order.total_amount }}.00</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -61,78 +62,47 @@ List of Food
                 </div>
             </div>
         </div>
-
-        <div class="container-product">
-            <div class="product-image">
-                <img src="{% static 'img/logo.jpg' %}"alt="img">
-            </div>
-            <div class="product-details" style="align-self: center;">
-                <div class="product-header">
-                    <h3>Item Name</h3>
-                    <h1>Price</h1>
-                </div>
-                <div class="cont-mo">
-                    <div class="more-details">
-                        <table class="order-table">
-                            <thead>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>10</td>
-                                    <td>100.00</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total Amount:</td>
-                                    <td>1000.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="product-footer">
-                    <a class="btn-back">Remove This</a>
-                    <a class="btn-place-order" href="{% url 'main_food_success' %}">Buy This Only</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
+        {% else %}
+        <br>
+        <p><i>No product in cart</i></p>
+        {% endif %}
 
         <table class="order-table">
-            <thead>
-                <tr>
-                    <th colspan="2">Summary Order</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Address:</td>
-                    <td><input class="product-qty" type="text" name="location" placeholder="Type here your address"></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Order Mode:</td>
-                    <td>Delivery</td>
-                </tr>
-                <tr>
-                    <td>Total Order:</td>
-                    <td>2000.00</td>
-                </tr>
-            </tfoot>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <thead>
+                    <tr>
+                        <th colspan="2">Summary Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Address:</td>
+                        <td><input class="product-qty" type="text" name="location" placeholder="Type here your address">
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Order Mode:</td>
+                        <td>{{ data.order_mode }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Order:</td>
+                        <td>{{ transaction.total_amount }}.00</td>
+                    </tr>
+                </tfoot>
+                <div class="product-footer">
+                    <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
+                    <a class="btn-place-order" href="{% url 'main_food_success' %}">Remove all</a>
+                    <button class="btn-place-order" type="submit">Check Out</button>
+                </div>
+            </form>
         </table>
-        <div class="product-footer">
-            <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-            <a class="btn-place-order" href="{% url 'main_food_success' %}">Remove all</a>
-            <a class="btn-place-order" href="{% url 'main_food_success' %}">Check Out</a>
-        </div>
     </div>
-   
-    
+
+
 </section>
 {% endblock %}
 {% block javascripts %}
