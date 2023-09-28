@@ -20,23 +20,25 @@ stra = 'main/admin'
 @login_required
 def customerPlaceOrder(response):
     user = response.user
-    if Order.objects.filter(user=user, status='In-Cart'):   
+    if Order.objects.filter(user=user, status='In-Cart'):
         orders = Order.objects.filter(user=user, status='In-Cart')
         for order in orders:
             ords = Order.objects.get(id=order.id)
             break
         data = order
         if Transaction.objects.filter(transaction_id=ords.transaction_id):
-            transaction = get_object_or_404(Transaction, transaction_id=ords.transaction_id)
+            transaction = get_object_or_404(
+                Transaction, transaction_id=ords.transaction_id)
         else:
-            transaction = Transaction(transaction_id=ords.transaction_id, user=user, order_mode=ords.order_mode)
+            transaction = Transaction(
+                transaction_id=ords.transaction_id, user=user, order_mode=ords.order_mode)
             transaction.save()
         transaction.total_amount = 0
         transaction.save()
         for order in orders:
-                total_order = transaction.total_amount + order.total_amount
-                transaction.total_amount = total_order
-                transaction.save()
+            total_order = transaction.total_amount + order.total_amount
+            transaction.total_amount = total_order
+            transaction.save()
         if response.method == "POST":
             address = response.POST['location']
             transaction.address = address
@@ -57,6 +59,13 @@ def customerPlaceOrder(response):
     })
 
 
+def customerDeleteOneOrder(request, order_id):
+    order = get_object_or_404(
+        Order, id=order_id, user=request.user, status='In-Cart')
+    order.delete()
+    return redirect('customer_placeorder_order')
+
+
 def foodProductList(request):
     search_query = request.GET.get('search', '')
     foods = ProductInfo.objects.filter(
@@ -75,40 +84,34 @@ def foodProductShow(response, id):
     if response.method == "POST":
         if user.is_authenticated:
             quantity = response.POST['product-qty']
-            mode = response.POST['mode']
             if Order.objects.filter(user=user, status='In-Cart'):
-                order_incart = Order.objects.filter(user=user, status='In-Cart')
+                order_incart = Order.objects.filter(
+                    user=user, status='In-Cart')
                 for o in order_incart:
                     o = Order.objects.get(id=o.id)
                     break
                 order = Order(user=user, product=food,
-                            quantity=quantity, order_mode=mode)
+                              quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if response.POST.get('addcart'):
-                    if mode != o.order_mode:
-                        print(o.order_mode)
-                        messages.error(response, 'Order mode must be the same on the added product in cart')
-                        return redirect('main_food_show', food.id)
+                    if order_incart:
+                        order.transaction_id = o.transaction_id
+                        order.save()
                     else:
-                        order.status = 'In-Cart'
-                        if order_incart:
-                            order.transaction_id = o.transaction_id
-                            order.save()
-                        else:
-                            order.save()
-                        return redirect('main_food_success')
+                        order.save()
+                    return redirect('main_food_added')
                 else:
                     order.status = 'Pending'
                     order.save()
                     return redirect('main_food_success')
             else:
                 order = Order(user=user, product=food,
-                                quantity=quantity, order_mode=mode)
+                              quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if response.POST.get('addcart'):
                     order.status = 'In-Cart'
                     order.save()
-                    return redirect('main_food_success')
+                    return redirect('main_food_added')
                 else:
                     order.status = 'Pending'
                     order.save()
@@ -124,6 +127,10 @@ def foodProductShow(response, id):
 @login_required
 def foodBuySucessfully(response):
     return render(response, 'main/pages/successfully-ordered.html')
+
+
+def foodAdded(response):
+    return render(response, 'main/pages/successfully-added.html')
 
 
 def ViewProductByCategory(response, id):
@@ -605,6 +612,12 @@ def adminChangePicture(response, id):
 
 
 @login_required
+@allowed_users(allowed_roles=['admin'])
+def adminViewOrderList(response):
+    return render(response, 'main/admin/viewitemlist.html')  # admin
+
+
+@login_required
 def customerIndex(response):
     user = response.user
     person = PersonInfo.objects.get(user=user)
@@ -736,3 +749,11 @@ def customerViewOrderList(response, trans_id):
         'orders': orders,
         'trans': trans
     })
+
+
+def customerSingleOrder(response):
+    return render(response, 'main/pages/singleorder.html')
+
+
+def customerSummaryOrder(response):
+    return render(response, 'main/pages/summaryorder.html')

@@ -13,6 +13,7 @@ urlpatterns = [
     path("pages/food", views.foodProductList, name="main_food"),
     path("pages/food/show/<int:id>", views.foodProductShow, name="main_food_show"),
     path("pages/food/success", views.foodBuySucessfully, name="main_food_success"),
+    path("pages/food/added", views.foodAdded, name="main_food_added"),
     path("pages/viewproduct/category/<int:id>",
          views.ViewProductByCategory, name='view_product_category'),
 
@@ -56,6 +57,10 @@ urlpatterns = [
     path("v1/profile/change-picture/<int:id>", views.adminChangePicture,
          name="admin_change_picture"),
 
+    path('v1/order/fooodlist/parameter', views.adminViewOrderList,
+         name='admin_customer_orderlist'),  # View customer's order list
+
+
     # Customer
     path("v2/profile", views.customerIndex, name="customer_index"),
     path("v2/profile/edit/<int:id>", views.customerEditProfile,
@@ -72,13 +77,21 @@ urlpatterns = [
          name="customer_completed_order"),
     path("v2/order/history", views.customerHistoryOrder,
          name="customer_history_order"),
-    path("v2/order/place-order", views.customerPlaceOrder,
+    path("v2/order/place-order", views.customerPlaceOrder,  # List of Cart
          name="customer_placeorder_order"),
+    path("v2/order/place-order/<int:order_id>", views.customerDeleteOneOrder,  # Delete One Order in Place Order
+         name="customer_delete_one_order"),
     path('v2/order/feedback/<int:id>',
          views.customerFeedback, name='customer_feedback'),
 
     path('v2/order/fooodlist/<int:trans_id>', views.customerViewOrderList,
          name='customer_orderlist'),
+
+    path("v2/order/single-order", views.customerSingleOrder,
+         name="customer_single_order"),
+
+    path("v2/order/summary", views.customerSummaryOrder,
+         name="customer_summary_order"),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,117 @@
+{% extends '../main-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
+<link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<section id="search" class="container2">
+    <form action="{% url 'main_food' %}" method="get">
+        <input type="search" name="search" class="search" placeholder="Search Food Name">
+    </form>
+</section>
+
+<section id="foods">
+    <div class="header" style="margin-bottom: 40px;">
+        <h2>Your Order</h2>
+    </div>
+
+    <div class="seller container2">
+        
+        <div class="container-product">
+            <div class="product-image" style="margin: 10px auto;">
+                <img src="{% static 'img/logo.jpg' %}" alt="img">
+            </div>
+            <div class="product-details" style="align-self: center;">
+                <div class="product-header">
+                    <h3>Buttered Chicken</h3>
+                    <h1>120.00</h1>
+                </div>
+                <div class="cont-mo">
+                    <div class="more-details">
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>120.00</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>Total Amount:</td>
+                                    <td>120.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+        <form action="" method="POST">
+            {% csrf_token %}
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Summary Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Order Mode:</td>
+                        <td>
+                            <select id="order" name="mode">
+                                <option value="Dine-In">Dine-In</option>
+                                <option value="Delivery">Delivery</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="address_tr" style="display: none;">
+                        <td>Address:</td>
+                        <td><input class="product-qty" type="text" name="location" placeholder="Type here your address">
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    
+                    <tr>
+                        <td>Total Order:</td>
+                        <td>120.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="product-footer">
+                <a class="btn-back">Cancel</a>
+                <button class="btn-place-order" type="submit">Check Out</button>
+            </div>
+        </form>
+    </div>
+
+</section>
+{% endblock %}
+{% block javascripts %}
+<script>
+    const orderSelect = document.getElementById('order');
+    const addressTr = document.getElementById('address_tr');
+
+    orderSelect.addEventListener('change', function() {
+        if (orderSelect.value === 'Delivery') {
+            addressTr.style.display = 'table-row';
+        } else {
+            addressTr.style.display = 'none';
+        }
+    });
+</script>
+{% endblock javascripts %}
