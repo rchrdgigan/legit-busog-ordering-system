@@ -1,0 +1,24 @@
+{% extends '../main-layout.html' %}
+{% load static %}
+
+{% block title %}
+List of Food
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
+<link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="success-message">
+    <h1>Food order successfully add to cart!</h1>
+    <p>Your order has been successfully added to cart.<br></p>
+    <div class="product-footer">
+        <a href="{% url 'main_food' %}" class="btn-back">Back to Foods</a>
+        <a href="{% url 'customer_placeorder_order' %}" class="btn-place-order">My Cart</a>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock javascripts %}

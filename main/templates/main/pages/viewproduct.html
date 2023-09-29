@@ -112,23 +112,27 @@ List of Food
     </form>
 </section>
 <section id="foods">
-    <div class="row">
+    <div class="header" style="margin-bottom: 40px;">
+        <h2>View Product</h2>
+    </div>
+    <div class="seller container2">
         {% for message in messages %}
         {% if message.tags == 'success' %}
         <div class="alert alert-success" role="alert">
             {{ message }}
         </div>
         {% elif message.tags == 'error' %}
-        <div class="alert alert-danger" role="alert">
-            {{ message }}
+        <div class="alert error">
+            <input type="checkbox" id="alert1"/>
+        <label class="close" title="close" for="alert1">
+          <i class="icon-remove"></i>
+        </label>
+            <p class="inner">
+                <strong>Opps!</strong> {{ message }}
+            </p>
         </div>
         {% endif %}
         {% endfor %}
-    </div>
-    <div class="header">
-        <h2>View Product</h2>
-    </div>
-    <div class="seller container2">
         <div class="container-product">
             <div class="product-image">
                 <img src="{{ food.image.url }}" alt="img">
@@ -164,17 +168,11 @@ List of Food
                                 <input class="product-qty" type="number" name="product-qty" min="0" max="50" value="1">
                                 <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
                             </div>
-                            <br>
-                            <label for="order"><b>Order Mode</b></label>
-                            <select id="order" name="mode">
-                                <option value="Dine-In">Dine-In</option>
-                                <option value="Delivery">Delivery</option>
-                            </select>
                         </div>
                     </div>
                     <div class="product-footer">
                         <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                        <button class="btn btn-place-order" type="submit">Buy This</button>
+                        <a class="btn btn-place-order" href="{% url 'customer_single_order' %}">Buy Now</a>
                         <input type="submit" class="btn btn-place-order" name="addcart" value="Add To Cart">
                     </div>
                 </form>

@@ -12,11 +12,13 @@ List of Food
 
 {% block content %}
 <section id="search" class="container2">
-    <input type="search" class="search" placeholder="Search Food Name">
+    <form action="{% url 'main_food' %}" method="get">
+        <input type="search" name="search" class="search" placeholder="Search Food Name">
+    </form>
 </section>
 
 <section id="foods">
-    <div class="header">
+    <div class="header" style="margin-bottom: 40px;">
         <h2>Your Cart Order</h2>
     </div>
 
@@ -24,11 +26,15 @@ List of Food
         {% if orders %}
         {% for order in orders %}
         <div class="container-product">
-            <div class="product-image">
+            <div class="product-image" style="margin: 10px auto;">
                 <img src="{{ order.product.image.url }}" alt="img">
             </div>
             <div class="product-details" style="align-self: center;">
                 <div class="product-header">
+                    <div style="display: flex; float:right; align-self: center;">
+                        Select Food &nbsp;<input type="checkbox" name="" id="">
+                    </div>
+
                     <h3>{{ order.product.name | title }}</h3>
                     <h1>{{ order.product.price }}.00</h1>
                 </div>
@@ -56,54 +62,24 @@ List of Food
                         </table>
                     </div>
                 </div>
-                <div class="product-footer">
-                    <a class="btn-back">Remove This</a>
-                    <a class="btn-place-order" href="{% url 'main_food_success' %}">Buy This Only</a>
+                <div class="product-footer" style="margin-bottom: 40px;">
+                    <a href="" class="btn-back">Remove This</a>
                 </div>
             </div>
+        </div>
+        <div class="product-footer">
+            <a class="btn-back" href="{% url 'main_food' %}">Back to Foods</a>
+            <a class="btn-place-order" href="{% url 'customer_summary_order' %}">Placed Order</a>
         </div>
         {% endfor %}
         {% else %}
         <br>
         <p><i>No product in cart</i></p>
         {% endif %}
-
-        <table class="order-table">
-            <form action="" method="POST">
-                {% csrf_token %}
-                <thead>
-                    <tr>
-                        <th colspan="2">Summary Order</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Address:</td>
-                        <td><input class="product-qty" type="text" name="location" placeholder="Type here your address">
-                        </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>Order Mode:</td>
-                        <td>{{ data.order_mode }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Order:</td>
-                        <td>{{ transaction.total_amount }}.00</td>
-                    </tr>
-                </tfoot>
-                <div class="product-footer">
-                    <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                    <a class="btn-place-order" href="{% url 'main_food_success' %}">Remove all</a>
-                    <button class="btn-place-order" type="submit">Check Out</button>
-                </div>
-            </form>
-        </table>
     </div>
-
 
 </section>
 {% endblock %}
 {% block javascripts %}
+
 {% endblock javascripts %}
