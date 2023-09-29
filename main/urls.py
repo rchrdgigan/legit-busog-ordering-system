@@ -60,6 +60,8 @@ urlpatterns = [
     path('v1/order/fooodlist/parameter', views.adminViewOrderList,
          name='admin_customer_orderlist'),  # View customer's order list
 
+    path("v1/contact/list", views.adminMessagesList,
+         name="admin_messages_list"),
 
     # Customer
     path("v2/profile", views.customerIndex, name="customer_index"),
@@ -92,6 +94,9 @@ urlpatterns = [
 
     path("v2/order/summary", views.customerSummaryOrder,
          name="customer_summary_order"),
+
+    path("v2/order/view-rate", views.customerRateViewOrder,
+         name="customer_view_rate_order"),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
