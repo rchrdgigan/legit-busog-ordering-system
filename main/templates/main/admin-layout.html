@@ -124,6 +124,9 @@
                         {% url 'admin_feedback_list' as admin_feedback_list_url %}
                         <li class="{% if request.path == admin_feedback_list_url %}active{% endif %}"><a href="{% url 'admin_feedback_list' %}"><i class="me-2"
                                    data-feather="mail"></i><span>Feedback</span></a></li>
+                        {% url 'admin_messages_list' as admin_messages_list_url %}
+                        <li class="{% if request.path == admin_messages_list_url %}active{% endif %}"><a href="{% url 'admin_messages_list' %}"><i class="me-2"
+                                              data-feather="phone"></i><span>Contacts</span></a></li>
                         {% url 'admin_account_list' as admin_account_list_url %}
                         <li class="{% if request.path == admin_account_list_url %}active{% endif %}"><a href="{% url 'admin_account_list' %}"><i class="me-2"
                                    data-feather="users"></i><span>Users

@@ -1,19 +1,25 @@
 {% extends '../admin-layout.html' %}
-{% load static %}
 
 {% block title %}
-List of Completed Order
+List of Food
 {% endblock %}
 
 {% block stylesheets %}
+<style>
+    .checked {
+        color: orange;
+    }
+
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="content mt-2">
+<div class="content">
+    {% load static %}
     <div class="page-header">
         <div class="page-title">
-            <h4>Completed Order List</h4>
-            <h6>View all completed orders</h6>
+            <h4>Contact List</h4>
+            <h6>View all people messages</h6>
         </div>
     </div>
 
@@ -23,38 +29,26 @@ List of Completed Order
                 <table id="example" class="table">
                     <thead>
                         <tr>
-                            <th>Date Ordered</th>
-                            <th>Order No.</th>
-                            <th>Image</th>
-                            <th>Customer</th>
-                            <th>Order Mode</th>
-                            <th>Status</th>
-                            <th>Total Amount</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Messages</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    
+                   
                     <tbody>
                         <tr>
-                            <td>2023-09-28</td>
-                            <td>36215</td>
-                            <td>
-                                <a href="{% static 'img/no-profile.png' %}">
-                                    <img width="50" src="{% static 'img/no-profile.png' %}" >
-                                </a>
-                            </td>
-                            <td>Customer Nname</td>
-                            <td>Dine-In</td>
-                            <td class="text-success">Completed</td>
-                            <td>1000</td>
+                            <td>Customer FullName</td>
+                            <td>email@example.com</td>
+                            <td><textarea class="form-control" name="" id="" cols="30" rows="3">Sample Messages Sample Messages Sample Messages Sample Messages Sample Messages Sample Messages</textarea></td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
-                                   data-bs-target="#viewModal">
-                                    <i data-feather="eye"></i>
+                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal">
+                                    <i data-feather="delete"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -62,21 +56,20 @@ List of Completed Order
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="caModal">
+<div class="modal fade" id="delModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="" method="post" id="ca_frm">
+            <form action="" method="post" id="delete_frm">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Deleting...?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input name="id" type="hidden">
-                    <p>Are you sure you want to cancel this data?</p>
-                    <input type="text" class="form-control" placeholder="Your Reason" required>
+                    <p>Are you sure you want to delete this data?</p>
                 </div>
                 <div class="modal-footer float-end">
-                    <button type="submit" class="btn btn-dark">Yes</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
                     <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                 </div>
             </form>

@@ -1,0 +1,190 @@
+{% extends '../customer-layout.html' %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<header>
+	<h1>Your Order List</h1>
+</header>
+<div class="content mt-2">
+	<div class="page-header">
+		<div class="page-title">
+			<h4>Your Food List Transaction #12345</h4>
+			<h6>View list of foods ordered</h6>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-body">
+			<div class="table-responsive">
+				<table id="example" class="table">
+					<thead>
+						<tr>
+							<th>Food No.</th>
+							<th>Image</th>
+							<th>Foods</th>
+							<th>Quantity</th>
+							<th>Price</th>
+							<th>Amount</th>
+							<th class="text-center">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td>
+								<a href="{% static 'img/dish.png' %}">
+									<img width="50" src="{% static 'img/dish.png' %}" >
+								</a>
+							</td>
+							<td>Food name</td>
+							<td>10</td>
+							<td>100</td>
+							<td>1000</td>
+							<td class="text-center">
+								<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""
+								   data-bs-target="#viewModal">
+									<i data-feather="eye"></i>
+								</a>
+                                <a class="btn btn-sm btn-warning" type="button" data-bs-toggle="modal" id=""
+                                data-bs-target="#rateModal">
+                                    <i data-feather="thumbs-up"></i>
+                                </a>
+							</td>
+						</tr>
+                        <tr>
+							<td>2</td>
+							<td>
+								<a href="{% static 'img/dish.png' %}">
+									<img width="50" src="{% static 'img/dish.png' %}" >
+								</a>
+							</td>
+							<td>Food name 2</td>
+							<td>20</td>
+							<td>100</td>
+							<td>2000</td>
+							<td class="text-center">
+								<a class="btn btn-sm btn-info" data-bs-toggle="modal" id=""
+								   data-bs-target="#viewModal">
+									<i data-feather="eye"></i>
+								</a>
+                                <a class="btn btn-sm btn-secondary disabled" type="button" data-bs-toggle="modal" id=""
+                                data-bs-target="#rateModal">
+                                    <i data-feather="thumbs-up"></i>
+                                </a>
+							</td>
+						</tr>
+                        <!-- Rating Modal -->
+                        <div class="modal fade" id="rateModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="" method="POST" id="ca_frm">
+                                        {% csrf_token %}
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">FeedBack</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="message">Feedback:</label> <br>
+                                            <textarea class="form-control" name="message" id="message" cols="55" rows="7"></textarea>
+                                            <br>
+                                            <p>Rating:</p>
+                                            <div class="rate">
+                                                <input type="radio" id="star1" name="rate1" value="5" />
+                                                <label for="star1" title="text">1 stars</label>
+                                                <input type="radio" id="star2" name="rate2" value="4" />
+                                                <label for="star2" title="text">2 stars</label>
+                                                <input type="radio" id="star3" name="rate3" value="3" />
+                                                <label for="star3" title="text">3 stars</label>
+                                                <input type="radio" id="star4" name="rate4" value="2" />
+                                                <label for="star4" title="text">4 stars</label>
+                                                <input type="radio" id="star5" name="rate5" value="1" />
+                                                <label for="star5" title="text">5 star</label>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer float-end">
+                                            <button type="submit" class="btn btn-dark">Submit</button>
+                                            <a class="btn btn-cancel" data-bs-dismiss="modal"
+                                            aria-label="Close">Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+						<!-- View modal -->
+						<div class="modal fade" id="viewModal">
+							<div class="modal-lg modal-dialog">
+								<div class="modal-content">
+									<form action="" method="post" id="view_frm">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Your Order</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"
+													aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div class="row">
+												<div class="form-group">
+													<label>Item Name</label>
+													<input type="text" class="form-control" name="name"
+														   value="" readonly>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Quantity</label>
+														<input type="text" class="form-control" name="quantity"
+															   value="" readonly>
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Price</label>
+														<input type="text" class="form-control" name="price"
+															   value="" readonly>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Total Price</label>
+													<input type="text" class="form-control" name="total_price"
+														   value="" readonly>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Category</label>
+														<input type="text" class="form-control" name="category"
+															   value="" readonly>
+													</div>
+												</div>
+												<div class="form-group">
+													<label>Prep Time</label>
+													<input type="text" class="form-control" name="PrepTime"
+														   value="" readonly>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Description</label>
+												<textarea name="description" id="description" cols="30" rows="10"
+														  readonly></textarea>
+											</div>
+										</div>
+										<div class="modal-footer float-end">
+											<a class="btn btn-cancel" data-bs-dismiss="modal"
+											   aria-label="Close">Close</a>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</div>
+	<a class="btn btn-primary" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i> Back</a>
+
+</div>
+{% endblock %}
