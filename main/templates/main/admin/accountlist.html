@@ -49,7 +49,11 @@ List of Food
                         <tr>
                             <td>{{ user.date_joined }}</td>
                             <td>
-                                <img width="50" src="{{ user.personinfo.image.url }}" alt="vehicle">
+                                {% if user.personinfo.image %}
+                                <img width="50" src="{{ user.personinfo.image.url }}">
+                                {% else %}
+                                <img src="{% static 'img/no-profile.png' %}" width="50">
+                                {% endif %}
                             </td>
                             <td>{{ user.first_name | title }} {{ user.last_name | title }}</td>
                             <td>{{ user.email }}</td>

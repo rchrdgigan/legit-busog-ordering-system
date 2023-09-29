@@ -35,10 +35,10 @@
 					{% for order in orders %}
 					<tbody>
 						<tr>
-							<td>1</td>
+							<td>{{ order.product.id }}</td>
 							<td>
 								<a href="{{ order.product.image.url }}">
-									<img width="50" src="{{ order.product.image.url }}" alt="vehicle">
+									<img width="50" src="{{ order.product.image.url }}">
 								</a>
 							</td>
 							<td>{{ order.product.name }}</td>

@@ -613,6 +613,12 @@ def adminChangePicture(response, id):
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
+def adminMessagesList(response):
+    return render(response, 'main/admin/contactlist.html')
+
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
 def adminViewOrderList(response):
     return render(response, 'main/admin/viewitemlist.html')  # admin
 
@@ -757,3 +763,7 @@ def customerSingleOrder(response):
 
 def customerSummaryOrder(response):
     return render(response, 'main/pages/summaryorder.html')
+
+
+def customerRateViewOrder(response):
+    return render(response, 'main/customer/rateviewitemlist.html')
