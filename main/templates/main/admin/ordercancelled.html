@@ -23,13 +23,13 @@ List of Cancelled Order
                 <table id="example" class="table">
                     <thead>
                         <tr>
-                            <th>Customer</th>
+                            <th>Date Ordered</th>
                             <th>Order No.</th>
                             <th>Image</th>
-                            <th>Foods</th>
-                            <th>Quantity</th>
+                            <th>Customer</th>
                             <th>Order Mode</th>
                             <th>Status</th>
+                            <th>Total Amount</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -40,7 +40,7 @@ List of Cancelled Order
                             <td>{{ order.id }}</td>
                             <td>
                                 <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" alt="vehicle">
+                                    <img width="50" src="{{ order.product.image.url }}" >
                                 </a>
                             </td>
                             <td>{{ order.product.name}}</td>
