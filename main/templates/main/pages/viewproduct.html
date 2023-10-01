@@ -123,10 +123,10 @@ List of Food
         </div>
         {% elif message.tags == 'error' %}
         <div class="alert error">
-            <input type="checkbox" id="alert1"/>
-        <label class="close" title="close" for="alert1">
-          <i class="icon-remove"></i>
-        </label>
+            <input type="checkbox" id="alert1" />
+            <label class="close" title="close" for="alert1">
+                <i class="icon-remove"></i>
+            </label>
             <p class="inner">
                 <strong>Opps!</strong> {{ message }}
             </p>
@@ -172,7 +172,7 @@ List of Food
                     </div>
                     <div class="product-footer">
                         <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                        <a class="btn btn-place-order" href="{% url 'customer_single_order' %}">Buy Now</a>
+                        <button class="btn btn-place-order" type="submit">Buy Now</button>
                         <input type="submit" class="btn btn-place-order" name="addcart" value="Add To Cart">
                     </div>
                 </form>

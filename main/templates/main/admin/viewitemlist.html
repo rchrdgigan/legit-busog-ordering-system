@@ -14,7 +14,9 @@ View Customer's Order
 <div class="content mt-2">
 	<div class="page-header">
 		<div class="page-title">
-			<h4>View Customer's Order #36215</h4>
+			{% for tran in trans %}
+			<h4>View Customer's Order #{{ tran.transaction_id }}</h4>
+			{% endfor %}
 			<h6>View list of foods ordered</h6>
 		</div>
 	</div>
@@ -33,28 +35,29 @@ View Customer's Order
 							<th class="text-center">Action</th>
 						</tr>
 					</thead>
+					{% for order in orders %}
 					<tbody>
 						<tr>
-							<td>1</td>
+							<td>{{ order.id }}</td>
 							<td>
-								<a href="{% static 'img/dish.png' %}">
-									<img width="50" src="{% static 'img/dish.png' %}">
+								<a href="{{ order.product.image.url }}">
+									<img width="50" src="{{ order.product.image.url }}">
 								</a>
 							</td>
-							<td>Food 1</td>
-							<td>2</td>
-							<td>100</td>
-							<td>200</td>
+							<td>{{ order.product.name }}</td>
+							<td>{{ order.quantity }}</td>
+							<td>{{ order.product.price }}</td>
+							<td>{{ order.total_amount }}</td>
 							<td class="text-center">
 								<a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
-								   data-bs-target="#viewModal">
+								   data-bs-target="#viewModal{{ order.id }}">
 									<i data-feather="eye"></i>
 								</a>
 							</td>
 						</tr>
 
 						<!-- View modal -->
-						<div class="modal fade" id="viewModal">
+						<div class="modal fade" id="viewModal{{ order.id }}">
 							<div class="modal-lg modal-dialog">
 								<div class="modal-content">
 									<form action="" method="post" id="view_frm">
@@ -67,41 +70,45 @@ View Customer's Order
 											<div class="row">
 												<div class="form-group">
 													<label>Item Name</label>
-													<input type="text" class="form-control" name="name" readonly>
+													<input type="text" value="{{ order.product.name }}"
+														   class="form-control" name="name" readonly>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
 														<label>Quantity</label>
-														<input type="text" class="form-control" name="quantity"
-															   readonly>
+														<input type="text" value="{{ order.quantity }}"
+															   class="form-control" name="quantity" readonly>
 													</div>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
 														<label>Price</label>
-														<input type="text" class="form-control" name="price" readonly>
+														<input type="text" value="{{ order.product.price }}"
+															   class="form-control" name="price" readonly>
 													</div>
 												</div>
 												<div class="form-group">
 													<label>Total Price</label>
-													<input type="text" class="form-control" name="total_price" readonly>
+													<input type="text" value="{{ order.total_amount }}"
+														   class="form-control" name="total_price" readonly>
 												</div>
 												<div class="col-md-6">
 													<div class="form-group">
 														<label>Category</label>
-														<input type="text" class="form-control" name="category"
-															   readonly>
+														<input type="text" value="{{ order.product.category }}"
+															   class="form-control" name="category" readonly>
 													</div>
 												</div>
 												<div class="form-group">
 													<label>Prep Time</label>
-													<input type="text" class="form-control" name="PrepTime" readonly>
+													<input type="text" value="{{ order.product.PrepTime }}"
+														   class="form-control" name="PrepTime" readonly>
 												</div>
 											</div>
 											<div class="form-group">
 												<label>Description</label>
 												<textarea name="description" id="description" cols="30" rows="10"
-														  readonly></textarea>
+														  readonly>{{ order.product.description }}</textarea>
 											</div>
 										</div>
 										<div class="modal-footer float-end">
@@ -112,9 +119,8 @@ View Customer's Order
 								</div>
 							</div>
 						</div>
-
-
 					</tbody>
+					{% endfor %}
 				</table>
 			</div>
 		</div>
