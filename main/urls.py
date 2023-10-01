@@ -94,7 +94,8 @@ urlpatterns = [
 
     path('v2/order/fooodlist/<int:trans_id>', views.customerViewOrderList,
          name='customer_orderlist'),
-    path('v2/order/foodlist/inprocess/<int:trans_id>', views.customerViewOrderListInProcess, name="customer_orderlist_inprocess"),
+    path('v2/order/foodlist/inprocess/<int:trans_id>',
+         views.customerViewOrderListInProcess, name="customer_orderlist_inprocess"),
     path("v2/order/single-order", views.customerSingleOrder,
          name="customer_single_order"),
 

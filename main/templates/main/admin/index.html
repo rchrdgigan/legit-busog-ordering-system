@@ -75,61 +75,66 @@ Dashboard
     </div>
 </div>
 
-<div class="content">
+<div class="content mt-2">
     <div class="page-header">
         <div class="page-title">
-            <h4>Recent Customers List</h4>
-            <h6>Show your recent customers.</h6>
+            <h4>Pending Order List</h4>
+            <h6>View all pending orders</h6>
         </div>
     </div>
 
     <div class="card">
-
         <div class="card-body">
             <div class="table-responsive">
                 <table id="example" class="table">
                     <thead>
                         <tr>
+                            <th>Date Ordered</th>
                             <th>Order No.</th>
-                            <th>Images</th>
-                            <th>Foods</th>
-                            <th>Category</th>
-                            <th>Qty.</th>
+                            <th>Image</th>
                             <th>Customer</th>
+                            <th>Order Mode</th>
                             <th>Status</th>
-                            <th>Date and Time</th>
-                            <th>Action</th>
+                            <th>Total Amount</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
+                    {% for tran in trans %}
                     <tbody>
                         <tr>
-                            <td>{{ order.id}}</td>
+                            <td>{{ tran.date_created }}</td>
+                            <td>{{ tran.transaction_id }}</td>
                             <td>
-                                <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" >
+                                <a href="{{ tran.user.personinfo.image.url }}">
+                                    <img width="50" src="{{ tran.user.personinfo.image.url }}">
                                 </a>
                             </td>
-                            <td>{{ order.product.name }}</td>
-                            <td>{{ order.product.category }}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.user.first_name | title }} {{ order.user.last_name | title }}</td>
-                            <td>
-                                <a class="bg-danger text-white rounded p-1">{{ order.status }}</a>
-                            </td>
-                            <td>{{ order.date }}</td>
-                            <td>
-                                <button type="button" id="" class="btn btn-sm btn-success m-2" data-bs-toggle="modal"
-                                        data-bs-target="#appModal{{ order.id }}"><i class="fa fa-check"></i>Approved</a>
+                            <td>{{ tran.user.first_name | title }} {{ tran.user.last_name | title }}</td>
+                            <td>{{ tran.order_mode }}</td>
+                            <td class="text-danger">{{ tran.status }}</td>
+                            <td>{{ tran.total_amount }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-success text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#appModal{{ tran.id }}">
+                                    <i data-feather="check"></i>
+                                </a>
 
-                                    <button type="button" id="" class="btn btn-sm btn-secondary" data-bs-toggle="modal"
-                                            data-bs-target="#caModal{{ order.id }}"><i
-                                           class="fa fa-times"></i>Cancel</a>
+                                <a class="btn btn-sm btn-info text-white"
+                                   href="{% url 'admin_customer_orderlist_pending' tran.transaction_id %}">
+                                    <i data-feather="eye"></i>
+                                </a>
+
+                                <a class="btn btn-sm btn-danger text-white" type="button" data-bs-toggle="modal" id=""
+                                   data-bs-target="#caModal">
+                                    <i data-feather="delete"></i>
+                                </a>
+
                             </td>
                         </tr>
                     </tbody>
+
                     <!-- Confirm Modal -->
-                    <div class="modal fade" id="appModal{{ order.id }}">
+                    <div class="modal fade" id="appModal{{ tran.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <form action="" method="post" id="app_frm">
@@ -144,7 +149,7 @@ Dashboard
                                     </div>
                                     <div class="modal-footer float-end">
                                         <a type="submit" class="btn btn-dark"
-                                           href="{% url 'admin_toProcess_order' order.id %}">Yes</a>
+                                           href="{% url 'admin_toProcess_order' tran.id %}">Yes</a>
                                         <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
                                     </div>
                                 </form>
@@ -152,10 +157,10 @@ Dashboard
                         </div>
                     </div>
                     <!-- Delete Modal -->
-                    <div class="modal fade" id="caModal{{order.id}}">
+                    <div class="modal fade" id="caModal">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="{% url 'admin_toCancel_order' order.id %}" method="POST" id="ca_frm">
+                                <form action="" method="POST" id="ca_frm">
                                     {% csrf_token %}
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>
@@ -176,12 +181,15 @@ Dashboard
                             </div>
                         </div>
                     </div>
+
                     {% endfor %}
+
                 </table>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block javascripts %}

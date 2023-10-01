@@ -72,9 +72,19 @@ List of Food
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <a class="me-3" href="" data-bs-toggle="modal" name="{{ f.name }}"
-                                   category="{{ f.category }}" price="{{ f.price }}" PrepTime="{{ f.PrepTime }}"
-                                   description="{{ f.description }}" data-bs-target="#viewModal">
+                                <a class="me-3"
+                                    name="{{ f.name }}"
+                                    category="{{ f.category }}" 
+                                    price="{{ f.price }}" 
+                                    PrepTime="{{ f.PrepTime }}"
+                                    description="{{ f.description }}" 
+                                    {% if f.availability == True %}
+                                    status="Available"
+                                    {% elif f.availability == False %}
+                                    status="Unavailable"
+                                    {% endif %}
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewModal">
                                     <i data-feather="eye"></i>
                                 </a>
                                 <a class="me-3" href="{% url 'admin_food_edit' f.id %}">
@@ -231,11 +241,13 @@ List of Food
         var price = $(opener).attr('price');
         var PrepTime = $(opener).attr('PrepTime');
         var description = $(opener).attr('description');
+        var status = $(opener).attr('status');
         $('#view_frm').find('[name="name"]').val(name);
         $('#view_frm').find('[name="category"]').val(category);
         $('#view_frm').find('[name="price"]').val(price);
         $('#view_frm').find('[name="PrepTime"]').val(PrepTime);
         $('#view_frm').find('[name="description"]').val(description);
+        $('#view_frm').find('[name="status"]').val(status);
     });
 </script>
 {% endblock javascripts %}
