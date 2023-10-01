@@ -209,10 +209,12 @@
 															   value="{{ order.product.category }}" readonly>
 													</div>
 												</div>
-												<div class="form-group">
-													<label>Prep Time</label>
-													<input type="text" class="form-control" name="PrepTime"
-														   value="{{ order.product.PrepTime }}" readonly>
+												<div class="col-md-6">
+													<div class="form-group">
+														<label>Prep Time</label>
+														<input type="text" value="{{ order.product.PrepTime }}"
+															   class="form-control" name="PrepTime" readonly>
+													</div>
 												</div>
 											</div>
 											<div class="form-group">
@@ -231,6 +233,12 @@
 						</div>
 					</tbody>
 					{% endfor %}
+					<tr>
+						<td colspan="3"></td>
+                        <td colspan="2"><h4>Total Amount :</h4></td>
+                        <td><h4>₱ {{ total_amount }}</h4></td>
+						<td></td>
+                    </tr>
 				</table>
 			</div>
 		</div>
@@ -238,4 +246,14 @@
 	<a class="btn btn-primary" onclick="window.history.go(-1); return false;"><i class="fa fa-arrow-left"></i> Back</a>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('input[type=radio]').click(function() {
+    var ratingValue = $(this).val();
+    $('#selected-rating').text(ratingValue);
+  });
+});
+</script>
 {% endblock %}
+

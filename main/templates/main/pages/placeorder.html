@@ -20,19 +20,31 @@ List of Food
 <section id="foods">
     <div class="header" style="margin-bottom: 40px;">
         <h2>Your Cart Order</h2>
-        <div class="row">
-            {% for message in messages %}
-            {% if message.tags == 'success' %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-            </div>
-            {% elif message.tags == 'error' %}
-            <div class="alert alert-danger" role="alert">
-                {{ message }}
-            </div>
-            {% endif %}
-            {% endfor %}
+    </div>
+    <div class="header">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert success">
+            <input type="checkbox" id="alert1" />
+            <label class="close" title="close" for="alert1">
+                <i class="icon-remove"></i>
+            </label>
+            <p class="inner">
+                <strong>Success!</strong> {{ message }}
+            </p>
         </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert error">
+            <input type="checkbox" id="alert1" />
+            <label class="close" title="close" for="alert1">
+                <i class="icon-remove"></i>
+            </label>
+            <p class="inner">
+                <strong>Opps!</strong> {{ message }}
+            </p>
+        </div>
+        {% endif %}
+        {% endfor %}
     </div>
     <div class="seller container2">
         <form action="" method="POST">

@@ -125,7 +125,11 @@
         <div class="collections ">
             {% for cat in category %}
             <div class="content">
+                {% if cat.img.url != null %}
                 <img src="{{ cat.img.url }}" style="border-radius: 10px; margin-bottom: 10px;" alt="img" />
+                {% else %}
+                <img src="{% static 'img/logo.jpg' %}" style="border-radius: 10px; margin-bottom: 10px;" alt="img" />
+                {% endif %}
                 <div class="img-content">
                     <p>{{ cat.category_name }}</p>
                     <button><a href="{% url 'view_product_category' cat.id %}">SHOW NOW</a></button>

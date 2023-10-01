@@ -31,7 +31,7 @@ def customerPlaceOrder(response):
         in_summ_trans = Transaction.objects.get(user=user, status='In-Summary')
         in_summ_trans.status = 'In-Cart'
         in_summ_trans.save()
-    
+
     if Order.objects.filter(user=user, status='In-Cart'):
         orders = Order.objects.filter(user=user, status='In-Cart')
         for order in orders:
@@ -64,12 +64,14 @@ def customerPlaceOrder(response):
                     ords.save()
                 return redirect('customer_summary_order')
             else:
-                return HttpResponse('Please select the product you want to check out')
+                messages.error(
+                    response, "Please select the product you want to check out")
     else:
         orders = ''
         transaction = ''
     return render(response, 'main/pages/placeorder.html', {
         'orders': orders,
+        # 'data': data,
         'transaction': transaction,
     })
 
@@ -80,6 +82,7 @@ def customerDeleteOneOrder(request, order_id):
     order.delete()
     messages.error(request, 'Successfully removed from the cart!')
     return redirect('customer_placeorder_order')
+
 
 def customerDeleteOneOrderSummary(response, id):
     order = get_object_or_404(Order, id=id)
@@ -116,7 +119,8 @@ def foodProductShow(response, id):
                               quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if Order.objects.filter(user=user, status='Single-Order'):
-                    single_order = Order.objects.filter(user=user, status='Single-Order')
+                    single_order = Order.objects.filter(
+                        user=user, status='Single-Order')
                     for single in single_order:
                         singles = Order.objects.get(id=single.id)
                         singles.delete()
@@ -137,7 +141,8 @@ def foodProductShow(response, id):
                               quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if Order.objects.filter(user=user, status='Single-Order'):
-                    single_order = Order.objects.filter(user=user, status='Single-Order')
+                    single_order = Order.objects.filter(
+                        user=user, status='Single-Order')
                     for single in single_order:
                         singles = Order.objects.get(id=single.id)
                         singles.delete()
@@ -294,14 +299,15 @@ def adminIndex(response):
     count_pd = count_processing + count_deliver
     count_completed = Order.objects.filter(status='Completed').count()
     orders = Order.objects.filter(status='Pending')
+    trans = Transaction.objects.filter(status='Pending')
     return render(response, 'main/admin/index.html', {
         'user': user,
         'count_pending': count_pending,
         'count_processing': count_processing,
         'count_completed': count_completed,
         'count_pd': count_pd,
-        'orders': orders
-
+        'orders': orders,
+        'trans': trans,
     })  # Admin
 
 
@@ -522,7 +528,8 @@ def adminToProcessOrder(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    trans = Transaction.objects.filter(status='In-Process') | Transaction.objects.filter(status='Out for Delivery')
+    trans = Transaction.objects.filter(
+        status='In-Process') | Transaction.objects.filter(status='Out for Delivery')
     return render(response, 'main/admin/orderinprocess.html', {
         'trans': trans,
     })  # admin
@@ -667,31 +674,36 @@ def adminMessagesList(response):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminViewOrderListPending(response, trans_id):
-    trans = Transaction.objects.filter(transaction_id=trans_id)
     orders = Order.objects.filter(transaction_id=trans_id, status='Pending')
     return render(response, 'main/admin/viewitemlist.html', {
         'orders': orders,
-        'trans': trans,
+        'trans': Transaction.objects.filter(transaction_id=trans_id),
+        'total_amount': sum(order.total_amount for order in orders)
     })  # admin
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminViewOrderListInProcess(response, trans_id):
     trans = Transaction.objects.filter(transaction_id=trans_id)
-    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(transaction_id=trans_id, status='Out for Delivery') 
+    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(
+        transaction_id=trans_id, status='Out for Delivery')
     return render(response, 'main/admin/viewitemlist.html', {
         'orders': orders,
         'trans': trans,
+        'total_amount': sum(order.total_amount for order in orders)
     })  # admin
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminViewOrderListCompleted(response, trans_id):
     trans = Transaction.objects.filter(transaction_id=trans_id)
-    orders = Order.objects.filter(transaction_id=trans_id, status='Completed') 
+    orders = Order.objects.filter(transaction_id=trans_id, status='Completed')
     return render(response, 'main/admin/viewitemlist.html', {
         'orders': orders,
         'trans': trans,
+        'total_amount': sum(order.total_amount for order in orders)
     })  # admin
 
 
@@ -759,7 +771,8 @@ def customerPendingOrder(response):
 @login_required
 def customerProcessOrder(response):
     user = response.user
-    trans = Transaction.objects.filter(user=user, status='In-Process') | Transaction.objects.filter(user=user, status='Out for Delivery')
+    trans = Transaction.objects.filter(
+        user=user, status='In-Process') | Transaction.objects.filter(user=user, status='Out for Delivery')
     return render(response, 'main/customer/inprocessorder.html', {
         'trans': trans,
     })  # Customer
@@ -835,15 +848,19 @@ def customerViewOrderList(response, trans_id):
     return render(response, 'main/customer/viewitemlist.html', {
         'orders': orders,
         'trans': trans,
+        'total_amount': sum(order.total_amount for order in orders)
     })
+
 
 def customerViewOrderListInProcess(response, trans_id):
     trans = Transaction.objects.filter(transaction_id=trans_id)
-    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(transaction_id=trans_id, status='Out for Delivery')
+    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(
+        transaction_id=trans_id, status='Out for Delivery')
 
     return render(response, 'main/customer/viewitemlist.html', {
         'orders': orders,
         'trans': trans,
+        'total_amount': sum(order.total_amount for order in orders)
     })
 
 
@@ -854,16 +871,18 @@ def customerSingleOrder(response):
         ords = get_object_or_404(Order, id=order.id)
         break
     if response.method == "POST":
-        transaction = Transaction(user=user, total_amount=ords.total_amount, transaction_id=ords.transaction_id)
+        transaction = Transaction(
+            user=user, total_amount=ords.total_amount, transaction_id=ords.transaction_id)
         if response.POST.get('mode') == 'Dine-In':
-                transaction.order_mode = response.POST.get('mode')
-                transaction.status = 'Pending'
-                transaction.save()
+            transaction.order_mode = response.POST.get('mode')
+            transaction.status = 'Pending'
+            transaction.save()
+            return redirect('main_food_success')
         else:
             if response.POST.get('location') == '':
                 messages.error(response, 'Please fill the address field! ')
                 return redirect('customer_single_order')
-            
+
             transaction.address = response.POST.get('location')
             transaction.order_mode = response.POST.get('mode')
             transaction.status = 'Pending'
@@ -885,7 +904,8 @@ def customerSummaryOrder(response):
             ords = Order.objects.get(id=order.id)
             break
 
-        transaction = get_object_or_404(Transaction, transaction_id=ords.transaction_id)
+        transaction = get_object_or_404(
+            Transaction, transaction_id=ords.transaction_id)
         transaction.total_amount = 0
         transaction.save()
         for order in orders:
@@ -901,16 +921,16 @@ def customerSummaryOrder(response):
                 if response.POST.get('location') == '':
                     messages.error(response, 'Please fill the address field! ')
                     return redirect('customer_summary_order')
-                
+
                 transaction.address = response.POST.get('location')
                 transaction.order_mode = response.POST.get('mode')
                 transaction.status = 'Pending'
                 transaction.save()
-            
+
             for order in orders:
                 data = get_object_or_404(Order, id=order.id)
                 data.status = 'Pending'
-                data.save()  
+                data.save()
             return redirect('main_food_success')
     else:
         transaction = ''
@@ -928,4 +948,5 @@ def customerRateViewOrder(response, trans_id):
     return render(response, 'main/customer/rateviewitemlist.html', {
         'trans': trans,
         'orders': orders,
+        'total_amount': sum(order.total_amount for order in orders)
     })

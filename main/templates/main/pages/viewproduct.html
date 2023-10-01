@@ -118,8 +118,14 @@ List of Food
     <div class="seller container2">
         {% for message in messages %}
         {% if message.tags == 'success' %}
-        <div class="alert alert-success" role="alert">
-            {{ message }}
+        <div class="alert success">
+            <input type="checkbox" id="alert1" />
+            <label class="close" title="close" for="alert1">
+                <i class="icon-remove"></i>
+            </label>
+            <p class="inner">
+                <strong>Success!</strong> {{ message }}
+            </p>
         </div>
         {% elif message.tags == 'error' %}
         <div class="alert error">
