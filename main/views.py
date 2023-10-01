@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
@@ -20,41 +21,55 @@ stra = 'main/admin'
 @login_required
 def customerPlaceOrder(response):
     user = response.user
+    if Order.objects.filter(user=user, status='In-Summary'):
+        in_summ_order = Order.objects.filter(user=user, status='In-Summary')
+        for in_summ in in_summ_order:
+            datas = get_object_or_404(Order, id=in_summ.id)
+            datas.status = 'In-Cart'
+            datas.save()
+    if Transaction.objects.filter(user=user, status='In-Summary'):
+        in_summ_trans = Transaction.objects.get(user=user, status='In-Summary')
+        in_summ_trans.status = 'In-Cart'
+        in_summ_trans.save()
+    
     if Order.objects.filter(user=user, status='In-Cart'):
         orders = Order.objects.filter(user=user, status='In-Cart')
         for order in orders:
             ords = Order.objects.get(id=order.id)
             break
-        data = order
+
         if Transaction.objects.filter(transaction_id=ords.transaction_id):
             transaction = get_object_or_404(
                 Transaction, transaction_id=ords.transaction_id)
         else:
             transaction = Transaction(
-                transaction_id=ords.transaction_id, user=user, order_mode=ords.order_mode)
+                transaction_id=ords.transaction_id, user=user)
             transaction.save()
         transaction.total_amount = 0
         transaction.save()
+
         for order in orders:
             total_order = transaction.total_amount + order.total_amount
             transaction.total_amount = total_order
             transaction.save()
+
         if response.method == "POST":
-            address = response.POST['location']
-            transaction.address = address
-            transaction.status = 'Pending'
-            transaction.save()
-            for order in orders:
-                order.status = 'Pending'
-                order.save()
-            return redirect('main_food_success')
+            if response.POST.getlist('checkbox'):
+                datalist = response.POST.getlist('checkbox')
+                transaction.status = 'In-Summary'
+                transaction.save()
+                for data in datalist:
+                    ords = get_object_or_404(Order, id=data)
+                    ords.status = 'In-Summary'
+                    ords.save()
+                return redirect('customer_summary_order')
+            else:
+                return HttpResponse('Please select the product you want to check out')
     else:
-        data = ''
         orders = ''
         transaction = ''
     return render(response, 'main/pages/placeorder.html', {
         'orders': orders,
-        'data': data,
         'transaction': transaction,
     })
 
@@ -63,7 +78,14 @@ def customerDeleteOneOrder(request, order_id):
     order = get_object_or_404(
         Order, id=order_id, user=request.user, status='In-Cart')
     order.delete()
+    messages.error(request, 'Successfully removed from the cart!')
     return redirect('customer_placeorder_order')
+
+def customerDeleteOneOrderSummary(response, id):
+    order = get_object_or_404(Order, id=id)
+    order.delete()
+    messages.error(response, 'Successfully removed from the order summary!')
+    return redirect('customer_summary_order')
 
 
 def foodProductList(request):
@@ -93,29 +115,40 @@ def foodProductShow(response, id):
                 order = Order(user=user, product=food,
                               quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
+                if Order.objects.filter(user=user, status='Single-Order'):
+                    single_order = Order.objects.filter(user=user, status='Single-Order')
+                    for single in single_order:
+                        singles = Order.objects.get(id=single.id)
+                        singles.delete()
                 if response.POST.get('addcart'):
                     if order_incart:
+                        order.status = 'In-Cart'
                         order.transaction_id = o.transaction_id
                         order.save()
                     else:
                         order.save()
                     return redirect('main_food_added')
                 else:
-                    order.status = 'Pending'
+                    order.status = 'Single-Order'
                     order.save()
-                    return redirect('main_food_success')
+                    return redirect('customer_single_order')
             else:
                 order = Order(user=user, product=food,
                               quantity=quantity)
                 order.total_amount = int(quantity) * int(order.product.price)
+                if Order.objects.filter(user=user, status='Single-Order'):
+                    single_order = Order.objects.filter(user=user, status='Single-Order')
+                    for single in single_order:
+                        singles = Order.objects.get(id=single.id)
+                        singles.delete()
                 if response.POST.get('addcart'):
                     order.status = 'In-Cart'
                     order.save()
                     return redirect('main_food_added')
                 else:
-                    order.status = 'Pending'
+                    order.status = 'Single-Order'
                     order.save()
-                    return redirect('main_food_success')
+                    return redirect('customer_single_order')
         else:
             return redirect('login')
 
@@ -463,9 +496,9 @@ def adminFoodUnavailable(response, ida, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminPendingOrder(response):
-    orders = Order.objects.filter(status='Pending')
+    trans = Transaction.objects.filter(status='Pending')
     return render(response, 'main/admin/orderpending.html', {
-        'orders': orders,
+        'trans': trans,
     })  # admin
 
 
@@ -473,30 +506,39 @@ def adminPendingOrder(response):
 @allowed_users(allowed_roles=['admin'])
 # Confirm order move to in-process category
 def adminToProcessOrder(response, id):
-    order = Order.objects.get(id=id)
-    order.status = 'In-Process'
-    order.save()
+    transaction = Transaction.objects.get(id=id)
+    transaction.status = 'In-Process'
+    transaction.save()
+    orders = Order.objects.filter(transaction_id=transaction.transaction_id)
+    for order in orders:
+        ords = Order.objects.get(id=order.id)
+        ords.status = 'In-Process'
+        ords.save()
     messages.success(
-        response, 'Order has been confirmed! It will moving now to In-Process...')
+        response, 'Order has been confirmed! It will move now to In-Process...')
     return redirect('admin_pending_order')
 
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminProcessOrder(response):
-    orders = Order.objects.filter(
-        status='In-Process') | Order.objects.filter(status='Out for Delivery')
+    trans = Transaction.objects.filter(status='In-Process') | Transaction.objects.filter(status='Out for Delivery')
     return render(response, 'main/admin/orderinprocess.html', {
-        'orders': orders,
+        'trans': trans,
     })  # admin
 
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminToDeliverOrder(response, id):
-    order = Order.objects.get(id=id)
-    order.status = 'Out for Delivery'
-    order.save()
+    transaction = Transaction.objects.get(id=id)
+    transaction.status = 'Out for Delivery'
+    transaction.save()
+    orders = Order.objects.filter(transaction_id=transaction.transaction_id)
+    for order in orders:
+        ords = Order.objects.get(id=order.id)
+        ords.status = 'Out for Delivery'
+        ords.save()
     messages.success(response, 'Order is out for delivery!')
     return redirect('admin_process_order')
 
@@ -505,9 +547,14 @@ def adminToDeliverOrder(response, id):
 @allowed_users(allowed_roles=['admin'])
 # Confirm order move to completed category
 def adminToCompleteOrder(response, id):
-    order = Order.objects.get(id=id)
-    order.status = 'Completed'
-    order.save()
+    transaction = Transaction.objects.get(id=id)
+    transaction.status = 'Completed'
+    transaction.save()
+    orders = Order.objects.filter(transaction_id=transaction.transaction_id)
+    for order in orders:
+        ords = Order.objects.get(id=order.id)
+        ords.status = 'Completed'
+        ords.save()
     messages.success(response, 'Order has been completed!')
     return redirect('admin_process_order')
 
@@ -515,9 +562,9 @@ def adminToCompleteOrder(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminCompletedOrder(response):
-    orders = Order.objects.filter(status='Completed')
+    trans = Transaction.objects.filter(status='Completed')
     return render(response, 'main/admin/ordercompleted.html', {
-        'orders': orders,
+        'trans': trans,
     })  # admin
 
 
@@ -619,8 +666,33 @@ def adminMessagesList(response):
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
-def adminViewOrderList(response):
-    return render(response, 'main/admin/viewitemlist.html')  # admin
+def adminViewOrderListPending(response, trans_id):
+    trans = Transaction.objects.filter(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='Pending')
+    return render(response, 'main/admin/viewitemlist.html', {
+        'orders': orders,
+        'trans': trans,
+    })  # admin
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminViewOrderListInProcess(response, trans_id):
+    trans = Transaction.objects.filter(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(transaction_id=trans_id, status='Out for Delivery') 
+    return render(response, 'main/admin/viewitemlist.html', {
+        'orders': orders,
+        'trans': trans,
+    })  # admin
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminViewOrderListCompleted(response, trans_id):
+    trans = Transaction.objects.filter(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='Completed') 
+    return render(response, 'main/admin/viewitemlist.html', {
+        'orders': orders,
+        'trans': trans,
+    })  # admin
 
 
 @login_required
@@ -687,18 +759,18 @@ def customerPendingOrder(response):
 @login_required
 def customerProcessOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='In-Process')
+    trans = Transaction.objects.filter(user=user, status='In-Process') | Transaction.objects.filter(user=user, status='Out for Delivery')
     return render(response, 'main/customer/inprocessorder.html', {
-        'orders': orders,
+        'trans': trans,
     })  # Customer
 
 
 @login_required
 def customerCompletedOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='Completed')
+    trans = Transaction.objects.filter(user=user, status='Completed')
     return render(response, 'main/customer/completedorder.html', {
-        'orders': orders,
+        'trans': trans,
     })  # Customer
 
 
@@ -736,34 +808,124 @@ def customerFeedback(response, id):
         else:
             rate = rate5
 
+        if feedback == '':
+            messages.error(response, 'Please fill the message field! ')
+            return redirect('customer_view_rate_order', order.transaction_id)
+
         feedback_data = FeedBack(
             user=user, order=order, message=feedback, rating=rate)
+        if feedback_data.rating == None:
+            messages.error(response, 'Please fill the star rating! ')
+            return redirect('customer_view_rate_order', order.transaction_id)
         feedback_data.save()
         add = float(product.ratings) + float(rate)
         div = float(add) / 2
         product.ratings = div
         product.save()
+        order.is_rated = True
+        order.save()
         messages.success(response, 'Feedback has been submitted!')
-        return redirect('customer_completed_order')
+        return redirect('customer_view_rate_order', order.transaction_id)
 
 
 def customerViewOrderList(response, trans_id):
-    trans = Transaction.objects.get(transaction_id=trans_id)
+    trans = Transaction.objects.filter(transaction_id=trans_id)
     orders = Order.objects.filter(transaction_id=trans_id, status='Pending')
 
     return render(response, 'main/customer/viewitemlist.html', {
         'orders': orders,
-        'trans': trans
+        'trans': trans,
+    })
+
+def customerViewOrderListInProcess(response, trans_id):
+    trans = Transaction.objects.filter(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='In-Process') | Order.objects.filter(transaction_id=trans_id, status='Out for Delivery')
+
+    return render(response, 'main/customer/viewitemlist.html', {
+        'orders': orders,
+        'trans': trans,
     })
 
 
 def customerSingleOrder(response):
-    return render(response, 'main/pages/singleorder.html')
+    user = response.user
+    orders = Order.objects.filter(user=user, status='Single-Order')
+    for order in orders:
+        ords = get_object_or_404(Order, id=order.id)
+        break
+    if response.method == "POST":
+        transaction = Transaction(user=user, total_amount=ords.total_amount, transaction_id=ords.transaction_id)
+        if response.POST.get('mode') == 'Dine-In':
+                transaction.order_mode = response.POST.get('mode')
+                transaction.status = 'Pending'
+                transaction.save()
+        else:
+            if response.POST.get('location') == '':
+                messages.error(response, 'Please fill the address field! ')
+                return redirect('customer_single_order')
+            
+            transaction.address = response.POST.get('location')
+            transaction.order_mode = response.POST.get('mode')
+            transaction.status = 'Pending'
+            transaction.save()
+            ords.status = 'Pending'
+            ords.save()
+            return redirect('main_food_success')
+    return render(response, 'main/pages/singleorder.html', {
+        'orders': orders,
+    })
 
 
 def customerSummaryOrder(response):
-    return render(response, 'main/pages/summaryorder.html')
+    user = response.user
+    if Order.objects.filter(user=user, status='In-Summary'):
+        print('done')
+        orders = Order.objects.filter(user=user, status='In-Summary')
+        for order in orders:
+            ords = Order.objects.get(id=order.id)
+            break
+
+        transaction = get_object_or_404(Transaction, transaction_id=ords.transaction_id)
+        transaction.total_amount = 0
+        transaction.save()
+        for order in orders:
+            total_order = transaction.total_amount + order.total_amount
+            transaction.total_amount = total_order
+            transaction.save()
+        if response.method == "POST":
+            if response.POST.get('mode') == 'Dine-In':
+                transaction.order_mode = response.POST.get('mode')
+                transaction.status = 'Pending'
+                transaction.save()
+            else:
+                if response.POST.get('location') == '':
+                    messages.error(response, 'Please fill the address field! ')
+                    return redirect('customer_summary_order')
+                
+                transaction.address = response.POST.get('location')
+                transaction.order_mode = response.POST.get('mode')
+                transaction.status = 'Pending'
+                transaction.save()
+            
+            for order in orders:
+                data = get_object_or_404(Order, id=order.id)
+                data.status = 'Pending'
+                data.save()  
+            return redirect('main_food_success')
+    else:
+        transaction = ''
+        orders = ''
+
+    return render(response, 'main/pages/summaryorder.html', {
+        'transaction': transaction,
+        'orders': orders,
+    })
 
 
-def customerRateViewOrder(response):
-    return render(response, 'main/customer/rateviewitemlist.html')
+def customerRateViewOrder(response, trans_id):
+    trans = Transaction.objects.filter(transaction_id=trans_id)
+    orders = Order.objects.filter(transaction_id=trans_id, status='Completed')
+    return render(response, 'main/customer/rateviewitemlist.html', {
+        'trans': trans,
+        'orders': orders,
+    })

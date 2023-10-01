@@ -12,7 +12,9 @@
 <div class="content mt-2">
 	<div class="page-header">
 		<div class="page-title">
-			<h4>Your Food List Transaction #{{ trans.transaction_id }}</h4>
+			{% for tran in trans %}
+			<h4>Your Food List Transaction #{{ tran.transaction_id }}</h4>
+			{% endfor %}
 			<h6>View list of foods ordered</h6>
 		</div>
 	</div>

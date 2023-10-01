@@ -59,6 +59,7 @@ class Order(models.Model):
     cancel_reason = models.CharField(max_length=100, null=True)
     total_amount = models.IntegerField(null=True)
     date = models.DateTimeField(default=now, null=True)
+    is_rated = models.BooleanField(null=True)
 
     def __str__(self):
         return str(self.user) + " - " + str(self.product)
@@ -71,6 +72,7 @@ class Transaction(models.Model):
     order_mode = models.CharField(max_length=50)
     status = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
+    date_created = models.DateTimeField(default=now)
 
     def __str__(self):
         return str(self.user)+ " - " + str(self.transaction_id)
@@ -102,7 +104,7 @@ class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
     message = models.TextField(max_length=500, null=True)
-    rating = models.IntegerField()
+    rating = models.IntegerField(null=True)
     date = models.DateTimeField(default=now)
 
     def __str__(self):

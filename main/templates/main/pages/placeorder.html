@@ -20,64 +20,78 @@ List of Food
 <section id="foods">
     <div class="header" style="margin-bottom: 40px;">
         <h2>Your Cart Order</h2>
+        <div class="row">
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+            </div>
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
     </div>
-
     <div class="seller container2">
-        {% if orders %}
-        {% for order in orders %}
-        <div class="container-product">
-            <div class="product-image" style="margin: 10px auto;">
-                <img src="{{ order.product.image.url }}" alt="img">
-            </div>
-            <div class="product-details" style="align-self: center;">
-                <div class="product-header">
-                    <div style="display: flex; float:right; align-self: center;">
-                        Select Food &nbsp;<input type="checkbox" name="" id="">
-                    </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% if orders %}
+            {% for order in orders %}
+            <div class="container-product">
+                <div class="product-image" style="margin: 10px auto;">
+                    <img src="{{ order.product.image.url }}" alt="img">
+                </div>
+                <div class="product-details" style="align-self: center;">
+                    <div class="product-header">
+                        <div style="display: flex; float:right; align-self: center;">
+                            Select Food &nbsp;<input type="checkbox" name="checkbox" value="{{ order.id }}">
+                        </div>
 
-                    <h3>{{ order.product.name | title }}</h3>
-                    <h1>{{ order.product.price }}.00</h1>
-                </div>
-                <div class="cont-mo">
-                    <div class="more-details">
-                        <table class="order-table">
-                            <thead>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ order.quantity }}</td>
-                                    <td>{{ order.product.price }}.00</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total Amount:</td>
-                                    <td>{{ order.total_amount }}.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <h3>{{ order.product.name | title }}</h3>
+                        <h1>{{ order.product.price }}.00</h1>
+                    </div>
+                    <div class="cont-mo">
+                        <div class="more-details">
+                            <table class="order-table">
+                                <thead>
+                                    <tr>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ order.quantity }}</td>
+                                        <td>{{ order.product.price }}.00</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td>Total Amount:</td>
+                                        <td>{{ order.total_amount }}.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="product-footer" style="margin-bottom: 40px;">
+                        <a href="{% url 'customer_delete_one_order' order.id %}" class="btn-back">Remove This</a>
                     </div>
                 </div>
-                <div class="product-footer" style="margin-bottom: 40px;">
-                    <a href="" class="btn-back">Remove This</a>
-                </div>
             </div>
-        </div>
-        <div class="product-footer">
-            <a class="btn-back" href="{% url 'main_food' %}">Back to Foods</a>
-            <a class="btn-place-order" href="{% url 'customer_summary_order' %}">Placed Order</a>
-        </div>
-        {% endfor %}
-        {% else %}
-        <br>
-        <p><i>No product in cart</i></p>
-        {% endif %}
+            {% endfor %}
+            <div class="product-footer">
+                <a class="btn-back" href="{% url 'main_food' %}">Back to Foods</a>
+                <button class="btn-place-order" type="submit">Placed Order</button>
+            </div>
+            {% else %}
+            <br>
+            <p><i>No product in cart</i></p>
+            {% endif %}
+        </form>
     </div>
-
 </section>
 {% endblock %}
 {% block javascripts %}

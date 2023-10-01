@@ -10,6 +10,8 @@ List of Food
 <link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
 {% endblock stylesheets %}
 
+
+
 {% block content %}
 <section id="search" class="container2">
     <form action="{% url 'main_food' %}" method="get">
@@ -21,17 +23,30 @@ List of Food
     <div class="header" style="margin-bottom: 40px;">
         <h2>Your Order Summary</h2>
     </div>
-
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="seller container2">
-        
+        {% if orders %}
+        {% for order in orders %}
         <div class="container-product">
             <div class="product-image" style="margin: 10px auto;">
-                <img src="{% static 'img/logo.jpg' %}" alt="img">
+                <img src="{{ order.product.image.url }}" alt="img">
             </div>
             <div class="product-details" style="align-self: center;">
                 <div class="product-header">
-                    <h3>Buttered Chicken</h3>
-                    <h1>120.00</h1>
+                    <h3>{{ order.product.name }}</h3>
+                    <h1>{{ order.product.price }}.00</h1>
                 </div>
                 <div class="cont-mo">
                     <div class="more-details">
@@ -44,65 +59,29 @@ List of Food
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
-                                    <td>120.00</td>
+                                    <td>{{ order.quantity }}</td>
+                                    <td>{{ order.product.price }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td>Total Amount:</td>
-                                    <td>120.00</td>
+                                    <td>{{ order.total_amount }}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
                 <div class="product-footer" style="margin-bottom: 40px;">
-                    <a href="" class="btn-back">Remove This</a>
+                    <a href="{% url 'customer_delete_order_summary' order.id %}" class="btn-back">Remove This</a>
                 </div>
             </div>
         </div>
-
-        <div class="container-product">
-            <div class="product-image" style="margin: 10px auto;">
-                <img src="{% static 'img/logo.jpg' %}" alt="img">
-            </div>
-            <div class="product-details" style="align-self: center;">
-                <div class="product-header">
-                    <h3>Buttered Chicken</h3>
-                    <h1>120.00</h1>
-                </div>
-                <div class="cont-mo">
-                    <div class="more-details">
-                        <table class="order-table">
-                            <thead>
-                                <tr>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>120.00</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td>Total Amount:</td>
-                                    <td>120.00</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="product-footer" style="margin-bottom: 40px;">
-                    <a href="" class="btn-back">Remove This</a>
-                </div>
-            </div>
-        </div>
-       
-        <form action="" method="POST">
+        {% endfor %}
+        {% else %}
+        No product in summary
+        {% endif %}
+        <form method="POST">
             {% csrf_token %}
             <table class="order-table">
                 <thead>
@@ -127,16 +106,16 @@ List of Food
                     </tr>
                 </tbody>
                 <tfoot>
-                    
+
                     <tr>
                         <td>Total Order:</td>
-                        <td>120.00</td>
+                        <td>{% if transaction %}{{ transaction.total_amount }}.00{% endif  %}</td>
                     </tr>
                 </tfoot>
             </table>
             <div class="product-footer">
                 <a class="btn-back" href="{% url 'main_food' %}">Back to Foods</a>
-                <a class="btn-place-order" href="">Check Out</a>
+                <button class="btn-place-order" type="submit">Check Out</button>
             </div>
         </form>
     </div>
@@ -148,7 +127,7 @@ List of Food
     const orderSelect = document.getElementById('order');
     const addressTr = document.getElementById('address_tr');
 
-    orderSelect.addEventListener('change', function() {
+    orderSelect.addEventListener('change', function () {
         if (orderSelect.value === 'Delivery') {
             addressTr.style.display = 'table-row';
         } else {

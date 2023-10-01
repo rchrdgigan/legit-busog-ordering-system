@@ -57,8 +57,12 @@ urlpatterns = [
     path("v1/profile/change-picture/<int:id>", views.adminChangePicture,
          name="admin_change_picture"),
 
-    path('v1/order/fooodlist/parameter', views.adminViewOrderList,
-         name='admin_customer_orderlist'),  # View customer's order list
+    path('v1/order/fooodlist_pending/<int:trans_id>', views.adminViewOrderListPending,
+         name='admin_customer_orderlist_pending'),  # View customer's order list
+    path('v1/order/fooodlist_inprocess/<int:trans_id>', views.adminViewOrderListInProcess,
+         name='admin_customer_orderlist_inprocess'),  # View customer's order list
+    path('v1/order/fooodlist_completed/<int:trans_id>', views.adminViewOrderListCompleted,
+         name='admin_customer_orderlist_completed'),  # View customer's order list
 
     path("v1/contact/list", views.adminMessagesList,
          name="admin_messages_list"),
@@ -83,19 +87,21 @@ urlpatterns = [
          name="customer_placeorder_order"),
     path("v2/order/place-order/<int:order_id>", views.customerDeleteOneOrder,  # Delete One Order in Place Order
          name="customer_delete_one_order"),
+    path("v2/deletefromsummary/<int:id>", views.customerDeleteOneOrderSummary,  # Delete One Order in Place Order
+         name="customer_delete_order_summary"),
     path('v2/order/feedback/<int:id>',
          views.customerFeedback, name='customer_feedback'),
 
     path('v2/order/fooodlist/<int:trans_id>', views.customerViewOrderList,
          name='customer_orderlist'),
-
+    path('v2/order/foodlist/inprocess/<int:trans_id>', views.customerViewOrderListInProcess, name="customer_orderlist_inprocess"),
     path("v2/order/single-order", views.customerSingleOrder,
          name="customer_single_order"),
 
     path("v2/order/summary", views.customerSummaryOrder,
          name="customer_summary_order"),
 
-    path("v2/order/view-rate", views.customerRateViewOrder,
+    path("v2/order/view-rate/<int:trans_id>", views.customerRateViewOrder,
          name="customer_view_rate_order"),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
