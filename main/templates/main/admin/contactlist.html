@@ -22,57 +22,73 @@ List of Food
             <h6>View all people messages</h6>
         </div>
     </div>
-
+    <div class="row">
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% elif message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
                 <table id="example" class="table">
                     <thead>
                         <tr>
+                            <th>Date Created</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Messages</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                   
+                    {% for m in msg %}
                     <tbody>
                         <tr>
-                            <td>Customer FullName</td>
-                            <td>email@example.com</td>
-                            <td><textarea class="form-control" name="" id="" cols="30" rows="3">Sample Messages Sample Messages Sample Messages Sample Messages Sample Messages Sample Messages</textarea></td>
+                            <td>{{ m.date_created }}</td>
+                            <td>{{ m.name }}</td>
+                            <td>{{ m.email }}</td>
+                            <td><textarea class="form-control" name="" id="" cols="30"
+                                          rows="3">{{ m.message }}</textarea></td>
                             <td class="text-center">
-                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal">
+                                <a type="button" data-bs-toggle="modal" id="" data-bs-target="#delModal{{ m.id }}">
                                     <i data-feather="delete"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
-
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="delModal{{ m.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="delete_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Deleting...?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        <p>Are you sure you want to delete this data?</p>
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a type="submit" class="btn btn-danger"
+                                           href="{% url 'admin_contact_delete' m.id %}">Yes</a>
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </table>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="delModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="" method="post" id="delete_frm">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Deleting...?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input name="id" type="hidden">
-                    <p>Are you sure you want to delete this data?</p>
-                </div>
-                <div class="modal-footer float-end">
-                    <button type="submit" class="btn btn-danger">Yes</button>
-                    <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">Cancel</a>
-                </div>
-            </form>
         </div>
     </div>
 </div>

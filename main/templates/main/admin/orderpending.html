@@ -72,7 +72,7 @@ List of Pending Order
                                 </a>
 
                                 <a class="btn btn-sm btn-danger text-white" type="button" data-bs-toggle="modal" id=""
-                                   data-bs-target="#caModal">
+                                   data-bs-target="#caModal{{ tran.id }}">
                                     <i data-feather="delete"></i>
                                 </a>
 
@@ -104,10 +104,10 @@ List of Pending Order
                         </div>
                     </div>
                     <!-- Delete Modal -->
-                    <div class="modal fade" id="caModal">
+                    <div class="modal fade" id="caModal{{ tran.id }}">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <form action="" method="POST" id="ca_frm">
+                                <form action="{% url 'admin_toCancel_order' tran.id %}" method="POST" id="ca_frm">
                                     {% csrf_token %}
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Canceling...?</h5>

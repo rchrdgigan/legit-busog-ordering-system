@@ -33,20 +33,21 @@ List of Cancelled Order
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for order in orders %}
+                    {% for t in trans %}
                     <tbody>
                         <tr>
-                            <td>{{ order.user.first_name | title }} {{ order.user.last_name | title }}</td>
-                            <td>{{ order.id }}</td>
+                            <td>{{ t.date_created }}</td>
+                            <td>{{ t.transaction_id }}</td>
                             <td>
-                                <a href="{{ order.product.image.url }}">
-                                    <img width="50" src="{{ order.product.image.url }}" >
+                                <a href="{{ t.user.personinfo.image.url }}">
+                                    <img width="50" src="{{ t.user.personinfo.image.url }}">
                                 </a>
                             </td>
-                            <td>{{ order.product.name}}</td>
-                            <td>{{ order.quantity }}</td>
-                            <td>{{ order.order_mode}}</td>
-                            <td class="text-danger">{{ order.status }}</td>
+                            <td>{{ t.user.first_name | title }} {{ t.user.last_name | title }}</td>
+
+                            <td>{{ t.order_mode }}</td>
+                            <td>{{ t.status }}</td>
+                            <td>{{ t.total_amount}}</td>
                             <td class="text-center">
                                 <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
                                    data-bs-target="#cancelled{{ order.id }}">
@@ -67,7 +68,7 @@ List of Cancelled Order
                                     </div>
                                     <div class="modal-body">
                                         <input name="id" type="hidden">
-                                        <p>Order has been cancelled due to following reason/s: {{ order.cancel_reason }}
+                                        <p>Order has been cancelled due to following reason/s: {{ t.cancel_reason }}
                                         </p>
                                     </div>
                                     <div class="modal-footer float-end">
