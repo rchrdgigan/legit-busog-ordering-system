@@ -28,7 +28,19 @@
 				<h6>View all pending orders</h6>
 			</div>
 		</div>
-
+		<div class="row">
+			{% for message in messages %}
+			{% if message.tags == 'success' %}
+			<div class="alert alert-success" role="alert">
+				{{ message }}
+			</div>
+			{% elif message.tags == 'error' %}
+			<div class="alert alert-danger" role="alert">
+				{{ message }}
+			</div>
+			{% endif %}
+			{% endfor %}
+		</div>
 		<div class="card">
 			<div class="card-body">
 				<div class="table-responsive">
@@ -55,13 +67,12 @@
 										<i data-feather="eye"></i>
 									</a>
 									<a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" id=""
-									   data-bs-target="#caModal">
+									   data-bs-target="#caModal{{ trans.id }}">
 										<i data-feather="delete"></i>
 									</a>
 								</td>
 							</tr>
 						</tbody>
-						{% endfor %}
 						<!-- Cancelled message modal -->
 						<div class="modal fade" id="cancelled">
 							<div class="modal-dialog">
@@ -74,7 +85,8 @@
 										</div>
 										<div class="modal-body">
 											<input name="id" type="hidden">
-											<p>Order has been cancelled due to following reason/s:</p>
+											<p>Order has been cancelled due to following reason/s:
+												{{ trans.cancel_reason }}</p>
 										</div>
 										<div class="modal-footer float-end">
 											<a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">OK</a>
@@ -85,7 +97,7 @@
 						</div>
 
 						<!-- Cancel Modal -->
-						<div class="modal fade" id="caModal">
+						<div class="modal fade" id="caModal{{ trans.id }}">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<form action="" method="post" id="ca_frm">
@@ -99,7 +111,8 @@
 											<p>Are you sure you want to cancel this data?</p>
 										</div>
 										<div class="modal-footer float-end">
-											<a type="submit" class="btn btn-dark" href="">Yes</a>
+											<a type="submit" class="btn btn-dark"
+											   href="{% url 'customer_cancel_order' trans.id %}">Yes</a>
 											<a class="btn btn-cancel" data-bs-dismiss="modal"
 											   aria-label="Close">Cancel</a>
 										</div>
@@ -107,6 +120,7 @@
 								</div>
 							</div>
 						</div>
+						{% endfor %}
 
 					</table>
 				</div>

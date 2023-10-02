@@ -32,6 +32,7 @@ urlpatterns = [
     path("v1/food/delete/<int:id2>/<int:id>",
          views.adminFoodDelete, name='admin_food_delete'),
     path("v1/feedback/list", views.adminViewFeedback, name="admin_feedback_list"),
+    path("v1/feedback/list/delete/<int:id>", views.adminDeleteFeeback, name="admin_feedback_list_delete"),
     path("v1/account/list", views.adminViewAccount, name="admin_account_list"),
     path("v1/account/change_password/<int:id>",
          views.adminUserChangePass, name="admin_account_change_pass"),
@@ -66,6 +67,7 @@ urlpatterns = [
 
     path("v1/contact/list", views.adminMessagesList,
          name="admin_messages_list"),
+    path("v1/contact/delete/<int:id>", views.adminDeleteMessage, name='admin_contact_delete'),
 
     # Customer
     path("v2/profile", views.customerIndex, name="customer_index"),

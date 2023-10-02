@@ -54,9 +54,7 @@ class Order(models.Model):
     product = models.ForeignKey(
         ProductInfo, on_delete=models.CASCADE, null=False)
     quantity = models.IntegerField()
-    order_mode = models.CharField(max_length=30)
     status = models.CharField(max_length=50)
-    cancel_reason = models.CharField(max_length=100, null=True)
     total_amount = models.IntegerField(null=True)
     date = models.DateTimeField(default=now, null=True)
     is_rated = models.BooleanField(null=True)
@@ -72,6 +70,7 @@ class Transaction(models.Model):
     order_mode = models.CharField(max_length=50)
     status = models.CharField(max_length=50)
     address = models.CharField(max_length=250)
+    cancel_reason = models.CharField(max_length=250, null=True)
     date_created = models.DateTimeField(default=now)
 
     def __str__(self):
@@ -108,4 +107,14 @@ class FeedBack(models.Model):
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        return str(self.user)+ " - " +str(self.order)   
+        return str(self.user)+ " - " +str(self.order)  
+
+class ContactUs(models.Model):
+     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+     name = models.CharField(max_length=100, name=False)
+     email = models.EmailField()
+     message = models.CharField(max_length=1000, null=False)
+     date_created = models.DateTimeField(default=now)
+
+     def __str__(self):
+        return str(self.user) +" - "+ str(self.date_created)

@@ -10,7 +10,7 @@ from .decorators import allowed_users
 from datetime import datetime
 from django.db.models import Q
 
-from .models import FeedBack, Order, PersonInfo, ProductInfo, Category, Transaction
+from .models import ContactUs, FeedBack, Order, PersonInfo, ProductInfo, Category, Transaction
 from .forms import ProductInfoForm
 
 # string path for admin and customer
@@ -184,6 +184,13 @@ def ViewProductByCategory(response, id):
 def index(response):
     category = Category.objects.all()
     foods = ProductInfo.objects.all()
+    if response.method == "POST":
+        name = response.POST['name']
+        email = response.POST['email']
+        message = response.POST['message']
+        save = ContactUs(user=response.user, name=name, email=email, message=message)
+        save.save()
+        messages.success(response, 'Your inquiries has been submitted!')
     return render(response, 'main/home.html', {
         'category': category,
         'foods': foods,
@@ -293,11 +300,11 @@ def changePassword(response):
 @allowed_users(allowed_roles=['admin'])
 def adminIndex(response):
     user = response.user
-    count_pending = Order.objects.filter(status='Pending').count()
-    count_processing = Order.objects.filter(status='In-Process').count()
-    count_deliver = Order.objects.filter(status='Out for Delivery').count()
+    count_pending = Transaction.objects.filter(status='Pending').count()
+    count_processing = Transaction.objects.filter(status='In-Process').count()
+    count_deliver = Transaction.objects.filter(status='Out for Delivery').count()
     count_pd = count_processing + count_deliver
-    count_completed = Order.objects.filter(status='Completed').count()
+    count_completed = Transaction.objects.filter(status='Completed').count()
     orders = Order.objects.filter(status='Pending')
     trans = Transaction.objects.filter(status='Pending')
     return render(response, 'main/admin/index.html', {
@@ -427,6 +434,15 @@ def adminViewFeedback(response):
     return render(response, 'main/admin/feedbacklist.html', {
         'feedbacks': feedbacks,
     })  # Admin
+
+
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminDeleteFeeback(response, id):
+    feedback = FeedBack.objects.get(id=id)
+    feedback.delete()
+    messages.error(response, 'Feedback has been deleted!')
+    return redirect('admin_feedback_list')
 
 
 @login_required
@@ -578,12 +594,17 @@ def adminCompletedOrder(response):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminCancellingOrder(response, id):
-    order = Order.objects.get(id=id)
+    trans = Transaction.objects.get(id=id)
+    order = Order.objects.filter(transaction_id=trans.transaction_id)
     if response.method == "POST":
         reason = response.POST.get('reason')
-        order.status = 'Cancelled'
-        order.cancel_reason = reason
-        order.save()
+        trans.status = 'Cancelled'
+        trans.cancel_reason = reason
+        trans.save()
+        for ords in order:
+            o = Order.objects.get(id=ords.id)
+            o.status = 'Cancelled'
+            o.save()
         messages.error(response, 'Order has been cancelled!')
         return redirect('admin_pending_order')
     else:
@@ -593,9 +614,9 @@ def adminCancellingOrder(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminCancelledOrder(response):
-    orders = Order.objects.filter(status='Cancelled')
+    trans = Transaction.objects.filter(status='Cancelled')
     return render(response, 'main/admin/ordercancelled.html', {
-        'orders': orders
+        'trans': trans
     })  # admin
 
 
@@ -668,8 +689,18 @@ def adminChangePicture(response, id):
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminMessagesList(response):
-    return render(response, 'main/admin/contactlist.html')
+    msg = ContactUs.objects.all()
+    return render(response, 'main/admin/contactlist.html', {
+        'msg': msg
+    })
 
+@login_required
+@allowed_users(allowed_roles=['admin'])
+def adminDeleteMessage(response, id):
+    msg = ContactUs.objects.get(id=id)
+    msg.delete()
+    messages.success(response, 'Message has been deleted!')
+    return redirect('admin_messages_list')
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
@@ -743,7 +774,7 @@ def customerChangePicture(response, id):
     user = User.objects.get(id=id)
     person = PersonInfo.objects.get(user=user)
     if response.method == "POST":
-        person.image = response.FILES['image']
+        person.image = response.FILES.get('image')
         person.save()
         messages.success(response, 'Successfully changed profile picture!')
         return redirect('customer_index')
@@ -754,15 +785,20 @@ def customerChangePicture(response, id):
 
 @login_required
 def customerCancelOrder(response, id):
-    order = Order.objects.get(id=id)
-    order.delete()
+    trans = Transaction.objects.get(id=id)
+    trans.delete()
+    orders = Order.objects.filter(transaction_id=trans.transaction_id)
+    for order in orders:
+        ords = Order.objects.get(id=order.id)
+        ords.delete()
+    messages.error(response, 'Order has been cancelled!')
     return redirect('customer_pending_order')
 
 
 @login_required
 def customerPendingOrder(response):
     user = response.user
-    transaction = Transaction.objects.filter(user=user, status='Pending')
+    transaction = Transaction.objects.filter(user=user, status='Pending') | Transaction.objects.filter(user=user, status='Cancelled')
     return render(response, 'main/customer/pendingorderlist.html', {
         'transaction': transaction,
     })  # Customer
@@ -843,7 +879,7 @@ def customerFeedback(response, id):
 
 def customerViewOrderList(response, trans_id):
     trans = Transaction.objects.filter(transaction_id=trans_id)
-    orders = Order.objects.filter(transaction_id=trans_id, status='Pending')
+    orders = Order.objects.filter(transaction_id=trans_id, status='Pending') | Order.objects.filter(transaction_id=trans_id, status='Cancelled')
 
     return render(response, 'main/customer/viewitemlist.html', {
         'orders': orders,
@@ -867,16 +903,18 @@ def customerViewOrderListInProcess(response, trans_id):
 def customerSingleOrder(response):
     user = response.user
     orders = Order.objects.filter(user=user, status='Single-Order')
-    for order in orders:
-        ords = get_object_or_404(Order, id=order.id)
-        break
     if response.method == "POST":
+        for order in orders:
+            ords = get_object_or_404(Order, id=order.id)
+            break
         transaction = Transaction(
             user=user, total_amount=ords.total_amount, transaction_id=ords.transaction_id)
         if response.POST.get('mode') == 'Dine-In':
             transaction.order_mode = response.POST.get('mode')
             transaction.status = 'Pending'
             transaction.save()
+            ords.status = 'Pending'
+            ords.save()
             return redirect('main_food_success')
         else:
             if response.POST.get('location') == '':
@@ -931,6 +969,11 @@ def customerSummaryOrder(response):
                 data = get_object_or_404(Order, id=order.id)
                 data.status = 'Pending'
                 data.save()
+            if Order.objects.filter(user=user, status='In-Cart'):
+                orders = Order.objects.filter(user=user, status='In-Cart')
+                for order in orders:
+                    ords = Order.objects.get(id=order.id)
+                    ords.delete()
             return redirect('main_food_success')
     else:
         transaction = ''
@@ -950,3 +993,6 @@ def customerRateViewOrder(response, trans_id):
         'orders': orders,
         'total_amount': sum(order.total_amount for order in orders)
     })
+
+# def customerContactUs(response):
+    
