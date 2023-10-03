@@ -7,7 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
-from datetime import datetime
+from datetime import date
 from django.db.models import Q
 
 from .models import ContactUs, FeedBack, Order, PersonInfo, ProductInfo, Category, Transaction
@@ -188,7 +188,8 @@ def index(response):
         name = response.POST['name']
         email = response.POST['email']
         message = response.POST['message']
-        save = ContactUs(user=response.user, name=name, email=email, message=message)
+        save = ContactUs(user=response.user, name=name,
+                         email=email, message=message)
         save.save()
         messages.success(response, 'Your inquiries has been submitted!')
     return render(response, 'main/home.html', {
@@ -302,7 +303,8 @@ def adminIndex(response):
     user = response.user
     count_pending = Transaction.objects.filter(status='Pending').count()
     count_processing = Transaction.objects.filter(status='In-Process').count()
-    count_deliver = Transaction.objects.filter(status='Out for Delivery').count()
+    count_deliver = Transaction.objects.filter(
+        status='Out for Delivery').count()
     count_pd = count_processing + count_deliver
     count_completed = Transaction.objects.filter(status='Completed').count()
     orders = Order.objects.filter(status='Pending')
@@ -694,6 +696,7 @@ def adminMessagesList(response):
         'msg': msg
     })
 
+
 @login_required
 @allowed_users(allowed_roles=['admin'])
 def adminDeleteMessage(response, id):
@@ -701,6 +704,7 @@ def adminDeleteMessage(response, id):
     msg.delete()
     messages.success(response, 'Message has been deleted!')
     return redirect('admin_messages_list')
+
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
@@ -798,7 +802,8 @@ def customerCancelOrder(response, id):
 @login_required
 def customerPendingOrder(response):
     user = response.user
-    transaction = Transaction.objects.filter(user=user, status='Pending') | Transaction.objects.filter(user=user, status='Cancelled')
+    transaction = Transaction.objects.filter(
+        user=user, status='Pending') | Transaction.objects.filter(user=user, status='Cancelled')
     return render(response, 'main/customer/pendingorderlist.html', {
         'transaction': transaction,
     })  # Customer
@@ -817,10 +822,14 @@ def customerProcessOrder(response):
 @login_required
 def customerCompletedOrder(response):
     user = response.user
-    trans = Transaction.objects.filter(user=user, status='Completed')
+    today = date.today()
+    formatted_date = today.strftime("%Y-%m-%d")
+    trans = Transaction.objects.filter(
+        Q(user=user, status='Completed', date_created__icontains=formatted_date)
+    )
     return render(response, 'main/customer/completedorder.html', {
         'trans': trans,
-    })  # Customer
+    })
 
 
 @login_required
@@ -834,29 +843,14 @@ def customerHistoryOrder(response):
 
 
 @login_required
-def customerFeedback(response, id):
+def customerFeedback(response):
+    id = response.POST.get('id')
     order = Order.objects.get(id=id)
     product = ProductInfo.objects.get(id=order.product.id)
     user = response.user
     if response.method == "POST":
         feedback = response.POST.get('message')
-        rate1 = response.POST.get('rate1')
-        rate2 = response.POST.get('rate2')
-        rate3 = response.POST.get('rate3')
-        rate4 = response.POST.get('rate4')
-        rate5 = response.POST.get('rate5')
-
-        if rate1:
-            rate = rate1
-        elif rate2:
-            rate = rate2
-        elif rate3:
-            rate = rate3
-        elif rate4:
-            rate = rate4
-        else:
-            rate = rate5
-
+        rate = response.POST.get('rate')
         if feedback == '':
             messages.error(response, 'Please fill the message field! ')
             return redirect('customer_view_rate_order', order.transaction_id)
@@ -879,7 +873,8 @@ def customerFeedback(response, id):
 
 def customerViewOrderList(response, trans_id):
     trans = Transaction.objects.filter(transaction_id=trans_id)
-    orders = Order.objects.filter(transaction_id=trans_id, status='Pending') | Order.objects.filter(transaction_id=trans_id, status='Cancelled')
+    orders = Order.objects.filter(transaction_id=trans_id, status='Pending') | Order.objects.filter(
+        transaction_id=trans_id, status='Cancelled')
 
     return render(response, 'main/customer/viewitemlist.html', {
         'orders': orders,
@@ -995,4 +990,3 @@ def customerRateViewOrder(response, trans_id):
     })
 
 # def customerContactUs(response):
-    
