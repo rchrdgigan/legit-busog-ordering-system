@@ -7,7 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import allowed_users
-from datetime import date
+from datetime import date, timedelta
 from django.db.models import Q
 
 from .models import ContactUs, FeedBack, Order, PersonInfo, ProductInfo, Category, Transaction
@@ -835,11 +835,16 @@ def customerCompletedOrder(response):
 @login_required
 def customerHistoryOrder(response):
     user = response.user
-    orders = Order.objects.filter(user=user, status='Cancelled') | Order.objects.filter(
-        user=user, status='Completed')
+    today = date.today()
+    recent_threshold = today - timedelta(days=365 * 5)
+    trans = Transaction.objects.filter(
+        Q(user=user, status='Completed') | Q(user=user, status='Cancelled'),
+        date_created__gte=recent_threshold.strftime("%Y-%m-%d"),
+        date_created__lt=today.strftime("%Y-%m-%d")
+    )
     return render(response, 'main/customer/orderhistory.html', {
-        'orders': orders,
-    })  # Customer
+        'orders': trans,
+    })
 
 
 @login_required

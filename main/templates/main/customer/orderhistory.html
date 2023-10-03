@@ -30,30 +30,26 @@
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
+                    {% for tran in trans %}
                     <tbody>
                         <tr>
-                            <td>2023091012</td>
-                            <td>Delivery</td>
-                            <td class="text-success">Completed</td>
-                            <td>200</td>
+                            <td>{{ tran.transaction_id }}</td>
+                            <td>{{ tran.order_mode }}</td>
+                            {% if tran.status == 'Completed' %}
+                            <td class="text-success">{{ tran.status }}</td>
+                            {% else %}
+                            <td class="text-secondary">{{ tran.status }}</td>
+                            {% endif %}
+                            <td>{{ tran.total_amount }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-info" href="">
-                                    <i data-feather="eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2023091012</td>
-                            <td>Delivery</td>
-                            <td class="text-secondary">Cancelled</td>
-                            <td>200</td>
-                            <td class="text-center">
-                                <a class="btn btn-sm btn-info" href="">
+                                <a class="btn btn-sm btn-info"
+                                   href="{% url 'customer_view_rate_order' tran.transaction_id %}">
                                     <i data-feather="eye"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
+                    {% endfor %}
                 </table>
             </div>
         </div>
