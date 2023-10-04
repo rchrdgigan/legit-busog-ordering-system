@@ -58,6 +58,7 @@ class Order(models.Model):
     total_amount = models.IntegerField(null=True)
     date = models.DateTimeField(default=now, null=True)
     is_rated = models.BooleanField(null=True)
+    note = models.TextField(max_length=1000, null=True)
 
     def __str__(self):
         return str(self.user) + " - " + str(self.product)

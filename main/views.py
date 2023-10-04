@@ -109,6 +109,7 @@ def foodProductShow(response, id):
     if response.method == "POST":
         if user.is_authenticated:
             quantity = response.POST['product-qty']
+            note = response.POST['note']
             if Order.objects.filter(user=user, status='In-Cart'):
                 order_incart = Order.objects.filter(
                     user=user, status='In-Cart')
@@ -116,7 +117,7 @@ def foodProductShow(response, id):
                     o = Order.objects.get(id=o.id)
                     break
                 order = Order(user=user, product=food,
-                              quantity=quantity)
+                              quantity=quantity, note=note)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if Order.objects.filter(user=user, status='Single-Order'):
                     single_order = Order.objects.filter(
@@ -138,7 +139,7 @@ def foodProductShow(response, id):
                     return redirect('customer_single_order')
             else:
                 order = Order(user=user, product=food,
-                              quantity=quantity)
+                              quantity=quantity, note=note)
                 order.total_amount = int(quantity) * int(order.product.price)
                 if Order.objects.filter(user=user, status='Single-Order'):
                     single_order = Order.objects.filter(
@@ -843,7 +844,7 @@ def customerHistoryOrder(response):
         date_created__lt=today.strftime("%Y-%m-%d")
     )
     return render(response, 'main/customer/orderhistory.html', {
-        'orders': trans,
+        'trans': trans,
     })
 
 

@@ -154,15 +154,13 @@ List of Food
                         <div class="more-details">
                             <h1>More Details</h1>
                             <br>
-                            <label><b>Estimated Prep</b></label>
+                            <label><b>Estimated Prep:</b></label>
                             <input type="text" value="{{ food.PrepTime }}" readonly>
 
-                            <label><b>Status</b></label>
-                            {% if food.availability == True %}
-                            <input type="text" value="Available" readonly>
-                            {% else %}
-                            <input type="text" value="Unavailable" readonly>
-                            {% endif %}
+                            <label><b>Description:</b></label>
+                            <br>
+                            <p><span>{{ food.description }}</span></p>
+
                         </div>
                         <div class="order-qty-button">
 
@@ -173,6 +171,12 @@ List of Food
                                 <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
                                 <input class="product-qty" type="number" name="product-qty" min="0" max="50" value="1">
                                 <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
+                            </div>
+                            <br>
+                            <br>
+                            <div>
+                                <label for="note"><i>Please leave a note (optional):</i></label><br>
+                                <textarea name="note" id="note" cols="50" rows="8"></textarea>
                             </div>
                         </div>
                     </div>
