@@ -106,7 +106,12 @@ View Customer's Order
 															   class="form-control" name="PrepTime" readonly>
 													</div>
 												</div>
-												
+
+											</div>
+											<div class="form-group">
+												<label>Note</label>
+												<textarea name="note" id="note" cols="30" rows="10"
+														  readonly>{{ order.note }}</textarea>
 											</div>
 											<div class="form-group">
 												<label>Description</label>
@@ -126,10 +131,14 @@ View Customer's Order
 					{% endfor %}
 					<tr>
 						<td colspan="3"></td>
-                        <td colspan="2"><h4>Total Amount :</h4></td>
-                        <td><h4>₱ {{ total_amount }}</h4></td>
+						<td colspan="2">
+							<h4>Total Amount :</h4>
+						</td>
+						<td>
+							<h4>₱ {{ total_amount }}</h4>
+						</td>
 						<td></td>
-                    </tr>
+					</tr>
 				</table>
 			</div>
 		</div>
