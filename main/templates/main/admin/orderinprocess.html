@@ -52,9 +52,13 @@ List of Inprocess Order
                             <td>{{ tran.date_created }}</td>
                             <td>{{ tran.transaction_id }}</td>
                             <td>
+                                {% if tran.user.personinfo.image %}
                                 <a href="{{ tran.user.personinfo.image.url }}">
                                     <img width="50" src="{{ tran.user.personinfo.image.url }}">
                                 </a>
+                                {% else %}
+                                <img src="{% static 'img/no-profile.png' %}" width="50">
+                                {% endif %}
                             </td>
                             <td>{{ tran.user.first_name | title }} {{ tran.user.last_name | title }}</td>
                             <td>{{ tran.order_mode }}</td>

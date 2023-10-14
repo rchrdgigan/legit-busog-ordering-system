@@ -44,12 +44,14 @@ class ProductInfo(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 def random_string():
     return str(random.randint(10000, 99999))
 
+
 class Order(models.Model):
-    transaction_id = models.CharField(max_length=50, default = random_string)
+    transaction_id = models.CharField(max_length=50, default=random_string)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     product = models.ForeignKey(
         ProductInfo, on_delete=models.CASCADE, null=False)
@@ -63,7 +65,7 @@ class Order(models.Model):
     def __str__(self):
         return str(self.user) + " - " + str(self.product)
 
-    
+
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=50, null=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
@@ -75,16 +77,16 @@ class Transaction(models.Model):
     date_created = models.DateTimeField(default=now)
 
     def __str__(self):
-        return str(self.user)+ " - " + str(self.transaction_id)
-    
+        return str(self.user) + " - " + str(self.transaction_id)
+
     def save(self, *args, **kwargs):
         if self.status == 'Out for Delivery':
             user = User.objects.get(id=self.user.id)
             person = PersonInfo.objects.get(user=user)
 
             TO_NUMBER = person.contact
-            VONAGE_API_KEY = 'b68cc5d5'
-            VONAGE_API_SECRET = '0iQvkqAg1Uk1BGsV'
+            VONAGE_API_KEY = '631d7166'
+            VONAGE_API_SECRET = 'pNRkF5jFLffncNIc'
             VONAGE_BRAND_NAME = 'LegitBusog'
             client = vonage.Client(
                 key=VONAGE_API_KEY, secret=VONAGE_API_SECRET)
@@ -100,6 +102,7 @@ class Transaction(models.Model):
             print(responseData)
         return super().save(*args, **kwargs)
 
+
 class FeedBack(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=False)
@@ -108,14 +111,15 @@ class FeedBack(models.Model):
     date = models.DateTimeField(default=now)
 
     def __str__(self):
-        return str(self.user)+ " - " +str(self.order)  
+        return str(self.user) + " - " + str(self.order)
+
 
 class ContactUs(models.Model):
-     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-     name = models.CharField(max_length=100, name=False)
-     email = models.EmailField()
-     message = models.CharField(max_length=1000, null=False)
-     date_created = models.DateTimeField(default=now)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    name = models.CharField(max_length=100, name=False)
+    email = models.EmailField()
+    message = models.CharField(max_length=1000, null=False)
+    date_created = models.DateTimeField(default=now)
 
-     def __str__(self):
-        return str(self.user) +" - "+ str(self.date_created)
+    def __str__(self):
+        return str(self.user) + " - " + str(self.date_created)

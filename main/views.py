@@ -373,33 +373,40 @@ def adminFoodCat(response, id):
 
 @login_required
 @allowed_users(allowed_roles=['admin'])
-def adminFoodCreate(response, id):
+def adminFoodCreate(request, id):
     category = Category.objects.get(id=id)
     food = ProductInfo.objects.filter(category=category)
-    if response.method == "POST":
-        form = ProductInfoForm(response.POST, response.FILES)
-        if form.is_valid():
+
+    if request.method == "POST":
+        form = ProductInfoForm(request.POST, request.FILES)
+        food_name = request.POST.get('food', '')
+
+        if ProductInfo.objects.filter(name=food_name).exists():
+            messages.error(
+                request, 'A product with this name already exists in the category!')
+
+        elif form.is_valid():
             save = form.save(commit=False)
-            save.user = response.user
-            save.name = response.POST['food']
-            save.price = response.POST['price']
-            save.PrepTime = response.POST['ept']
-            save.category = response.POST['cat_id']
-            save.description = response.POST['description']
+            save.user = request.user
+            save.name = food_name
+            save.price = request.POST.get('price', '')
+            save.PrepTime = request.POST.get('ept', '')
+            save.category = request.POST.get('cat_id', '')
+            save.description = request.POST.get('description', '')
             save.save()
             messages.success(
-                response, 'Your Product Has Been Successfully Added!')
+                request, 'Your Product Has Been Successfully Added!')
             return redirect('admin_food_cat', category.id)
         else:
-            HttpResponse('Invalid!')
+            messages.error(request, 'Invalid Form Data!')
+    else:
+        form = ProductInfoForm()
 
-    form = ProductInfoForm()
     cat_all = Category.objects.all()
-    return render(response, 'main/admin/foodcreate.html', {
+    return render(request, 'main/admin/foodcreate.html', {
         'form': form,
         'food': food,
         'cat_all': cat_all
-
     })  # Admin
 
 
@@ -806,6 +813,15 @@ def customerPendingOrder(response):
     transaction = Transaction.objects.filter(
         user=user, status='Pending') | Transaction.objects.filter(user=user, status='Cancelled')
     return render(response, 'main/customer/pendingorderlist.html', {
+        'transaction': transaction,
+    })  # Customer
+
+
+@login_required
+def customerCancelledOrder(response):
+    user = response.user
+    transaction = Transaction.objects.filter(user=user, status='Cancelled')
+    return render(response, 'main/customer/cancelledorder.html', {
         'transaction': transaction,
     })  # Customer
 

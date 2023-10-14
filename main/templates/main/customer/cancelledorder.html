@@ -1,8 +1,8 @@
-{% extends '../admin-layout.html' %}
+{% extends '../customer-layout.html' %}
 {% load static %}
 
 {% block title %}
-List of Completed Order
+List of Cancelled Order
 {% endblock %}
 
 {% block stylesheets %}
@@ -12,8 +12,8 @@ List of Completed Order
 <div class="content mt-2">
     <div class="page-header">
         <div class="page-title">
-            <h4>Completed Order List</h4>
-            <h6>View all completed orders</h6>
+            <h4>Cancelled Order List</h4>
+            <h6>View all cancelled order</h6>
         </div>
     </div>
 
@@ -33,11 +33,11 @@ List of Completed Order
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
-                    {% for tran in trans %}
+                    {% for t in trans %}
                     <tbody>
                         <tr>
-                            <td>{{ tran.date_created }}</td>
-                            <td>{{ tran.transaction_id }}</td>
+                            <td>{{ t.date_created }}</td>
+                            <td>{{ t.transaction_id }}</td>
                             <td>
                                 {% if tran.user.personinfo.image %}
                                 <a href="{{ tran.user.personinfo.image.url }}">
@@ -47,18 +47,41 @@ List of Completed Order
                                 <img src="{% static 'img/no-profile.png' %}" width="50">
                                 {% endif %}
                             </td>
-                            <td>{{ tran.user.first_name | title }} {{ tran.user.last_name | title }}</td>
-                            <td>{{ tran.order_mode }}</td>
-                            <td class="text-success">{{ tran.status }}</td>
-                            <td>{{ tran.total_amount }}</td>
+                            <td>{{ t.user.first_name | title }} {{ t.user.last_name | title }}</td>
+
+                            <td>{{ t.order_mode }}</td>
+                            <td>{{ t.status }}</td>
+                            <td>{{ t.total_amount}}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-info text-white"
-                                   href="{% url 'admin_customer_orderlist_completed' tran.transaction_id %}">
+                                <a class="btn btn-sm btn-info text-white" data-bs-toggle="modal" id=""
+                                   data-bs-target="#cancelled{{ order.id }}">
                                     <i data-feather="eye"></i>
                                 </a>
                             </td>
                         </tr>
                     </tbody>
+                    <!-- Cancelled message modal -->
+                    <div class="modal fade" id="cancelled{{ order.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="" method="post" id="app_frm">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Cancelled Order</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input name="id" type="hidden">
+                                        <p>Order has been cancelled due to following reason/s: {{ t.cancel_reason }}
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer float-end">
+                                        <a class="btn btn-cancel" data-bs-dismiss="modal" aria-label="Close">OK</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                 </table>
             </div>

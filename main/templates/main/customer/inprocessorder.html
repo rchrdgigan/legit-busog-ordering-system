@@ -35,6 +35,7 @@
 					<table id="example" class="table">
 						<thead>
 							<tr>
+								<th>Date Ordered</th>
 								<th>Order No.</th>
 								<th>Order Mode</th>
 								<th>Status</th>
@@ -45,6 +46,7 @@
 						{% for tran in trans %}
 						<tbody>
 							<tr>
+								<td>{{ tran.date_created }}</td>
 								<td>{{ tran.transaction_id }}</td>
 								<td>{{ tran.order_mode }}</td>
 								<td class="text-info">{{ tran.status }}</td>

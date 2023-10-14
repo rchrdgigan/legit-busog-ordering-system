@@ -85,6 +85,8 @@ urlpatterns = [
          name="customer_process_order"),
     path("v2/order/completed", views.customerCompletedOrder,
          name="customer_completed_order"),
+    path("v2/order/cancelled", views.customerCancelledOrder,
+         name="customer_cancelled_order"),
     path("v2/order/history", views.customerHistoryOrder,
          name="customer_history_order"),
     path("v2/order/place-order", views.customerPlaceOrder,  # List of Cart

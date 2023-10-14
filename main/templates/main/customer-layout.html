@@ -117,6 +117,8 @@
                                 <li><a class="{% if request.path == customer_process_order_url %}active{% endif %}" href="{% url 'customer_process_order' %}">Processing</span></a></li>
                                 {% url 'customer_completed_order' as customer_completed_order_url %}
                                 <li><a class="{% if request.path == customer_completed_order_url %}active{% endif %}" href="{% url 'customer_completed_order' %}">Completed</span></a></li>
+                                {% url 'customer_cancelled_order' as customer_cancelled_order_url %}
+                                <li><a class="{% if request.path == customer_cancelled_order_url %}active{% endif %}" href="{% url 'customer_cancelled_order' %}">Cancelled</span></a></li>
                             </ul>
                         </li>
                         {% url 'customer_history_order' as customer_history_order_url %}
