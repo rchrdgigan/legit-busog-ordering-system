@@ -39,9 +39,13 @@ List of Cancelled Order
                             <td>{{ t.date_created }}</td>
                             <td>{{ t.transaction_id }}</td>
                             <td>
-                                <a href="{{ t.user.personinfo.image.url }}">
-                                    <img width="50" src="{{ t.user.personinfo.image.url }}">
+                                {% if tran.user.personinfo.image %}
+                                <a href="{{ tran.user.personinfo.image.url }}">
+                                    <img width="50" src="{{ tran.user.personinfo.image.url }}">
                                 </a>
+                                {% else %}
+                                <img src="{% static 'img/no-profile.png' %}" width="50">
+                                {% endif %}
                             </td>
                             <td>{{ t.user.first_name | title }} {{ t.user.last_name | title }}</td>
 

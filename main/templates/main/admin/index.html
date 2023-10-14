@@ -105,7 +105,7 @@ Dashboard
                             <td>{{ tran.date_created }}</td>
                             <td>{{ tran.transaction_id }}</td>
                             <td>
-                                {% if tran.user.personinfo.image.url %}
+                                {% if tran.user.personinfo.image %}
                                 <a href="{{ tran.user.personinfo.image.url }}">
                                     <img width="50" src="{{ tran.user.personinfo.image.url }}">
                                 </a>

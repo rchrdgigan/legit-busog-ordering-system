@@ -47,6 +47,7 @@
 					<table id="example" class="table">
 						<thead>
 							<tr>
+								<th>Date Ordered</th>
 								<th>Order No.</th>
 								<th>Order Mode</th>
 								<th>Status</th>
@@ -57,6 +58,7 @@
 						{% for trans in transaction %}
 						<tbody>
 							<tr>
+								<td>{{ tran.date_created }}</td>
 								<td>{{ trans.transaction_id }}</td>
 								<td>{{ trans.order_mode }}</td>
 								<td class="text-danger">{{ trans.status }}</td>

@@ -8,101 +8,6 @@ List of Food
 {% block stylesheets %}
 <link rel="stylesheet" href="{% static 'css/foodproduct.css' %}">
 <link rel="stylesheet" href="{% static 'css/viewproduct.css' %}">
-<style>
-    .qty-input {
-        color: #000;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    .qty-input .product-qty,
-    .qty-input .qty-count {
-        background: transparent;
-        color: inherit;
-        font-weight: bold;
-        font-size: inherit;
-        border: none;
-        display: inline-block;
-        min-width: 0;
-        height: 2.5rem;
-        line-height: 1;
-    }
-
-    .qty-input .product-qty:focus,
-    .qty-input .qty-count:focus {
-        outline: none;
-    }
-
-    .qty-input .product-qty {
-        width: 50px;
-        min-width: 0;
-        display: inline-block;
-        text-align: center;
-        appearance: textfield;
-    }
-
-    .qty-input .product-qty::-webkit-outer-spin-button,
-    .qty-input .product-qty::-webkit-inner-spin-button {
-        appearance: none;
-        margin: 0;
-    }
-
-    .qty-input .qty-count {
-        padding: 0;
-        cursor: pointer;
-        width: 2.5rem;
-        font-size: 1.25em;
-        text-indent: -100px;
-        overflow: hidden;
-        position: relative;
-    }
-
-    .qty-input .qty-count:before,
-    .qty-input .qty-count:after {
-        content: "";
-        height: 2px;
-        width: 10px;
-        position: absolute;
-        display: block;
-        background: #000;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-    }
-
-    .qty-input .qty-count--minus {
-        border-right: 1px solid #e2e2e2;
-    }
-
-    .qty-input .qty-count--add {
-        border-left: 1px solid #e2e2e2;
-    }
-
-    .qty-input .qty-count--add:after {
-        transform: rotate(90deg);
-    }
-
-    .qty-input .qty-count:disabled {
-        color: #ccc;
-        background: #f2f2f2;
-        cursor: not-allowed;
-        border-color: transparent;
-    }
-
-    .qty-input .qty-count:disabled:before,
-    .qty-input .qty-count:disabled:after {
-        background: #ccc;
-    }
-
-    .qty-input {
-        border-radius: 4px;
-    }
-
-</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -111,6 +16,7 @@ List of Food
         <input type="search" name="search" class="search" placeholder="Search Food Name">
     </form>
 </section>
+
 <section id="foods">
     <div class="header" style="margin-bottom: 40px;">
         <h2>View Product</h2>
@@ -139,54 +45,57 @@ List of Food
         </div>
         {% endif %}
         {% endfor %}
-        <div class="container-product">
-            <div class="product-image">
-                <img src="{{ food.image.url }}" alt="img">
-            </div>
-            <div class="product-details">
-                <div class="product-header">
-                    <h3>{{ food.name }}</h3>
-                    <h1>{{ food.price}} PHP</h1>
+        <div class="seller container2">
+            <div class="foodproduct">
+                <div class="product-image">
+                    <img src="{{ food.image.url }}" alt="img">
                 </div>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <div class="cont-mo">
-                        <div class="more-details">
-                            <h1>More Details</h1>
-                            <br>
-                            <label><b>Estimated Prep:</b></label>
-                            <input type="text" value="{{ food.PrepTime }}" readonly>
-
-                            <label><b>Description:</b></label>
-                            <br>
-                            <p><span>{{ food.description }}</span></p>
-
-                        </div>
-                        <div class="order-qty-button">
-
-                            <h3>Select</h3>
-                            <br>
-                            <label><b>Quantity</b></label>
-                            <div class="qty-input">
-                                <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
-                                <input class="product-qty" type="number" name="product-qty" min="0" max="50" value="1">
-                                <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
-                            </div>
-                            <br>
-                            <br>
-                            <div>
-                                <label for="note"><i>Please leave a note (optional):</i></label><br>
-                                <textarea name="note" id="note" cols="50" rows="8"></textarea>
-                            </div>
-                        </div>
+                <div class="product-details">
+                    <div class="product-header">
+                        <h3>{{ food.name }}</h3>
+                        <h1>{{ food.price}} PHP</h1>
                     </div>
-                    <div class="product-footer">
-                        <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
-                        <button class="btn btn-place-order" type="submit">Buy Now</button>
-                        <input type="submit" class="btn btn-place-order" name="addcart" value="Add To Cart">
-                    </div>
-                </form>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="cont-mo">
+                            <div class="more-details">
+                                <h1>More Details</h1>
+                                <br>
+                                <label><b>Estimated Prep:</b></label>
+                                <input type="text" value="{{ food.PrepTime }}" readonly>
+    
+                                <label><b>Description:</b></label>
+                                <br>
+                                <p><span>{{ food.description }}</span></p>
+    
+                            </div>
+                            <div class="order-qty-button">
+    
+                                <h3>Set Quantity and Note</h3>
+                                <br>
+                                <label><b>Quantity</b></label>
+                                <div class="qty-input">
+                                    <button class="qty-count qty-count--minus" data-action="minus" type="button">-</button>
+                                    <input class="product-qty" type="number" name="product-qty" min="1" max="50" value="1">
+                                    <button class="qty-count qty-count--add" data-action="add" type="button">+</button>
+                                </div>
+                                <br>
+                                <br>
+                                <div>
+                                    <label for="note"><i>Please leave a note (optional):</i></label><br>
+                                    <textarea type="text" name="note" id="note" cols="50" rows="8"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-footer">
+                            <a class="btn-back" onclick="window.history.go(-1); return false;">Back</a>
+                            <button class="btn btn-place-order" type="submit">Buy Now</button>
+                            <input type="submit" class="btn btn-place-order" name="addcart" value="Add To Cart">
+                        </div>
+                    </form>
+                </div>
             </div>
+           
         </div>
     </div>
 

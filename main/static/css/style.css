@@ -647,6 +647,9 @@ iframe {
     .head {
         display: none;
     }
+    .header-logo{
+        display: none;
+    }
     .top-txt .head p,
     .top-txt .head a {
         font-size: 10px;
@@ -690,6 +693,29 @@ iframe {
     }
     .best-seller img {
         padding-top: 40px;
+    }
+    .order-qty-button textarea {
+        width: 100%;
+        margin-left: 0;
+    }
+    .order-qty-button h3{
+        text-align: center;
+    }
+    .product-image{
+        margin: auto 10px;
+    }
+    .product-header {
+        text-align: center;
+    }
+    .cont-mo{
+        display: flex;
+        flex-direction: column;
+    }
+    .more-details{
+        margin: 10px;
+    }
+    .more-details h1{
+        text-align: center;
     }
 }
 
